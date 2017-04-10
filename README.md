@@ -13,6 +13,8 @@ This is the vAPI (a.k.a. VMODL2) exposed by vSphere Container Service.
 9. To start the server, run build/maven/vcs/vcs-provider/appassembler/bin/vcs-provider
 10. To test the server is actually running, open http://localhost:8088/rest in a browser - it should show a json containing rest metadata.
 
+To exercise the deployed REST APIs, it's recommended to use Postman client. To use Postman, download "Postman for Chrome", import the workflow available in vcs/tools/postman.json file. This workflow has included all the VmGroup REST API requests. Once the import is successful, you should be able to invoke VmGroup REST APIs by clicking some buttons in Postman client.
+
 To add your own services to existing VCS vAPI project, please import the project to your Eclipse and follow the existing com.vmware.vcs.VmGroup service as an example:
 1. VCS vAPI API definition: vcs/vmodl/com/vmware/vcs/VmGroup.vmodl
 2. VCS vAPI provider implementation: vcs/java/provider/vcs/src/main/...
