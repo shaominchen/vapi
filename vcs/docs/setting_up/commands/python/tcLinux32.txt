@@ -1,7 +1,0 @@
-vapi-pdk$ export PATH=$TCROOT/lin32/python-2.7.8/bin:$PATH
-
-vapi-pdk$ wget http://build-squid.eng.vmware.com/build/mts/release/bora-2638405/publish/Werkzeug-0.9.6-py2.7.egg
-
-vapi-pdk$ export PYTHONPATH=$TCROOT/lin32/twisted-12.2.0/lib/python2.7/site-packages:$TCROOT/lin32/zope.interface-4.0.1/lib/python2.7/site-packages:$TCROOT/noarch/python-six-1.7.2/lib/python2.7/site-packages:$TCROOT/noarch/setuptools-5.7/lib/python2.7/site-packages:$TCROOT/lin32/pyopenssl-0.13-5/lib/python2.7/site-packages:Werkzeug-0.9.6-py2.7.egg
-
-vapi-pdk$ export PYTHONPATH=python-toolkit/runtime/vapi_runtime-2.6.0-py2.7.egg:python-toolkit/runtime/vapi_common_client-2.6.0-py2.7.egg:python-toolkit/runtime/vapi_common-2.6.0-py2.7.egg:$PYTHONPATH

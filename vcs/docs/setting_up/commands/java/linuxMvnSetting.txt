@@ -1,2 +1,0 @@
-vapi-pdk$ test -d ~/.m2 || mkdir ~/.m2
-vapi-pdk$ cp toyvm/java/settings.xml ~/.m2/settings.xml

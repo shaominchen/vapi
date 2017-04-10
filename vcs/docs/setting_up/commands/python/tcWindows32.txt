@@ -1,7 +1,0 @@
-vapi-pdk> set PATH=%PATH%;%TCROOT%\win32\python-2.7.8
-
-vapi-pdk> :: Download http://build-squid.eng.vmware.com/build/mts/release/bora-2638405/publish/Werkzeug-0.9.6-py2.7.egg
-
-vapi-pdk> set PYTHONPATH=%TCROOT%\win32\twisted-12.2.0\python2.7\Lib\site-packages;%TCROOT%\win32\zope.interface-4.0.1\lib\python2.7\site-packages;%TCROOT%\noarch\python-six-1.7.2\lib\python2.7\site-packages;%TCROOT%\noarch\setuptools-5.7\lib\python2.7\site-packages;%TCROOT%\win32\pyopenssl-0.13-4\2.6\Lib\site-packages;Werkzeug-0.9.6-py2.7.egg
-
-vapi-pdk> set PYTHONPATH=lib\python\vapi_runtime-2.6.0-py2.7.egg;lib\python\vapi_common_client-2.6.0-py2.7.egg;lib\python\vapi_common-2.6.0-py2.7.egg;%PYTHONPATH%
