@@ -1,0 +1,21 @@
+// Copyright 2015 VMware, Inc.  All rights reserved.
+
+//fyi - this script assumes that auto-components has already been called, as needed
+
+String metadataToolkitHome = System.properties['metadata.toolkit.home'] ?:
+        System.env['METADATA_TOOLKIT_HOME'] ?:
+        System.env['GOBUILD_VAPI_CORE_METADATA_ROOT'] ?:
+        project.ext.has('GOBUILD_VAPI_CORE_METADATA_ROOT') ? project.GOBUILD_VAPI_CORE_METADATA_ROOT : null
+
+assert metadataToolkitHome
+println "metadata-toolkit-home = ${metadataToolkitHome}"
+
+// setup a system property for the metadata-toolkit's shared gradle files to utilize
+System.properties['metadata.toolkit.home'] = metadataToolkitHome
+
+// setup a project property for use within the gradle build
+project.ext.metadataToolkitHome = new File(metadataToolkitHome).absoluteFile
+project.ext.metadataToolkitBin = new File(metadataToolkitHome, 'bin')
+project.ext.metadataGenerator = new File(metadataToolkitBin, 'metadata-generator')
+assert project.metadataToolkitHome.exists()
+

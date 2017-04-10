@@ -1,0 +1,95 @@
+{
+    "metamodel":
+    {
+        "component":
+        {
+            "name": "${product.name.asCanonical}",
+            "documentation": "${metadata.getDocumentation(product)}",
+${metadata.render('metamodel_metadata.partial', [node:product], 3)}
+            ,
+            "packages":
+            [
+<% product.packages.eachWithIndex { pkg, pidx -> %>\
+                {
+                    "name": "${pkg.name.asCanonical}",
+                    "documentation": "${metadata.getDocumentation(pkg)}",
+${metadata.render('metamodel_metadata.partial', [node:pkg], 5)}
+                    ,
+${metadata.render('metamodel_enumeration.partial', [node:pkg], 5)}
+                    ,
+${metadata.render('metamodel_structure.partial', [node:pkg], 5)}
+                    ,
+                    "services":
+                    [
+<% pkg.services.eachWithIndex { svc, sidx -> %>\
+                        {
+                            "name": "${svc.getQualifiedName('asCanonical')}",
+                            "documentation": "${metadata.getDocumentation(svc)}",
+${metadata.render('metamodel_metadata.partial', [node:svc], 7)}
+                            ,
+${metadata.render('metamodel_enumeration.partial', [node:svc], 7)}
+                            ,
+${metadata.render('metamodel_constants.partial', [node:svc], 7)}
+                            ,
+${metadata.render('metamodel_structure.partial', [node:svc], 7)}
+                            ,
+                            "operations":
+                            [
+<% svc.operations.eachWithIndex {  operation, oidx -> %> \
+                                {
+                                    "name": "${operation.name.asCanonical}",
+                                    "documentation": "${metadata.getDocumentation(operation)}",
+                                    "params":
+                                    [
+<% operation.parameters.eachWithIndex { parameter, pridx -> %>\
+                                        {
+                                            "name": "${parameter.name.asCanonical}",
+                                            "documentation": "${metadata.getDocumentation(parameter)}",
+                                            "type": ${metadata.getTypeString(parameter)},
+${metadata.render('metamodel_metadata.partial', [node:parameter], 11)}
+                                        }
+<% if (pridx != operation.parameters.size() - 1) { %>\
+                                        ,
+<% } %>\
+<% } %>\
+                                    ],
+                                    "result":
+                                    {
+                                        "documentation": "${metadata.getDocumentation(operation.result)}",
+                                        "type": ${metadata.getTypeString(operation.result)},
+${metadata.render('metamodel_metadata.partial', [node:operation.result], 10)}
+                                    },
+                                    "errors":
+                                    [
+<% operation.errors.eachWithIndex { error, eridx -> %>\
+                                        {
+                                            "user_defined_type_name": "${error.type.declaration.getQualifiedName('asCanonical')}",
+                                            "documentation": "${metadata.getDocumentation(error)}"
+                                        }
+<% if (eridx != operation.errors.size() - 1) { %>\
+                                        ,
+<% } %>\
+<% } %>\
+                                    ],
+${metadata.render('metamodel_metadata.partial', [node:operation], 9)}
+                                }
+<% if (oidx != svc.operations.size() - 1) { %>\
+                                ,
+<% } %>\
+<% } %>\
+                            ]
+                        }
+<% if (sidx != pkg.services.size() - 1) { %>\
+                        ,
+<% } %>\
+<% } %>\
+                    ]
+                }
+<% if (pidx != product.packages.size() - 1) { %>\
+                ,
+<% } %>\
+<% } %>\
+            ]
+        }
+    }
+}

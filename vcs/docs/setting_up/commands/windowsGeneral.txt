@@ -1,0 +1,3 @@
+vapi-pdk> set VAPI_PDK=%cd%
+vapi-pdk> set TCROOT=\build-toolchain.eng.vmware.com\toolchain
+vapi-pdk> set PATH=%TCROOT%\win64\jdk-1.7.0_79\bin\;%PATH%

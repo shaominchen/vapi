@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2014-2016 VMware, Inc. -->
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>sample.first</groupId>
+      <artifactId>vcs-provider-parent</artifactId>
+      <packaging>pom</packaging>
+      <version>2.6.0</version>
+      <name>vcs-provider-parent</name>
+      <description>Parent POM for vAPI ToyVM provider in tutorial project</description>
+
+    <!--
+        These properties are inherited by the children module's poms.
+        Versions of all plugins used by this project are located here.
+        mvn.sh in this folder exports VAPI_PDK and BUILD_ROOT variables used in
+        this and the children projects.
+    -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <buildroot>${BUILD_ROOT}/maven/vcs</buildroot>
+
+        <!-- Set VAPI_CORE_ROOT to the folder that contains VAPI_PDK -->
+        <VAPI_CORE_ROOT>${VAPI_PDK}</VAPI_CORE_ROOT>
+
+        <!-- Compiler's configurations -->
+        <compiler.version>1.7</compiler.version>
+        <compiler.source.version>1.7</compiler.source.version>
+        <compiler.target.version>1.7</compiler.target.version>
+        <exec.mainClass>sample.first.impl.ToyVMServerMain</exec.mainClass>
+
+        <!-- Component versions -->
+        <vapi.version>${project.version}</vapi.version>
+        <log4j.version>1.2.16</log4j.version>
+        <springframework.version>4.2.5.RELEASE</springframework.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <org.json.version>20090211</org.json.version>
+        <jsonassert.version>1.0.0</jsonassert.version>
+        <testng.version>6.8.8</testng.version>
+
+        <!-- Plugin versions -->
+        <maven.antrun.plugin.version>1.7</maven.antrun.plugin.version>
+        <maven.install.plugin.version>2.3</maven.install.plugin.version>
+        <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+        <maven.eclipse.plugin.version>2.5.1</maven.eclipse.plugin.version>
+        <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
+        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
+        <exec.maven.plugin.version>1.2.1</exec.maven.plugin.version>
+        <build.helper.maven.plugin.version>1.7</build.helper.maven.plugin.version>
+        <properties.maven.plugin.version>1.0-alpha-2</properties.maven.plugin.version>
+        <maven.appassembler.plugin>1.9</maven.appassembler.plugin>
+
+        <!-- Toolkit directories -->
+        <idl.toolkit.root>${VAPI_CORE_ROOT}/idl-toolkit</idl.toolkit.root>
+        <java.toolkit.root>${VAPI_CORE_ROOT}/java-toolkit</java.toolkit.root>
+        <metadata.toolkit.root>${VAPI_CORE_ROOT}/metadata-toolkit</metadata.toolkit.root>
+    </properties>
+
+    <build>
+        <!--
+            The default build directory is a sub-directory named 'target' under
+            each project. Setting the build directory to a common build root
+            and project name as the sub-directory.
+        -->
+        <directory>${buildroot}/${project.name}</directory>
+        <!--
+            pluginManagement is only a way to share the same plugin
+            configuration across all your project modules.
+            This only configures plugins that are actually referenced within
+            the plugins element in the children.
+        -->
+        <pluginManagement>
+            <plugins>
+                <!--
+                    This is used to generate Eclipse IDE files for use with an
+                    Eclipse project. This way the ToyVM project can be imported
+                    into eclipse.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>${maven.eclipse.plugin.version}</version>
+                    <configuration>
+                        <additionalConfig>
+                            <file>
+                                <name>.settings/org.eclipse.jdt.core.prefs</name>
+                                <content>
+                                    <![CDATA[eclipse.preferences.version=1
+                                    org.eclipse.jdt.core.compiler.compliance=${compiler.version}
+                                    org.eclipse.jdt.core.compiler.codegen.targetPlatform=${compiler.target.version}
+                                    org.eclipse.jdt.core.compiler.source=${compiler.source.version}
+                                    ]]>
+                                </content>
+                            </file>
+                        </additionalConfig>
+                    </configuration>
+                </plugin>
+                <!--
+                    Version attribute of plugins executed by children modules
+                    are defined here.
+                -->
+                <!-- To set execute permissions on vAPI code generators -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven.antrun.plugin.version}</version>
+                </plugin>
+                <!-- To install vAPI dependencies -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven.install.plugin.version}</version>
+                </plugin>
+                <!-- To generate language bindings and metadata files -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec.maven.plugin.version}</version>
+                </plugin>
+                <!-- To add the generated language bindings to source tree -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build.helper.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>{maven.source.plugin.version}</version>
+                </plugin>
+                <!-- To generate standalone app for the provider -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>appassembler-maven-plugin</artifactId>
+                    <version>${maven.appassembler.plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- Plugins that are invoked in this module. -->
+        <plugins>
+            <!--
+                The compiler plugin is used to compile the sources of the
+                project. The default source and target version is 1.5. We change
+                that here to the most recent supported version.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${compiler.source.version}</source>
+                    <target>${compiler.target.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+        Similar to pluginManagement, dependencyManagement only configures
+        dependencies that are referenced within elements in the children.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- vAPI libraries -->
+            <dependency>
+                <groupId>com.vmware.vapi</groupId>
+                <artifactId>vapi-runtime</artifactId>
+                <version>${vapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vmware.vapi</groupId>
+                <artifactId>vapi-metadata-service</artifactId>
+                <version>${vapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vmware.vapi</groupId>
+                <artifactId>vapi-rest</artifactId>
+                <version>${vapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vmware.vapi</groupId>
+                <artifactId>vapi-metadata-lib</artifactId>
+                <version>${vapi.version}</version>
+            </dependency>
+
+            <!-- Log4J -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <!-- Javax servlet -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Dependencies for running tests -->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${org.json.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${jsonassert.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Children modules of this project -->
+    <modules>
+        <!-- Module to download and set up vapi dependencies -->
+        <module>local-deps</module>
+        <!-- Module that contains the provider code - with the main class -->
+        <module>vcs</module>
+    </modules>
+
+    <!--
+        Profiles are chosen based on which OS maven is run on. Accordingly, a
+        couple of property values are set.
+    -->
+    <profiles>
+        <profile>
+            <id>WinProfile</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <idlMetadataGenerator>metadata-generator.bat</idlMetadataGenerator>
+                <idlJavaGenerator>java-generator.bat</idlJavaGenerator>
+            </properties>
+        </profile>
+        <profile>
+            <id>UnixProfile</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <idlMetadataGenerator>./metadata-generator</idlMetadataGenerator>
+                <idlJavaGenerator>./java-generator</idlJavaGenerator>
+            </properties>
+        </profile>
+    </profiles>
+</project>

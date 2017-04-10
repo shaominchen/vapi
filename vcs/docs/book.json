@@ -1,0 +1,31 @@
+{
+    "gitbook": "2.0.4",
+    "plugins": [
+        "-mathjax",
+        "toc",
+        "bootstrapjs",
+        "helpers",
+        "ga"
+    ],
+    "pluginsConfig": {
+        "bootstrapjs": {
+            "modal": true,
+            "dropdown": true,
+            "tooltip": {
+                "selector": "[data-toggle=tooltip]"
+            }
+        },
+        "ga": {
+            "token": "UA-60611100-1"
+        }
+    },
+    "links": {
+        "sharing": {
+            "google": false,
+            "facebook": false,
+            "twitter": false,
+            "weibo": false,
+            "all": false
+        }
+    }
+}

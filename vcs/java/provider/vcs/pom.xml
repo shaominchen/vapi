@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2014-2016 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vmware.vcs</groupId>
+        <artifactId>vcs-provider-parent</artifactId>
+        <version>2.6.0</version>
+    </parent>
+    <groupId>com.vmware.vcs</groupId>
+    <artifactId>vcs-provider</artifactId>
+    <packaging>jar</packaging>
+    <name>vcs-provider</name>
+    <description>vAPI VCS provider</description>
+
+    <properties>
+        <!--
+            This is the directory to which the generated language bindings
+            and metadata files are located. The java-generator and the
+            metadata-generated create subdirectories named java and metadata
+            respectively to put the generated files.
+        -->
+        <gen.java.dest>${project.build.directory}/generated</gen.java.dest>
+        <vcs.provider.assemble.dir>${project.build.directory}/appassembler</vcs.provider.assemble.dir>
+    </properties>
+
+    <build>
+        <!-- By declaring resources, we add these directories to classpath -->
+        <resources>
+            <resource>
+                <!-- Contains metadata jsons generated for VCS service -->
+                <directory>${gen.java.dest}/metadata</directory>
+            </resource>
+            <resource>
+                <!-- Contains configuration and properties files -->
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <!--
+            Plugins that are invoked in this module.
+            It may or may not be inherited from a pluginManagement.
+        -->
+        <plugins>
+            <!--
+                Import properties that gobuild exported.
+                Configuration of the plugin in defined in the parent module.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+            </plugin>
+            <!--
+                Copy the vAPI common's metadata into the classes directory so
+                that it is accessible through the classpath. These files are
+                needed by the VCS server. Their usage is described in the
+                vcs-spring.xml in the resources directory.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-vapi-common-metadata</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy
+                                    file="${VAPI_CORE_ROOT}/metadata/com.vmware.vapi_metamodel.json"
+                                    tofile="${gen.java.dest}/metadata/com.vmware.vapi_metamodel.json" />
+                                <copy
+                                    file="${VAPI_CORE_ROOT}/metadata/com.vmware.vapi_cli.json"
+                                    tofile="${gen.java.dest}/metadata/com.vmware.vapi_cli.json" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <!-- Generate language bindings - includes server skeleton -->
+                    <execution>
+                        <id>java-generation</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <executable>${idlJavaGenerator}</executable>
+                            <workingDirectory>${java.toolkit.root}/bin</workingDirectory>
+                            <arguments>
+                                <argument>--output</argument>
+                                <argument>${gen.java.dest}</argument>
+                                <argument>--library</argument>
+                                <argument>${idl.toolkit.root}/vmidl/vapi_stdlib.vmidl</argument>
+                                <argument>${project.basedir}/../../../vmodl/</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <!-- Generate metadata for VCS server -->
+                    <execution>
+                        <id>metadata-generation</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <skip>${skipGenerate}</skip>
+                            <executable>${idlMetadataGenerator}</executable>
+                            <workingDirectory>${metadata.toolkit.root}/bin</workingDirectory>
+                            <arguments>
+                                <argument>--output</argument>
+                                <argument>${gen.java.dest}</argument>
+                                <argument>--library</argument>
+                                <argument>${idl.toolkit.root}/vmidl/vapi_stdlib.vmidl</argument>
+                                <argument>${project.basedir}/../../../vmodl/</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Add the generated language bindings as part of the source tree -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${gen.java.dest}/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Package all the artifacts needed to run the provider, and generate
+                 scripts to run it. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                    <goal>assemble</goal>
+                    </goals>
+                </execution>
+                </executions>
+                <configuration>
+                    <platforms>
+                        <platform>unix</platform>
+                        <platform>windows</platform>
+                    </platforms>
+                    <!-- Uncomment the below line to see request/responses sent over the wire. This is
+                         insecure, it will log sensitive information in the request/response. Don't do it
+                         in production environment. Also, enable DEBUG logging in the log4j.properties.
+                    <extraJvmArguments>-Dcom.vmware.vapi.runtime.log.raw.request=true</extraJvmArguments>
+                    -->
+                    <programs>
+                        <program>
+                            <id>vcs-provider</id>
+                            <mainClass>com.vmware.vcs.impl.VcsServerMain</mainClass>
+                        </program>
+                    </programs>
+                    <assembleDirectory>${vcs.provider.assemble.dir}</assembleDirectory>
+                    <binFolder>bin</binFolder>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <repositoryName>lib</repositoryName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- vAPI libraries -->
+        <dependency>
+            <groupId>com.vmware.vapi</groupId>
+            <artifactId>vapi-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vmware.vapi</groupId>
+            <artifactId>vapi-metadata-lib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vmware.vapi</groupId>
+            <artifactId>vapi-metadata-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vmware.vapi</groupId>
+            <artifactId>vapi-rest</artifactId>
+        </dependency>
+
+        <!-- Log4J -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+        <!-- Javax servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- For testing -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

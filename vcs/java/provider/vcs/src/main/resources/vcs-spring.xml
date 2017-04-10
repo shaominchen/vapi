@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       default-autowire="byType"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util-3.1.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <!--
+        All the ${abc.lmn.xyz} properties used in this file is defined
+        in the vcs.properties file present in the current folder.
+    -->
+    <context:property-placeholder location="classpath:vcs.properties"
+        ignore-unresolvable="false" ignore-resource-not-found="false" />
+
+    <!--
+        The server side of the HTTP protocol handler. Loads HTTP server
+        configuration defined by "httpOnlyServer" bean and provides start/stop
+        capability for the server.
+    -->
+    <!-- TC server configuration -->
+    <bean id="httpOnlyServer"
+        class="com.vmware.vapi.protocol.server.rpc.http.impl.TcServer"
+        init-method="start" destroy-method="stop">
+        <property name="threadPool" ref="httpThreadPool" />
+        <property name="endpoints">
+            <list>
+                <ref bean="httpServerEndpoint"/>
+            </list>
+        </property>
+        <property name="services">
+            <list>
+                <ref bean="httpVapiService"/>
+                <ref bean="restServletService" />
+            </list>
+        </property>
+    </bean>
+
+    <!--
+        Configuration of thread pool that is used to process the incoming vAPI
+        HTTP requests.
+    -->
+    <bean id ="httpThreadPool"
+          class="org.apache.catalina.core.StandardThreadExecutor">
+        <property name="name" value="HttpThreadPool" />
+        <property name="namePrefix" value="VmGroup-tcserver-" />
+        <property name="minSpareThreads" value="${http.threadPool.minSpareThreads}" />
+        <property name="maxThreads" value="${http.threadPool.maxThreads}" />
+        <property name="maxIdleTime" value="${http.threadPool.maxIdleTime}" />
+        <property name="maxQueueSize" value="${http.threadPool.maxQueueSize}" />
+    </bean>
+
+    <!-- HTTP endpoint configuration -->
+    <bean id="httpServerEndpoint"
+          class="com.vmware.vapi.protocol.server.rpc.http.impl.HttpEndpoint">
+      <constructor-arg value="${http.endpoint.port}"/>
+      <property name="maxIdleTime" value="${http.endpoint.maxIdleTime}"/>
+    </bean>
+
+    <!-- vAPI service configuration -->
+    <bean id="httpVapiService"
+          class="com.vmware.vapi.protocol.server.rpc.http.impl.ServiceImpl">
+        <property name="path" value="${http.service.path}" />
+        <property name="servlet" ref="vApiServlet" />
+    </bean>
+
+    <bean id="vApiServlet"
+          class="com.vmware.vapi.protocol.server.rpc.http.impl.HttpStreamingServlet">
+        <constructor-arg ref="mediaTypeResolver" />
+    </bean>
+
+    <bean id="mediaTypeResolver"
+          class="com.vmware.vapi.protocol.server.rpc.http.impl.MediaTypeResolverImpl"
+          factory-method="newJsonResolver">
+        <constructor-arg ref="jsonProtocol" />
+    </bean>
+
+    <!-- REST servlet configuration -->
+    <bean id="restServletService"
+        class="com.vmware.vapi.protocol.server.rpc.http.impl.ServiceImpl">
+        <property name="path" value="/rest/*" />
+        <property name="servlet" ref="restMainServlet" />
+    </bean>
+
+    <!-- Specification of which messaging protocol to use -->
+    <bean id="jsonProtocol"
+          class="com.vmware.vapi.protocol.server.msg.json.JsonServerConnection">
+        <constructor-arg ref="apiProvider" />
+        <constructor-arg>
+            <list> </list>
+        </constructor-arg>
+    </bean>
+
+    <!--
+        "apiProvider" is a magic/expected spring bean ID that will be used
+        by SpringConfigurator to get the ApiProvider to be used.
+    -->
+   <bean id="apiProvider"
+         class="com.vmware.vapi.provider.local.LocalProvider">
+      <constructor-arg value="vcs" />
+      <constructor-arg ref="apiInterfaces">
+      </constructor-arg>
+   </bean>
+
+    <!--
+        List of interfaces corresponding to the services that need to be started at
+        this endpoint.
+    -->
+    <bean id="apiInterfaces" class="com.vmware.vapi.config.ListHelper"
+          factory-method="join">
+        <constructor-arg>
+            <list>
+                <!--
+                     Each of the following items is a list. The "apiInterfaces"
+                     ListHelper bean is used to concatenate these lists into a
+                     single list.
+                -->
+                <list>
+                    <ref bean="vmGroupService" />
+                </list>
+                <ref bean="metamodelServiceInterfaces" />
+                <ref bean="cliServiceInterfaces" />
+                <ref bean="navigationServiceInterfaces" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- VmGroup service implementation specification -->
+    <bean id="vmGroupService"
+          class="com.vmware.vcs.VmGroupApiInterface">
+        <constructor-arg ref="vmGroupImpl" />
+    </bean>
+
+    <!-- VmGroup service configuration -->
+    <bean id="vmGroupImpl"
+          class="com.vmware.vcs.impl.VmGroupImpl" >
+    </bean>
+
+    <!-- Creation of API interfaces for the metadata services -->
+    <bean id="metamodelServiceInterfaces"
+          factory-bean="metadataServiceBuilder"
+          factory-method="createMetamodelServices"/>
+    <bean id="cliServiceInterfaces"
+          factory-bean="metadataServiceBuilder"
+          factory-method="createCliServices" />
+
+    <!--
+        Bean used to create a MetadataServiceBuilder object which adds metadata sources
+        defined by the "sources" bean. These sources will be pre-loaded into the
+        metadata service interfaces that can later be produced by this builder.
+    -->
+    <bean id="metadataServiceBuilder" class="com.vmware.vapi.metadata.service.MetadataServiceBuilder"
+        factory-method="createBuilderAndBuild">
+        <constructor-arg ref="sources" />
+        <constructor-arg value="metadataservice" />
+    </bean>
+
+    <!--
+        Each bean in this list describes where to find metadata of the components exposed by this endpoint.
+        They provide the data exposed/needed by the vAPI metamodel, cli, and other metadata services.
+        The argument value "true" provided to the DataSourceSpec spec means
+        that the specified data source (file-name) needs to be in the classpath.
+    -->
+    <util:list id="sources">
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="METAMODEL" />
+            <constructor-arg value="vcs-provider" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                        value="com.vmware.vcs_metamodel.json" />
+                    <constructor-arg value="Metamodel metadata for VmGroup service" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="CLI" />
+            <constructor-arg value="vcs-provider" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                        value="com.vmware.vcs_cli.json" />
+                    <constructor-arg value="CLI metadata for VmGroup service" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="METAMODEL" />
+            <constructor-arg value="common" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                        value="com.vmware.vapi_metamodel.json" />
+                    <constructor-arg value="Metamodel metadata for vAPI infrastructure services" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="CLI" />
+            <constructor-arg value="common" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                        value="com.vmware.vapi_cli.json" />
+                    <constructor-arg value="CLI metadata for vAPI infrastructure services" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="METAMODEL" />
+            <constructor-arg value="rest-navigation" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                            value="rest.navigation.json" />
+                    <constructor-arg value="Metamodel metadata for REST Navigation services" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </util:list>
+
+    <!-- Beans for REST API generation using metadata -->
+    <bean id="apiMetadataFactory" class="com.vmware.vapi.metadata.impl.ApiMetadataFactory" />
+
+    <bean id="apiMetadata" factory-bean="apiMetadataFactory"
+        factory-method="createApiMetadata">
+        <constructor-arg>
+            <util:set>
+                <value>com.vmware.vapi.metadata.metamodel.Component
+                </value>
+            </util:set>
+        </constructor-arg>
+        <constructor-arg ref="metadataProvider" />
+    </bean>
+
+    <bean id="metadataProvider" class="com.vmware.vapi.provider.local.LocalProvider">
+        <constructor-arg value="metadataProvider" />
+        <constructor-arg ref="metamodelServiceInterfaces" />
+    </bean>
+
+    <bean id="components" factory-bean="apiMetadata"
+        factory-method="getComponentInfo">
+        <constructor-arg>
+            <null />
+        </constructor-arg>
+    </bean>
+</beans>

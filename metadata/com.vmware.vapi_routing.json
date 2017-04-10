@@ -1,0 +1,9 @@
+{
+    "routing":
+    {
+        "product":
+        {
+            "name": "com.vmware.vapi"
+        }
+    }
+}

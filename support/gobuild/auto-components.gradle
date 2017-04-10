@@ -1,0 +1,48 @@
+/* Copyright 2013 VMware, Inc.  All rights reserved. */
+
+def baseDir = System.properties['base.dir'] ?: '.'
+def buildRoot = System.properties['build.root']
+
+/*DEV BUILDS ONLY*/
+if (buildRoot) {
+    def gobuildTarget = System.env['GOBUILD_TARGET']
+    def objdir = System.env['OBJDIR'] ?: 'beta'
+    def hostType = System.env['HOSTTYPE'] ?: 'linux64'
+    def buildRootDir = new File(buildRoot) //, "..")
+    //def objdirDir = new File(buildRootDir, objdir)
+    def specinfoDir = new File(buildRootDir, "gobuild/specinfo")
+    def specinfoFile = new File(specinfoDir, "specinfo.properties")
+    def fromGobuild = (System.env['BUILD_NUMBER'] && System.env['BUILDTYPE']) ||
+                      System.properties['no.auto.components']
+    def srcRoot = System.env['SRCROOT'] ?: ".."
+
+    assert gobuildTarget
+    if (!fromGobuild || System.properties['try.auto.components']) {
+        ant.properties['BUILDROOT'] = buildRoot
+        ant.properties['GOBUILD_TARGET'] = gobuildTarget
+        ant.properties['OBJDIR'] = objdir
+        ant.properties['HOSTTYPE'] = hostType
+        ant.importBuild "${srcRoot}/support/gobuild/build.xml"
+        ant.project.executeTarget('compcache')
+
+        if (specinfoFile.exists()) {
+            def props = new Properties()
+            specinfoFile.withInputStream { props.load(it) }
+            props.each { project.ext[it.key] = it.value }
+        } else {
+            logger.warn("Could not locate ${specinfoFile} to load it")
+        }
+    }
+
+    // Configure the build directory for the project and all subprojects
+    def topBuildDir = new File(buildRoot)
+    project.setProperty('buildDir', topBuildDir)
+    subprojects.collect { subproject ->
+        def subBuildDir = new File(topBuildDir, subproject.name)
+        subproject.setProperty('buildDir', subBuildDir)
+    }
+    project.ext['buildRoot'] = buildRoot
+} else {
+    project.ext['buildRoot'] = false
+}
+

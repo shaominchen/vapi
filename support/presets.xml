@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2013 VMware, Inc. All rights reserved. VMware confidential. -->
+
+<!--
+   A set of utility and helper presets and macros.
+-->
+<project name="internal-compiler-presets"
+   xmlns:bundlor="antlib:com.springsource.bundlor.ant">
+
+   <property name="build.number" value="00000" />
+   <property name="bundle.version" value="0.0.1.${build.number}"/>
+
+   <property name="libs.bundlor-home"
+             location="${tcRoot}/noarch/bundlor-1.0.0.M6" />
+
+   <taskdef resource="com/springsource/bundlor/ant/antlib.xml"
+            uri="antlib:com.springsource.bundlor.ant">
+      <classpath>
+         <fileset dir="${libs.bundlor-home}/dist"/>
+         <fileset dir="${libs.bundlor-home}/lib"/>
+      </classpath>
+   </taskdef>
+
+   <macrodef name="bundlor-helper">
+      <attribute name="inputPath" />
+      <attribute name="outputPath" />
+      <attribute name="manifestTemplatePath" />
+      <attribute name="bundleVersion" />
+
+      <sequential>
+         <echo>Generating OSGi bundle from @{inputPath}:
+      bundle package: @{outputPath}
+      manifest template: @{manifestTemplatePath}
+      bundle version: @{bundleVersion}</echo>
+
+         <bundlor:bundlor bundlePath="@{inputPath}"
+                          outputPath="@{outputPath}"
+                          manifestTemplatePath="@{manifestTemplatePath}"
+                          bundleVersion="@{bundleVersion}" />
+      </sequential>
+   </macrodef>
+</project>

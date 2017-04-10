@@ -1,0 +1,29 @@
+<% /*
+* Render enumeration information
+*/%>\
+"enumerations":
+[
+<% node.enumerations.eachWithIndex { enumeration, sidx -> %>\
+    {
+        "name": "${enumeration.getQualifiedName('asCanonical')}",
+        "documentation": "${metadata.getDocumentation(enumeration)}",
+        "metadata": {},
+        "values":
+        [
+<% enumeration.constants.eachWithIndex { constant, cidx -> %>\
+            {
+                "name": "${constant.name.asDeclared}",
+                "documentation": "${metadata.getDocumentation(constant)}",
+                "metadata": {}
+            }
+<% if (cidx != enumeration.constants.size() - 1) { %>\
+            ,
+<% } %>\
+<% } %>\
+        ]
+    }
+<% if (sidx != node.enumerations.size() - 1) { %>\
+    ,
+<% } %>\
+<% } %>\
+]

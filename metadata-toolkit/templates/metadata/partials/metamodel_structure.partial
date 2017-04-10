@@ -1,0 +1,41 @@
+<% /*
+* Render structure information
+*/%>\
+"structures":
+[
+<% node.structures.eachWithIndex { structure, sidx -> %>\
+    {
+        "name": "${structure.getQualifiedName('asCanonical')}",
+<% if (structure.isErrorType()) { %>\
+        "type": "Error",
+<% } else { %>\
+        "type": "Structure",
+<% } %>\
+        "documentation": "${metadata.getDocumentation(structure)}",
+${metadata.render('metamodel_metadata.partial', [node:structure], 2)}
+        ,
+${metadata.render('metamodel_enumeration.partial', [node:structure], 2)}
+        ,
+${metadata.render('metamodel_constants.partial', [node:structure], 2)}
+        ,
+        "fields":
+        [
+<% structureFields = metadata.getStructureFields(structure) %>
+<% structureFields.eachWithIndex { field, fidx -> %>\
+            {
+                "name": "${field.name.asCanonical}",
+                "documentation": "${metadata.getDocumentation(field)}",
+                "type": ${metadata.getTypeString(field)},
+${metadata.render('metamodel_metadata.partial', [node:field], 4)}
+            }
+<% if (fidx != structureFields.size() - 1) { %>\
+            ,
+<% } %>\
+<% } %>\
+        ]
+    }
+<% if (sidx != node.structures.size() - 1) { %>\
+    ,
+<% } %>\
+<% } %>\
+]

@@ -1,0 +1,1 @@
+vapi-pdk$ sudo apt-get install python-virtualenv

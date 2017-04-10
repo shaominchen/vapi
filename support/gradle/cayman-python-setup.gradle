@@ -1,0 +1,33 @@
+// Copyright 2015 VMware, Inc.  All rights reserved.
+
+//fyi - this script assumes that auto-components has already been called, as needed
+
+String caymanPythonHome = System.properties['cayman.python.home'] ?:
+        System.env['CAYMAN_PYTHON_HOME'] ?:
+        System.env['GOBUILD_CAYMAN_PYTHON_ROOT'] ?:
+        project.ext.has('GOBUILD_CAYMAN_PYTHON_ROOT') ? project.GOBUILD_CAYMAN_PYTHON_ROOT : null
+String caymanPythonBin = "${caymanPythonHome}/lin64/bin/python"
+String caymanSetupToolsHome = System.properties['cayman.setuptools.home'] ?:
+        System.env['CAYMAN_SETUPTOOLS_HOME'] ?:
+        System.env['GOBUILD_CAYMAN_SETUPTOOLS_ROOT'] ?:
+        project.ext.has('GOBUILD_CAYMAN_SETUPTOOLS_ROOT') ? project.GOBUILD_CAYMAN_SETUPTOOLS_ROOT : null
+
+assert caymanPythonHome
+assert caymanSetupToolsHome
+
+println "cayman-python-home= ${caymanPythonHome}"
+println "cayman-python-bin= ${caymanPythonBin}"
+
+// setup a system property for the cayman-python's shared gradle files to utilize
+System.properties['cayman.python.home'] = caymanPythonHome
+System.properties['cayman.setuptools.home'] = caymanSetupToolsHome
+System.properties['cayman.python.bin'] = caymanPythonBin
+
+// setup a project property for use within the gradle build
+project.ext.caymanPythonHome = new File(caymanPythonHome).absoluteFile
+project.ext.caymanSetupToolsHome = new File(caymanSetupToolsHome).absoluteFile
+project.ext.caymanPythonBin = new File(caymanPythonBin).absoluteFile
+assert project.caymanPythonHome.exists()
+assert project.caymanSetupToolsHome.exists()
+assert project.caymanPythonBin.exists()
+

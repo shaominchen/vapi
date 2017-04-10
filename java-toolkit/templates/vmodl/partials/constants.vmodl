@@ -1,0 +1,11 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+<% type.constants.each { c -> %>\
+
+${vmodl.javadoc(c)}
+${modifiers ? 'static public final ' : ''}\
+${vmodl.getConstantType(c)} ${c.name.asDeclared} = ${vmodl.getConstantValue(c)};
+<% } %>\

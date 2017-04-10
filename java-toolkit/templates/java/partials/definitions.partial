@@ -1,0 +1,129 @@
+<%
+/* **********************************************************
+ * Copyright 2013-2016 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+%><%
+/*
+ * Renders a Java definitions binding given an IDL type.
+ *
+ * @variable java is a reference to the JavaLanguageHelper instance
+ * @variable structures is a reference to the IdlStructure instances to render
+ * @variable operations is a reference to the IdlOperation instances to render
+ * @variable service is a reference to the IdlService instance to render
+ */ %>\
+<% def emitFieldFields = structures.size() > 0 || operations.size() > 0 %>\
+<% def emitFieldValidators = operations.size() > 0 %>\
+<% def emitFieldCaseFields = false %>\
+<% structures.each { s -> %>\
+<%   if (s.isErrorType()) { %>\
+    public static final com.vmware.vapi.bindings.type.ErrorType ${java.getJavaFieldName(s.name)};
+<%   } else { %>\
+<%     emitFieldValidators = true %>\
+<%     emitFieldCaseFields |= s.getUnionTags().size() > 0 %>\
+    public static final com.vmware.vapi.bindings.type.StructType ${java.getJavaFieldName(s.name)};
+<%   }%>\
+<% } %>\
+
+<% operations.each { o -> %>\
+<%   emitFieldCaseFields |= o.getUnionTags().size() > 0 %>\
+    public static final com.vmware.vapi.bindings.type.StructType ${java.getInputDefSimpleName(o)};
+    public static final com.vmware.vapi.bindings.type.Type ${java.getOutputDefSimpleName(o)};
+<%   if (o.markedRequestMapping()) {%>\
+    public static final com.vmware.vapi.internal.bindings.OperationDef ${java.getOperationDefSimpleName(o)};
+<%   } %>\
+<% } %>\
+
+    static {
+<% if (emitFieldFields) { %>\
+        java.util.Map<java.lang.String, com.vmware.vapi.bindings.type.Type> fields = null;
+        java.util.Map<java.lang.String, com.vmware.vapi.bindings.type.StructType.FieldNameDetails> fieldNameDetails = null;
+        com.vmware.vapi.bindings.type.StructType.FieldNameDetails details = null;
+<% } %>\
+<% if (emitFieldValidators) { %>\
+        java.util.List<com.vmware.vapi.internal.data.ConstraintValidator> validators = null;
+<% } %>\
+<% if (emitFieldCaseFields) { %>\
+        java.util.Map<String, java.util.List<com.vmware.vapi.internal.data.UnionValidator.FieldData>> caseFields = null;
+<% } %>\
+<% structures.each { s -> %>
+        fields = new java.util.LinkedHashMap<java.lang.String, com.vmware.vapi.bindings.type.Type>();
+        fieldNameDetails = new java.util.HashMap<java.lang.String, com.vmware.vapi.bindings.type.StructType.FieldNameDetails>();
+<% if (s.isErrorType()) { %>\
+<%   java.getSelfAndSuperAttributes(s).each { a -> %>\
+<%   def attrSerName = java.getSerializationName(a) %>\
+        fields.put("${attrSerName}", ${java.getTypeDefinition(a)});
+        details = new com.vmware.vapi.bindings.type.StructType.FieldNameDetails("${attrSerName}",
+                                                                                "${java.getJavaFieldName(a.name)}",
+                                                                                "${java.getPropertyAccessorName(a)}",
+                                                                                "${java.getPropertyMutatorName(a)}");
+        fieldNameDetails.put(details.getCanonicalName(), details);
+<%   } %>\
+        ${java.getJavaFieldName(s.name)} = new com.vmware.vapi.bindings.type.ErrorType("${s.getQualifiedName('asCanonical')}", fields, ${java.getBindingClassFullName(s)}.class, fieldNameDetails);
+<% } else { %>\
+<%   s.impliedAttributes.each { a -> %>\
+<%   def attrSerName = java.getSerializationName(a) %>\
+        fields.put("${attrSerName}", ${java.getTypeDefinition(a)});
+        details = new com.vmware.vapi.bindings.type.StructType.FieldNameDetails("${attrSerName}",
+                                                                                "${java.getJavaFieldName(a.name)}",
+                                                                                "${java.getPropertyAccessorName(a)}",
+                                                                                "${java.getPropertyMutatorName(a)}");
+        fieldNameDetails.put(details.getCanonicalName(), details);
+<%   } %>\
+        validators = null;
+<%   if (java.hasIsOneOfFields(s.impliedAttributes) || s.getUnionTags().size() > 0) {
+        def isOneOfValidators = java.getIsOneOfFieldValidators(s.impliedAttributes); %>\
+        validators = new java.util.ArrayList<com.vmware.vapi.internal.data.ConstraintValidator>(${s.getUnionTags().size() + isOneOfValidators.size()});
+<%      isOneOfValidators.each { validator -> %>\
+        ${validator}
+<%      }  %>\
+<%     s.getUnionTags().each { union_tag -> %>\
+        caseFields = new java.util.HashMap<String, java.util.List<com.vmware.vapi.internal.data.UnionValidator.FieldData>>();
+<%       def cases_map = s.getUnionCasesMap(union_tag)
+         cases_map.each { constant, attrs ->
+           def attrs_csv = (attrs) ? attrs.collect { java.getFieldData(it, s) }.join(', ') : ''
+%>\
+        caseFields.put("${constant.name}", java.util.Arrays.<com.vmware.vapi.internal.data.UnionValidator.FieldData>asList(${attrs_csv}));
+<%       } %>\
+        validators.add(new com.vmware.vapi.internal.data.UnionValidator("${union_tag.name.asLowerCaseWithUnderscores}",
+                                                                        caseFields));
+<%     } /* getUnionTags.each */ %>\
+<%   } %>\
+        ${java.getJavaFieldName(s.name)} = new com.vmware.vapi.bindings.type.StructType("${s.getQualifiedName('asCanonical')}", fields, ${java.getBindingClassFullName(s)}.class, validators, ${s.isModel()}, ${java.getModelPrimaryKeys(s)}, fieldNameDetails);
+<% } /* } else { */%>\
+<% } /* structures.each */%>\
+<% operations.each { o -> %>
+        fields = new java.util.HashMap<java.lang.String, com.vmware.vapi.bindings.type.Type>();
+<%  o.parameters.each { p -> %>\
+        fields.put("${p.name.asCanonical}", ${java.getTypeDefinition(p)});
+<% } %>\
+        validators = null;
+<%   if (java.hasIsOneOfFields(o.parameters) || o.getUnionTags().size() > 0) { %>\
+<%      def isOneOfValidators = java.getIsOneOfFieldValidators(o.parameters); %>\
+        validators = new java.util.ArrayList<com.vmware.vapi.internal.data.ConstraintValidator>(${o.getUnionTags().size() + isOneOfValidators.size()});
+<%      isOneOfValidators.each { validator -> %>\
+        ${validator}
+<%      }  %>\
+<%      o.getUnionTags().each { union_tag -> %>\
+        caseFields = new java.util.HashMap<String, java.util.List<com.vmware.vapi.internal.data.UnionValidator.FieldData>>();
+<%        def cases_map = o.getUnionCasesMap(union_tag) %>\
+<%        cases_map.each { constant, attrs -> %>\
+<%          def attrs_csv = (attrs) ? attrs.collect { java.getFieldData(it) }.join(', ') : '' %>\
+        caseFields.put("${constant.name}", java.util.Arrays.<com.vmware.vapi.internal.data.UnionValidator.FieldData>asList(${attrs_csv}));
+<%        } %>\
+        validators.add(new com.vmware.vapi.internal.data.UnionValidator("${union_tag.name.asLowerCaseWithUnderscores}",
+                                                                        caseFields));
+<%     } %>\
+<%   } %>\
+        ${java.getInputDefSimpleName(o)} = new com.vmware.vapi.bindings.type.StructType("operation-input", fields, com.vmware.vapi.data.StructValue.class, validators, false, null, null);
+        ${java.getOutputDefSimpleName(o)} = ${java.getTypeDefinition(o.result)};
+<%   if (o.markedRequestMapping()) {%>\
+        ${java.getOperationDefSimpleName(o)} = new com.vmware.vapi.internal.bindings.OperationDef(${java.getOperationDefCtorParams(o)});
+<%   } %>\
+<%   o.parameters.each { p -> %>\
+<%     def regParamStatement = java.getOperationDefParamRegistration(p) %>\
+<%     if (regParamStatement) { %>\
+        ${regParamStatement}
+<%     }%>\
+<%   } %>\
+<% } /* operations.each */%>\
+    }

@@ -1,0 +1,1 @@
+vapi-pdk> copy toyvm\java\settings.xml %HOMEPATH%\.m2\settings.xml

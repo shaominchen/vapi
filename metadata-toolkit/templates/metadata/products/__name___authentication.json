@@ -1,0 +1,61 @@
+{
+<% import com.vmware.vapi.idl.model.metadata.AuthenticationScheme %>\
+    "authentication":
+    {
+        "product":
+        {
+<% if (product.metadata.authn != null) { %>\
+            "name": "${product.name.asCanonical}",
+            "schemes":
+            {
+<% schemesSize = product.metadata.authn.schemes.size() %>\
+<% product.metadata.authn.schemes.eachWithIndex { k, v, idx -> %>\
+                "${k}":
+                {
+                    "type": "${v.type}",
+<% if (v.type == AuthenticationScheme.Type.SessionAware) { %>\
+                    "sessionManager": "${v.sessionManager.getQualifiedName('asCanonical')}",
+<% } %>\
+                    "authenticationScheme": "${v.authenticationScheme.asLowerCaseWithUnderscores}"
+                }
+<% if (schemesSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            },
+            "packages":
+            {
+<% pkgSize = product.metadata.authn.packages.size() %>\
+<% product.metadata.authn.packages.eachWithIndex { k, v, idx -> %>\
+                "${k.name.asCanonical}": ${metadata.getAuthnSchemes(v)}
+<% if (pkgSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            },
+            "services":
+            {
+<% svcSize = product.metadata.authn.services.size() %>\
+<% product.metadata.authn.services.eachWithIndex { k, v, idx -> %>\
+                "${k.getQualifiedName('asCanonical')}": ${metadata.getAuthnSchemes(v)}
+<% if (svcSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            },
+            "operations":
+            {
+<% opSize = product.metadata.authn.operations.size() %>\
+<% product.metadata.authn.operations.eachWithIndex { k, v, idx -> %>\
+                "${k.declaringNode.getQualifiedName('asCanonical')}.${k.name.asCanonical}": ${metadata.getAuthnSchemes(v)}
+<% if (opSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            }
+<% } else {%>\
+            "name": "${product.name.asCanonical}"
+<% } %>\
+        }
+    }
+}

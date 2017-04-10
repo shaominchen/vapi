@@ -1,0 +1,93 @@
+<% def thisHtml = clidoc.serviceHtml(service) %>\
+<% if (service.operations.size()) { %>\
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>dcli ${service.name.asCapitalizedWords} commands</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<p><img src="http://www.vmware.com/files/templates/images/bg-wrapper.gif" alt="VMware"></p>
+<h1>${service.name.asCapitalizedWords} Namespace</h1>
+<p>${clidoc.getDocComment(service.doc)}</p>
+<p> List of commands: </p>
+<ul>
+<% service.operations.each { op -> %>\
+<li><a href="#${op.name}">${op.name.asCapitalizedWords} command</a></li>
+<% } %>\
+</ul>
+<br>
+<hr>
+<% service.operations.each { o -> %>\
+<a name="${o.name}"><h2>${o.name.asCapitalizedWords} Command</h2></a>
+<code>dcli ${clidoc.getFullCommandName(service, o.name)} </code>
+<p class="table-title">Description</p>
+<p>${clidoc.getDocComment(o.doc)} </p>
+<% if (o.parameters) { %>\
+<p class="table-title">Options</p>
+<table border="1" width:"990" cellpadding="6">
+    <th width="30%">Option Name</th>
+    <th width="5%">Type</th>
+    <th width="5%">Required</th>
+    <th width="60%">Description</th>
+</tr>
+<% def param_list = clidoc.getInputParams(o) %>\
+<% def param_index = param_list.size() %>\
+<% def num_params = param_list.size() %>\
+<% def param_help = "" %>\
+<% param_list.each { p -> %>\
+<% def type = clidoc.getCliFormatType(p.parameter.type) %>\
+<% def type_str = "" %>\
+<% def enum_val = "" %>\
+<% def description = clidoc.getDocComment(p.parameter.doc) %>\
+<% if (type.isReference() && type.isEnumeration()) { %>\
+<% type_str = "string" %>\
+<% description += " Valid values are: {" %>\
+<% def constants_count = type.declaration.constants.size() %>\
+<% type.declaration.constants.each { c -> %>\
+<% description += c.name.asDeclared %>\
+<% if (--constants_count > 0) { %>\
+<% description += ", " %>\
+<% } else {%>\
+<% enum_val = c.name.asDeclared %>\
+<% } %>\
+<% } %>\
+<% description += "}" %>\
+<% } else { %>\
+<% type_str = clidoc.getCLITypeName(type) %>\
+<% } %>\
+<% def required = clidoc.isRequired(p.parameter.impliedType) %>\
+<% if ((num_params - param_index) % 2 == 0) { %>\
+<tr class="r1">
+<% } else { %>\
+<tr class="r0">
+<% } %>\
+    <td><code>${p.name.replace("-", "&#8209;")}</code></td>
+    <td>${type_str}</td>
+    <td>${required}</td>
+    <td>${description}</td>
+</tr>
+<% if (required == "Yes") { %>\
+<% param_help += clidoc.getParameterHelp(p.name, type, enum_val) %>\
+<% } %>\
+<% if (--param_index > 0) { %>\
+
+<% } else { %>\
+</table>
+<p class="table-title">Example</p>
+<code>dcli ${clidoc.getFullCommandName(service, o.name)} ${param_help}</code>
+<br>
+<% } %>\
+<% } %>\
+<% } else { %>\
+<p class="table-title">Example</p>
+<code>dcli ${clidoc.getFullCommandName(service, o.name)}</code>
+<br>
+<% } %>\
+<br>
+<hr>
+<% } %>\
+</body>
+</html>
+<% } %>\

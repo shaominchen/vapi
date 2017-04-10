@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2014-2016 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>sample.first</groupId>
+        <artifactId>toyvm-client-parent</artifactId>
+        <version>2.6.0</version>
+    </parent>
+    <groupId>sample.first</groupId>
+    <artifactId>toyvm-client-local-deps</artifactId>
+    <packaging>jar</packaging>
+    <name>toyvm-client-local-deps</name>
+    <description>vAPI ToyVM client's dependencies</description>
+
+    <build>
+        <!--
+            Plugins that are invoked in this module.
+            It may or may not be inherited from a pluginManagement.
+        -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!--
+                        Set the executable flag for the code generator as
+                        gobuild doesn't preserve it. See bug 895518 for more
+                        details
+                    -->
+                    <execution>
+                        <id>chmod-on-generators</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <target>
+                                <chmod file="${VAPI_CORE_ROOT}/java-toolkit/bin/${idlJavaGenerator}" perm="a+x" />
+                                <chmod file="${VAPI_CORE_ROOT}/metadata-toolkit/bin/${idlMetadataGenerator}" perm="a+x" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                This plugin installs vAPI java libraries published in vAPI PDK
+                directory into the local maven repository. The plugin also
+                installs the corresponding POM files so that dependencies of
+                vAPI java runtime are downloaded and used automatically.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-vapi</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-${vapi.version}.pom</file>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi</artifactId>
+                            <packaging>pom</packaging>
+                            <version>${vapi.version}</version>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-runtime</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-runtime.jar</file>
+                            <sources>${VAPI_CORE_ROOT}/lib/java/vapi-runtime-sources.jar</sources>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-runtime</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-runtime-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-common-client</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-common-client.jar</file>
+                            <sources>${VAPI_CORE_ROOT}/lib/java/vapi-common-client-sources.jar</sources>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-common-client</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-common-client-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-authn</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-authn.jar</file>
+                            <sources>${VAPI_CORE_ROOT}/lib/java/vapi-authn-sources.jar</sources>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-authn</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-authn-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-rest</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-rest-${vapi.version}.jar</file>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-rest</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-rest-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-metadata-service</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-metadata-service.jar</file>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-metadata-service</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-metadata-service-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-vapi-metadata-lib</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${VAPI_CORE_ROOT}/lib/java/vapi-metadata-lib.jar</file>
+                            <groupId>com.vmware.vapi</groupId>
+                            <artifactId>vapi-metadata-lib</artifactId>
+                            <version>${vapi.version}</version>
+                            <packaging>jar</packaging>
+                            <pomFile>${VAPI_CORE_ROOT}/lib/java/vapi-metadata-lib-${vapi.version}.pom</pomFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

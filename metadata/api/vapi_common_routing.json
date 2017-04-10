@@ -1,0 +1,9 @@
+{
+    "routing":
+    {
+        "product":
+        {
+            "name": "vapi_common"
+        }
+    }
+}

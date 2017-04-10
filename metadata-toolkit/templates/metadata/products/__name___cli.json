@@ -1,0 +1,117 @@
+{
+    "cli":
+    [
+<% def num_nodes = metadata.getCliNodeCount(product) %>\
+<% product.packages.each { pkg -> %>\
+<% if (1) { %>\
+        {
+            "path": "${metadata.getNamespace(pkg)}",
+            "name": "${metadata.getInterfaceName(pkg)}",
+            "type": "namespace",
+            "description": "${metadata.getComment(pkg.doc)}"
+        },
+<% } %>\
+<% } %>\
+<% product.services.each { service -> %>\
+        {
+            "path": "${metadata.getNamespace(service)}",
+            "name": "${metadata.getInterfaceName(service)}",
+            "type": "namespace",
+            "description": "${metadata.getComment(service.doc)}"
+<% if (--num_nodes > 0) { %>\
+        },
+<% } else { %>\
+        }
+<% } %>\
+<% service.operations.each { o -> %>\
+        {
+            "path": "${metadata.getPackageName(service)}",
+            "name": "${metadata.getCommandName(o.name)}",
+            "type": "command",
+            "description": "${metadata.getComment(o.doc)}",
+            "node_metadata":
+            {
+<% if (o.parameters) { %>\
+                "options":
+                [
+<% def param_list = metadata.getInputParams(o) %>\
+<% def num_params = param_list.size() %>\
+<% param_list.each { p -> %>\
+                    {
+                        "long_option": "${p.name}",
+                        "short_option": "",
+                        "field_name": "${p.parameter.name.asCanonical}",
+                        "description": "${metadata.getComment(p.parameter.doc)}",
+<% def type = metadata.getCliFormatType(p.parameter.type) %>\
+<% if (p.isComplex) { %>\
+<% if (p.parameter.hasFieldsOf()) { %>\
+                        "type": "complex-hasfieldsof",
+<% } else { %>\
+                        "type": "complex",
+<% } %>\
+<% } else if (type.isReference() && type.isEnumeration()) { %>\
+                        "type": "${type.getQualifiedName('asCanonical')}",
+<% } else { %>\
+                        "type": "${type.asIdentifier.asLowerCaseSansSpaces}",
+<% } %>\
+                        "generic": "${p.generic}"
+<% if (--num_params > 0) { %>\
+                    },
+<% } else { %>\
+                    }
+<% } %>\
+<% } %>\
+                ],
+<% } %>\
+<% def result_type = metadata.getCliFormatType(o.result.type) %>\
+<% if (metadata.isList(o.result.type) && result_type.isReference() && result_type.isStructure()) { %>\
+                "formatter": "table",
+<% } else if (!o.result.type.isVoid()) { %>\
+                "formatter": "simple",
+<% } %>\
+<% if (result_type.isReference() && result_type.isStructure()) { %>\
+                "output_field_list":
+                [
+<% def struct_list = metadata.getNestedStructs(o.result) %>\
+<% def num_structs = struct_list.size() %>\
+<% struct_list.each { s -> %>\
+                    {
+<% if (s.namespace) { %>\
+                        "structure_id": "${s.getQualifiedName('asCanonical')}",
+<% } else { %>\
+                        "structure_id": "${s.name.asCanonical}",
+<% } %>\
+                        "output_fields":
+                        [
+<% def num_attrs = s.impliedAttributes.size() %>\
+<% s.impliedAttributes.each { a -> %>\
+                            {
+                                "field_name": "${a.name.asCanonical}",
+                                "display_name": "${a.name.asCapitalizedWords}"
+<% if (--num_attrs > 0) { %>\
+                            },
+<% } else { %>\
+                            }
+<% } %>\
+<% } %>\
+                        ]
+<% if (--num_structs > 0) { %>\
+                    },
+<% } else { %>\
+                    }
+<% } %>\
+<% } %>\
+                ],
+<% } %>\
+                "service_id": "${service.getQualifiedName('asCanonical')}",
+                "operation_id": "${o.name.asCanonical}"
+            }
+<% if (--num_nodes > 0) { %>\
+        },
+<% } else { %>\
+        }
+<% } %>\
+<% } %>\
+<% } %>\
+    ]
+}

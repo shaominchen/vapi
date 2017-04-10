@@ -1,0 +1,43 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.headerComment(service)}
+package ${service.namespace};
+
+<% vmodl.getImports(service).each { %>\
+import ${it};
+<% } %>\
+
+${vmodl.javadoc(service)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(service)])}\
+interface ${service.name.asDeclared} {
+${vmodl.render('constants.vmodl', [type:service, modifiers:false], 1)}\
+<% service.operations.each { o -> %>\
+
+    ${vmodl.javadoc(o, 1)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(o)], 1)}\
+${vmodl.render('lines.partial', [lines:vmodl.annotations(o.result)], 1)}\
+    ${vmodl.mapType(o.result.type)} ${o.name.asDeclared}(\
+<%  o.parameters.eachWithIndex { p, i -> %>\
+
+${vmodl.render('lines.partial', [lines:vmodl.annotations(p)], 2)}\
+        ${vmodl.mapType(p.type)} ${p.name.asDeclared}${i < o.parameters.size()-1 ? ',' : ''}\
+<%  } %>\
+)\
+<%  if (o.errors) { %>\
+
+    throws ${o.errors.collect { it.name.asDeclared }.join(', ')}\
+<%  } %>\
+;
+<% } %>\
+<% service.enumerations.each { e -> %>\
+
+${vmodl.render('enumeration.vmodl', [enumeration:e], 1)}
+<% } %>\
+<% service.structures.each { s -> %>
+
+${vmodl.render('structure.vmodl', [structure:s], 1)}
+<% } %>\
+}

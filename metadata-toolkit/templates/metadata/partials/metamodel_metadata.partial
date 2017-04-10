@@ -1,0 +1,14 @@
+<% /*
+* Renders metadata for a AbstractNamedNode
+*/ %>\
+"metadata":
+{
+<% mfields = metadata.getMetadataFields(node) %>\
+<% mtsize = mfields.size() %>\
+<% mfields.eachWithIndex { key, mtidx -> %>\
+    ${metadata.getMetadataField(node, key)}
+<% if (mtidx != mtsize - 1) { %>\
+    ,
+<% } %>\
+<% } %>\
+}

@@ -1,0 +1,8 @@
+/**
+ * The {@name com.vmware.vcs} {@term package} provides {@term services} to manage
+ * storage for stateful containers running on vSphere.
+ */
+@Component
+package com.vmware.vcs;
+
+import vmodl.lang.Component;

@@ -1,0 +1,63 @@
+{
+    "routing":
+    {
+        "product":
+        {
+<% if (product.metadata.routing != null) { %>\
+            "name": "${product.name.asCanonical}",
+            "packages":
+            {
+<% packagesSize = product.metadata.routing.packages.size() %>\
+<% product.metadata.routing.packages.eachWithIndex { it, idx -> %>\
+                "${it.key.name.asCanonical}": "${it.value.strategy}"
+<% if (packagesSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            },
+            "services":
+            {
+<% servicesSize = product.metadata.routing.services.size() %>\
+<% product.metadata.routing.services.eachWithIndex { it, idx -> %>\
+                "${it.key.getQualifiedName('asCanonical')}": "${it.value.strategy}"
+<% if (servicesSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            },
+            "types":
+            {
+<% typesSize = product.metadata.routing.types.size() %>\
+<% product.metadata.routing.types.eachWithIndex { it, idx -> %>\
+                 "${it.key}": "${it.value}"
+<% if (typesSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            }
+<% svcSize = product.metadata.routing.serviceMethods.size() %>\
+<% if (svcSize > 0) { %>\
+            ,
+<% } %>\
+<% product.metadata.routing.serviceMethods.eachWithIndex { it, idx -> %>\
+            "${it.key.getQualifiedName('asCanonical')}":
+            {
+<% svcMethods = it.value %>\
+<% svcMethodsSize = svcMethods.size() %>\
+<% svcMethods.eachWithIndex { itMethod, ruleIdx -> %>\
+                "${itMethod.key.name.asCanonical}" : "${itMethod.value.strategy}"
+<% if (svcMethodsSize - 1 != ruleIdx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            }
+<% if (svcSize - 1 != idx) { %>\
+            ,
+<% } %>\
+<% } %>\
+<% } else {%>\
+            "name": "${product.name.asCanonical}"
+<% } %>\
+        }
+    }
+}

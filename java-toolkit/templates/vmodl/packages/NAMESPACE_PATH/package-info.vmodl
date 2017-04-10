@@ -1,0 +1,3 @@
+${vmodl.javadoc(idlPackage)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(idlPackage)])}\
+package ${idlPackage.name};

@@ -1,0 +1,19 @@
+# Create a new virtual environment for vAPI project
+vapi-pdk$ virtualenv vapienv
+
+# Activate project
+vapi-pdk$ . vapienv/bin/activate
+
+# Install OS library requirements of dependencies of vapi_runtime package
+(vapienv)vapi-pdk$ sudo apt-get install -y build-essential libffi-dev python python-dev python-distribute python-pip libssl-dev
+
+# Install vAPI python packages
+(vapienv)vapi-pdk$ pip install lib/python/vapi_runtime-2.6.0.zip
+(vapienv)vapi-pdk$ pip install lib/python/vapi_common-2.6.0.zip
+(vapienv)vapi-pdk$ pip install lib/python/vapi_common_client-2.6.0.zip
+
+# Install twisted package for default twisted based server (or) twisted wsgi server
+(vapienv)vapi-pdk $ pip install twisted
+
+# Verify if all the packages are installed
+(vapienv)vapi-pdk $ pip list

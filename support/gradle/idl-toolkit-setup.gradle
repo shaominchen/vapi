@@ -1,0 +1,51 @@
+// Copyright 2013-2015 VMware, Inc.  All rights reserved.
+
+String idlToolkitHome = System.properties['idl.toolkit.home'] ?:
+        System.env['IDL_TOOLKIT_HOME'] ?:
+        System.env['GOBUILD_VAPI_CORE_IDL_ROOT'] ?:
+        project.ext.has('GOBUILD_VAPI_CORE_IDL_ROOT') ? project.GOBUILD_VAPI_CORE_IDL_ROOT : null
+
+assert idlToolkitHome
+println "idl-toolkit-home = ${idlToolkitHome}"
+
+// setup a system property for the idl-toolkit's shared gradle files to utilize
+System.properties['idl.toolkit.home'] = idlToolkitHome
+
+// setup a project property for use within the gradle build
+project.ext.idlToolkitHome = new File(idlToolkitHome).absoluteFile
+project.ext.idlToolkitBin = new File(idlToolkitHome, 'bin')
+project.ext.vmodlParser = new File(idlToolkitBin, 'vmodl-parser')
+project.ext.vmodlArchive = new File(idlToolkitBin, 'vmar')
+project.ext.vmodlGenerator = new File(idlToolkitBin, 'vmodl-generator')
+project.ext.idlDocGenerator = new File(idlToolkitBin, 'doc-generator')
+project.ext.idlTransformer = new File(idlToolkitBin, 'idl-transformer')
+
+project.ext.idlToolkitModels = new File(idlToolkitHome, 'models')
+project.ext.vapiStdLibrary = new File(idlToolkitModels, 'com.vmware.vapi.std.vmidl')
+project.ext.vapiStdLib = project.vapiStdLibrary // synonym for compatibility
+
+project.ext.idlToolkitTemplates = new File(idlToolkitHome, 'templates')
+assert project.idlToolkitHome.exists()
+
+//TODO: add the hook to +x the commands here, in a centralized location
+/*MAYBE*
+class IdlToolkitExec extends Exec {}
+
+gradle.addListener new IdlToolkitListener()
+
+class IdlToolkitListener implements TaskExecutionListener {
+
+    @Override
+    void beforeExecute(Task task) {
+        if (task instanceof IdlToolkitExec) {
+            ant.chmod(file:task.executable, perm:"+x")
+        }
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState taskState) {
+        // noop
+    }
+}
+*/
+

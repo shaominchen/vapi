@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Configuration for vAPI REST presentation layer. In a default case, all the
+    configurations specified in this file can be used as-is.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    default-autowire="byType"
+    xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config />
+
+    <bean id="restMainServlet" class="com.vmware.vapi.rest.RestMainServlet" />
+
+    <util:list id="classesToBeBound" value-type="java.lang.Class">
+        <value>com.vmware.vapi.rest.data.Error</value>
+    </util:list>
+
+    <bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound" ref="classesToBeBound" />
+    </bean>
+
+    <bean id="jaxbMarshallerPrettyPrint" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound" ref="classesToBeBound" />
+        <property name="marshallerProperties">
+            <map>
+                <entry>
+                    <key>
+                        <util:constant
+                            static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+                    </key>
+                    <value type="java.lang.Boolean">true</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean factory-bean="jaxbMarshaller" factory-method="getJaxbContext" />
+
+    <bean id="restUrlUtils" class="com.vmware.vapi.rest.RestUrlUtils">
+        <property name="pathMatcher" ref="pathMatcher" />
+    </bean>
+
+    <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher" />
+    <util:list id="messageConverters">
+        <bean factory-bean="restBeanFactory" factory-method="createJsonConverter" />
+        <bean
+            class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+            <property name="marshaller" ref="jaxbMarshaller" />
+            <property name="unmarshaller" ref="jaxbMarshaller" />
+        </bean>
+    </util:list>
+
+    <bean class="com.vmware.vapi.rest.ResponseWriter">
+        <property name="messageConverters" ref="messageConverters" />
+        <property name="prettyPrintMessageConverters" ref="prettyPrintConverters" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.AcceptValidator">
+        <property name="messageConverters" ref="messageConverters" />
+    </bean>
+
+    <util:list id="prettyPrintConverters">
+        <bean factory-bean="restBeanFactory" factory-method="createJsonConverterPrettyPrint" />
+        <bean
+            class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+            <property name="marshaller" ref="jaxbMarshallerPrettyPrint" />
+            <property name="unmarshaller" ref="jaxbMarshallerPrettyPrint" />
+        </bean>
+    </util:list>
+
+    <bean id="restBeanFactory" class="com.vmware.vapi.rest.configuration.BeanFactory" />
+
+    <bean class="com.vmware.vapi.rest.util.MediaTypeHelper" />
+
+    <bean class="com.fasterxml.jackson.core.JsonFactory" />
+
+    <bean id="NamespaceConverter"
+        class="com.vmware.vapi.rest.metadata.generation.NamespaceConverterImpl">
+        <property name="namespaceLookup">
+            <util:map>
+                <entry key="com.vmware.vapi.rest" value="http://www.vmware.com/vapi/rest" />
+                <entry key="com.vmware.vapi.base" value="http://www.vmware.com/vapi/base" />
+            </util:map>
+        </property>
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.converter.impl.RestConverterImpl" />
+
+    <bean class="com.vmware.vapi.rest.converter.impl.VApiErrorToHttpCodeMapImpl" />
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.ErrorTypeConverter">
+        <property name="nonRestErrorMaps">
+            <map />
+        </property>
+        <property name="resourceBundle" ref="resourceBundle" />
+    </bean>
+
+    <bean
+        class="com.vmware.vapi.rest.util.MultipartMessageSerializationHelper" />
+
+    <bean class="com.vmware.vapi.rest.configuration.LookupDataFactory"
+        id="lookupDataFactory" />
+
+
+    <bean class="com.vmware.vapi.rest.configuration.RestMethodMetadataFactory"
+        id="methodMetadataFactory">
+        <property name="methodInfos" ref="methodInfoMap" />
+    </bean>
+
+    <bean id="methodInfoMap" factory-bean="lookupDataFactory"
+        factory-method="createMethodInfoMap">
+        <constructor-arg ref="products" />
+    </bean>
+
+    <bean id="restMethodMetadatas" factory-bean="methodMetadataFactory"
+        factory-method="createRestMethodMetadata" />
+
+    <util:list id="mappingRules">
+        <bean class="com.vmware.vapi.rest.dispatch.impl.NewGetMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.PutMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.PatchMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.NewDeleteMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.CreateMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.ListMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.NewPostMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+        </bean>
+        <bean class="com.vmware.vapi.rest.dispatch.impl.NavigationMappingRule">
+            <property name="noIdPrefixBeforePathParam" value="true" />
+            <property name="filter">
+                <util:set>
+                    <value>com.vmware.vapi.metadata.metamodel.service.operation.get</value>
+                    <value>com.vmware.vapi.rest.navigation.resource.get</value>
+                </util:set>
+            </property>
+        </bean>
+    </util:list>
+
+    <bean id="nameProvider" class="com.vmware.vapi.rest.convert.impl.CanonicalNameProvider" />
+
+    <bean id="mapper"
+        class="com.vmware.vapi.rest.dispatch.impl.RestRequestTemplateMapperImpl">
+        <constructor-arg ref="mappingRules" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.UriLocatorImpl" />
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.LinkLocatorImpl" />
+
+    <bean class="com.vmware.vapi.rest.link.impl.RestLinkLocatorImpl" />
+
+    <bean class="com.vmware.vapi.rest.configuration.LinkLocatorRegistrator"
+        init-method="registerLinkData">
+        <property name="methodData" ref="restMethodMetadatas" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.RequestDispatcher">
+        <property name="enablePostAsGet" value="true" />
+    </bean>
+
+    <bean id="restLocatorFactory"
+        class="com.vmware.vapi.rest.configuration.RestMetadataRegistrar"
+        init-method="registerRestMetadataHandlers">
+        <property name="methodData" ref="restMethodMetadatas" />
+        <property name="apiProvider" ref="apiProvider" />
+        <property name="requestHandler" ref="vapiRequestHandler" />
+        <property name="navigationRequestHandler" ref="navVapiRequestHandler" />
+        <property name="optionsRequestHandler" ref="optionsVapiRequestHandler" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.RestRequestLocatorImpl" />
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.ErrorHandler" />
+
+    <bean id="serializationStrategyFactory" class="com.vmware.vapi.rest.convert.impl.WrappedPrimitveTypeResultSerializationStrategyFactory" />
+
+    <bean id="resultNamingStrategy" factory-bean="serializationStrategyFactory" factory-method="getNamingStrategy" />
+
+    <bean id="componentListLoader" class="com.vmware.vapi.rest.metadata.ComponentListLoader"/>
+    <bean id="componentInfos" factory-bean="componentListLoader" factory-method="load">
+        <constructor-arg ref="metadataProvider"/>
+    </bean>
+
+    <bean id="dataValueTypeResolverFactory" class="com.vmware.vapi.rest.convert.impl.MetadataSvcTypeResolverFactory">
+        <property name="nameProvider" ref="nameProvider" />
+        <property name="resultNamingStrategy" ref="resultNamingStrategy" />
+    </bean>
+
+    <bean id="dataValueTypeResolver" factory-bean="dataValueTypeResolverFactory" factory-method="build">
+        <constructor-arg ref="componentInfos" />
+    </bean>
+
+    <bean id="serializationStrategy" factory-bean="serializationStrategyFactory" factory-method="getSerializationStrategy" >
+        <constructor-arg ref="dataValueTypeResolver" />
+    </bean>
+
+    <util:list id="converters">
+        <bean
+            class="com.vmware.vapi.rest.convert.impl.HttpDataValueProgressConverter">
+            <property name="supportedTypes">
+                <util:list>
+                    <value>application/json</value>
+                </util:list>
+            </property>
+            <property name="serializer" ref="jsonDataValueSerializer" />
+        </bean>
+        <bean
+            class="com.vmware.vapi.rest.convert.impl.HttpDataValueProgressConverter">
+            <property name="supportedTypes">
+                <util:list>
+                    <value>application/xml</value>
+                </util:list>
+            </property>
+            <property name="serializer" ref="xmlDataValueSerializer" />
+        </bean>
+        <bean
+            class="com.vmware.vapi.rest.convert.impl.HttpDataValueConverterImpl">
+            <property name="supportedTypes">
+                <util:list>
+                    <value>application/json</value>
+                </util:list>
+            </property>
+            <property name="deserializer">
+                <bean
+                    class="com.vmware.vapi.rest.convert.impl.JsonDataValueDeserializer">
+                </bean>
+            </property>
+            <property name="serializer" ref="jsonDataValueSerializer" />
+        </bean>
+        <bean
+            class="com.vmware.vapi.rest.convert.impl.HttpDataValueConverterImpl">
+            <property name="supportedTypes">
+                <util:list>
+                    <value>application/xml</value>
+                </util:list>
+            </property>
+            <property name="deserializer">
+                <bean
+                    class="com.vmware.vapi.rest.convert.impl.XmlDataValueDeserializer">
+                    <property name="factory">
+                        <bean class="javax.xml.stream.XMLInputFactory"
+                            factory-method="newInstance" />
+                    </property>
+                </bean>
+            </property>
+            <property name="serializer" ref="xmlDataValueSerializer" />
+        </bean>
+    </util:list>
+
+    <bean id="uriProvider" class="com.vmware.vapi.rest.convert.impl.VmodlResourceUriProvider">
+        <property name="restUrlUtils" ref="restUrlUtils" />
+        <property name="metadataUtil" ref="metadataUriUtil" />
+    </bean>
+
+    <bean id="urlDataValueDeserializer"
+        class="com.vmware.vapi.rest.convert.impl.UrlDataValueDeserializer" />
+
+    <bean id="jsonDataValueSerializer"
+        class="com.vmware.vapi.rest.convert.impl.JsonDataValueSerializer">
+    </bean>
+
+    <bean id="xmlDataValueSerializer"
+        class="com.vmware.vapi.rest.convert.impl.XmlDataValueSerializer">
+        <property name="factory">
+            <bean class="javax.xml.stream.XMLOutputFactory"
+                factory-method="newInstance" />
+        </property>
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.dispatch.impl.VApiRequestHandler"
+        id="vapiRequestHandler">
+        <property name="nameProvider" ref="nameProvider" />
+        <property name="converters" ref="converters" />
+        <property name="dataValueDeserializer" ref="urlDataValueDeserializer"/>
+    </bean>
+
+    <bean
+        class="com.vmware.vapi.rest.dispatch.impl.NavigationVApiRequestHandler"
+        id="navVapiRequestHandler">
+        <property name="nameProvider" ref="nameProvider" />
+        <property name="converters" ref="converters" />
+        <property name="dataValueDeserializer" ref="urlDataValueDeserializer"/>
+    </bean>
+
+    <bean
+        class="com.vmware.vapi.rest.dispatch.impl.OptionsVapiRequestHandler"
+        id="optionsVapiRequestHandler">
+        <property name="nameProvider" ref="nameProvider" />
+        <property name="converters" ref="converters" />
+        <property name="dataValueDeserializer" ref="urlDataValueDeserializer"/>
+    </bean>
+
+    <bean id="products" factory-bean="lookupDataFactory"
+        factory-method="extractProducts">
+        <constructor-arg ref="components" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.convert.impl.DataValueWriterFactoryImpl" />
+
+    <bean class="com.vmware.vapi.rest.RestAsyncHandleFactory">
+        <property name="createSessionMethods">
+            <util:list />
+        </property>
+        <property name="VApiRequestHandler" ref="vapiRequestHandler" />
+    </bean>
+
+    <bean class="com.vmware.vapi.rest.VApiRequestValidator">
+        <property name="dataValueConverters" ref="converters" />
+    </bean>
+
+    <!--
+        REST navigation services beans. These services provide a
+        convenient way to explore and discover the REST namespaces
+        by following the links from the base URL.
+    -->
+    <bean id="navigationServiceInterfaces"
+        class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="sourceList">
+            <list>
+                <bean class="com.vmware.vapi.rest.navigation.RootApiInterface">
+                    <constructor-arg ref="RootImpl" />
+                </bean>
+                <bean
+                    class="com.vmware.vapi.rest.navigation.ComponentApiInterface">
+                    <constructor-arg ref="ComponentImpl" />
+                </bean>
+                <bean
+                    class="com.vmware.vapi.rest.navigation.ServiceApiInterface">
+                    <constructor-arg ref="ServiceImpl" />
+                </bean>
+                <bean
+                    class="com.vmware.vapi.rest.navigation.ResourceApiInterface">
+                    <constructor-arg ref="ResourceImpl" />
+                </bean>
+                <bean
+                    class="com.vmware.vapi.rest.navigation.OptionsApiInterface">
+                    <constructor-arg ref="OptionsImpl" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="RootImpl" class="com.vmware.vapi.rest.navigation.impl.RootProviderImpl">
+        <property name="uriUtil" ref="navigationUriUtil"/>
+    </bean>
+
+    <bean id="ComponentImpl"
+        class="com.vmware.vapi.rest.navigation.impl.ComponentProviderImpl">
+        <property name="uriUtil" ref="navigationUriUtil"/>
+        <property name="componentInfos" ref="products" />
+    </bean>
+
+    <bean id="componentPublicServices" factory-bean="lookupDataFactory"
+        factory-method="componentServices">
+        <constructor-arg index="0" ref="products" />
+    </bean>
+
+    <bean id="ServiceImpl"
+        class="com.vmware.vapi.rest.navigation.impl.ServiceProviderImpl">
+        <property name="uriUtil" ref="navigationUriUtil"/>
+        <property name="components" ref="componentPublicServices"/>
+    </bean>
+
+    <bean id="ResourceImpl"
+        class="com.vmware.vapi.rest.navigation.impl.ResourceProviderImpl">
+        <property name="uriUtil" ref="navigationUriUtil"/>
+        <property name="util" ref="resourceUtil" />
+    </bean>
+
+    <bean id="OptionsImpl"
+        class="com.vmware.vapi.rest.navigation.impl.OptionsProviderImpl">
+        <property name="uriUtil" ref="navigationUriUtil"/>
+    </bean>
+
+    <bean id="resourceUtil" class="com.vmware.vapi.rest.navigation.impl.ResourceUtil">
+        <property name="restMethodMetadata" ref="restMethodMetadatas" />
+    </bean>
+
+    <bean id="metadataUriUtil" class="com.vmware.vapi.rest.util.MetadataUriUtil" >
+        <property name="restUrlUtils" ref="restUrlUtils" />
+        <property name="operationInfoMap" ref="methodInfoMap" />
+        <property name="mapper" ref="mapper" />
+    </bean>
+
+    <bean id="navigationUriUtil" class="com.vmware.vapi.rest.navigation.impl.NavigationUriUtil">
+        <property name="restUrlUtils" ref="restUrlUtils" />
+        <property name="metadataUtil" ref="metadataUriUtil" />
+        <property name="serializer">
+            <bean
+                class="com.vmware.vapi.rest.convert.impl.UrlDataValueSerializer">
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Beans for creating localizable messages -->
+    <bean id="localizableMessageFactory"
+        class="com.vmware.vapi.bindings.LocalizableMessageFactory">
+        <constructor-arg ref="resourceBundle" />
+        <constructor-arg ref="messageFormat" />
+    </bean>
+
+    <bean id="messageFormat" factory-bean="MessageFormatFactory" factory-method="createMessageFormatTemplateFormatter" />
+    <bean id="MessageFormatFactory" class="com.vmware.vcs.util.MessageFormatFactory" />
+
+    <bean id="resourceBundle" class="java.util.ResourceBundle" factory-method="getBundle">
+         <constructor-arg value="cis.vapi.rest.ResourceBundle" />
+    </bean>
+</beans>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2012-2016 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>vapi</artifactId>
+    <groupId>com.vmware.vapi</groupId>
+    <version>2.6.0</version>
+  </parent>
+  <groupId>com.vmware.vapi</groupId>
+  <artifactId>vapi-dynamic-provider-lib</artifactId>
+  <packaging>jar</packaging>
+  <name>vapi-dynamic-provider-lib</name>
+  <description>Libraries used by a dynamic provider</description>
+
+  <properties>
+    <gen.dest>${project.build.directory}/generated</gen.dest>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Generate test skeletons for com.vmware.vapi.sample.first</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${idlJavaGenerator}</executable>
+              <workingDirectory>${java-toolkit.generator.bin.dir}</workingDirectory>
+              <arguments>
+                <argument>--output</argument>
+                <argument>${gen.dest}</argument>
+                <argument>--no-warn</argument>
+                <argument>--library</argument>
+                <argument>${vapi.std.vmidl}</argument>
+                <argument>${idl.toolkit.models}/oldtest/sample/first</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Generate test metadata: For com.vmware.vapi.sample.first</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${vmodlParser}</executable>
+              <workingDirectory>${idl.toolkit.root}/bin</workingDirectory>
+              <arguments>
+                <argument>--name</argument>
+                <argument>com.vmware.vapi.sample.first</argument>
+                <argument>--json-writer</argument>
+                <argument>${gen.dest}/metadata/com.vmware.vapi.sample.first.json</argument>
+                <argument>--no-warn</argument>
+                <argument>--library</argument>
+                <argument>${vapi.std.vmidl}</argument>
+                <argument>${idl.toolkit.models}/oldtest/sample/first</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Generate test metadata: For ToyVM service</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${vmodlParser}</executable>
+              <workingDirectory>${idl.toolkit.root}/bin</workingDirectory>
+              <arguments>
+                <argument>--name</argument>
+                <argument>sample.first</argument>
+                <argument>--json-writer</argument>
+                <argument>${gen.dest}/metadata/sample.first.json</argument>
+                <argument>--no-warn</argument>
+                <argument>--library</argument>
+                <argument>${vapi.std.vmidl}</argument>
+                <argument>${project.basedir}/src/test/vmodl/ToyVM.vmodl</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Generate metadata for vAPI common</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${vmodlParser}</executable>
+              <workingDirectory>${idl.toolkit.root}/bin</workingDirectory>
+              <arguments>
+                <argument>--name</argument>
+                <argument>com.vmware.vapi</argument>
+                <argument>--json-writer</argument>
+                <argument>${gen.dest}/metadata/com.vmware.vapi.json</argument>
+                <argument>--no-warn</argument>
+                <argument>${idl.toolkit.models}/vapi</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Add source folder for generated Java bindings for test services</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${gen.dest}/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Add generated metadata for test services</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${gen.dest}/metadata</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <!-- TODO: Need to enable OSGI bundling Because osgi bundling is
+          not performed for dynamic-provider, the /META-INF/MANIFEST.MF is not produced.
+          This breaks the default execution of maven-jar-plugin defined in the parent
+          pom. So we override the broken executions. -->
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <configuration combine.self="override" />
+          </execution>
+          <execution>
+            <id>default-jar-no-version</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration combine.self="override">
+              <finalName>${project.name}</finalName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- vAPI libraries -->
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-metadata-service</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+
+    <!-- For testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-uber-provider</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

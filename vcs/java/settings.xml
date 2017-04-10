@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<settings>
+  <pluginGroups>
+    <pluginGroup>org.mortbay.jetty</pluginGroup>
+  </pluginGroups>
+
+  <proxies>
+    <proxy>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.vmware.com</host>
+      <port>3128</port>
+      <nonProxyHosts>*.eng.vmware.com|*.vmware.com</nonProxyHosts>
+    </proxy>
+  </proxies>
+
+  <!-- XXX: Set this to the directory that you want to use as local maven repository -->
+  <localRepository>/tmp/maven</localRepository>
+
+  <mirrors>
+     <mirror>
+       <id>Internal-maven-repo</id>
+       <name>VMware Nexus Repo</name>
+       <url>http://build-squid.eng.vmware.com/nexus/content/groups/repo</url>
+       <mirrorOf>external:*</mirrorOf>
+     </mirror>
+  </mirrors>
+
+  <servers>
+    <server>
+      <id>Internal-maven-repo</id>
+    </server>
+  </servers>
+
+  <profiles>
+  </profiles>
+
+  <activeProfiles>
+  </activeProfiles>
+</settings>

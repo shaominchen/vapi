@@ -1,0 +1,134 @@
+<%
+/* **********************************************************
+ * Copyright 2012 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+%><%
+/*
+ * Renders a Java enumeration class binding given an IDL enumeration.
+ *
+ * @variable java is a reference to the JavaLanguageHelper instance
+ * @variable enumeration is a reference to the IdlEnumeration instance to render
+ */
+def enumName = enumeration.name.asCapitalizedWords
+%>\
+${java.getComment(enumeration.doc, 0, enumeration)}\
+public<% if (enumeration.declaringNode) { %> static<% } %> final
+class ${enumName} extends com.vmware.vapi.bindings.ApiEnumeration<${enumName}> {
+
+    /**
+     * Native Java {@code enum} representing this enumeration class.
+     * Ordinals have no semantic meaning (your code should not rely on them).
+     * <p>
+     * See {@link #getEnumValue}.
+     */
+    public enum Values {
+<% enumeration.constants.each { c -> %>\
+${java.getNativeEnumConstantComment(enumeration, c, 2)}\
+        ${c.name},
+
+<% } %>\
+        /**
+         * Special {@code enum} constant which is used to represent constants
+         * that do not exist in this enumeration binding. For example if a
+         * client receives an enumeration constant that only exists in the
+         * newer version of the API of the server, the client source code will
+         * see it represented by {@code _UNKNOWN} constant, because its version
+         * of the native Java {@code enum} lacks the new constant.
+         */
+        _UNKNOWN,
+    }
+
+<% enumeration.constants.each { c -> %>\
+
+${java.getComment(c.doc, 1)}\
+    public static final ${enumName} ${c.name} = new ${enumName}("${c.name}");
+<% } %>\
+
+    private static final long serialVersionUID = 1L;
+
+    private static final ${enumName}[] \$VALUES = new ${enumName}[] {${enumeration.constants.collect{it.name}.join(', ')}};
+
+    private static final java.util.Map<java.lang.String, ${enumName}> \$NAME_TO_VALUE_MAP = com.vmware.vapi.bindings.ApiEnumeration.buildNameMap(\$VALUES);
+
+    private ${enumName}() {
+        super(Values._UNKNOWN.name());
+    }
+
+    private ${enumName}(java.lang.String name) {
+        super(name);
+    }
+
+    /**
+     * Retrieve all enumeration constants <b>pre-defined</b> by this enumeration class.
+     * <p>
+     * Additional instances might exist at runtime, for example to represent a
+     * new constant added to this enumeration class in subsequent version of the
+     * API. Such new constant is represented as instance of {@link ${enumName}}
+     * but is not <b>pre-defined</b>.
+     *
+     * @return Array of all <b>pre-defined</b> enumeration constants. Never {@code null}.
+     */
+    public static ${enumName}[] values() {
+        return \$VALUES.clone();
+    }
+
+    /**
+     * Returns the enumeration constant for the specified name.
+     * <p>
+     * If the name matches exactly the identifier used to declare an enumeration
+     * constant from this enumeration class, the constant in question will be returned.
+     * <p>
+     * Otherwise, a new instance of {@link ${enumName}} will be returned for the
+     * specified name, which will not be one of the <b>pre-defined</b> constant
+     * instances. Such new instance maps to the {@link Values#_UNKNOWN}
+     * {@code enum} constant from the native Java {@code enum}.
+     *
+     * @param name The name of the constant to return. Must not be {@code null}.
+     * @return Enumeration constant for the specified name. Never {@code null}.
+     */
+    public static ${enumName} valueOf(java.lang.String name) {
+        if (name == null) {
+            throw new java.lang.NullPointerException();
+        }
+        ${enumName} predefined = \$NAME_TO_VALUE_MAP.get(name);
+        if (predefined != null) {
+            return predefined;
+        }
+        return new ${enumName}(name);
+    }
+
+    /**
+     * Checks if this enumeration constant is unknown. Unknown is a constant
+     * that is not one of the <b>pre-defined</b> ones for this enumeration class.
+     * Also see {@link #valueOf} and {@link #values}.
+     *
+     * @return {@code true} if this constant is unknown, and {@code false} otherwise.
+     */
+    public boolean isUnknown() {
+        return getEnumValue() == Values._UNKNOWN;
+    }
+
+    /**
+     * Returns a native Java {@code enum} constant representing this enumeration
+     * constant. The result is useful for usual handling of Java {@code enum},
+     * for example it can be used in {@code switch} statements.
+     * <p>
+     * If this enumeration constant is unknown, then {@link Values#_UNKNOWN}
+     * {@code enum} constant is returned.
+     * <p>
+     * The native Java {@code enum} is {@link Values}.
+     *
+     * @return The Java {@code enum} constant. Never {@code null}.
+     */
+    public Values getEnumValue() {
+        try {
+            return Values.valueOf(name());
+        } catch (IllegalArgumentException ex) {
+            return Values._UNKNOWN;
+        }
+    }
+
+    private java.lang.Object readResolve() {
+        return valueOf(name());
+    }
+}

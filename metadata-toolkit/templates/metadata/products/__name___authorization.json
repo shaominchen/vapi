@@ -1,0 +1,43 @@
+{
+    "privilege":
+    {
+        "product":
+        {
+<% if (product.metadata.authz != null) { %>\
+            "name": "${product.name.asCanonical}",
+            "default":
+            {
+<% packagesSize = product.metadata.authz.packages.size() %>\
+<% product.metadata.authz.packages.eachWithIndex { k, idx -> %>\
+                "${k.pkg.name.asCanonical}": ${metadata.formatList(k.privileges)}
+<% if (packagesSize - 1 != idx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            }
+<% svcSize = product.metadata.authz.services.size() %>\
+<% if (svcSize > 0) { %>\
+            ,
+<% } %>\
+<% product.metadata.authz.services.eachWithIndex { svc, idx -> %>\
+            "${svc.service.getQualifiedName('asCanonical')}":
+            {
+<% svcRules = metadata.getPrivilegeMapping(svc) %>\
+<% svcRuleSize = svcRules.size() %>\
+<% svcRules.eachWithIndex { svcRule, ruleIdx -> %>\
+                ${svcRule}
+<% if (svcRuleSize - 1 != ruleIdx) { %>\
+                ,
+<% } %>\
+<% } %>\
+            }
+<% if (svcSize - 1 != idx) { %>\
+            ,
+<% } %>\
+<% } %>\
+<% } else {%>\
+            "name": "${product.name.asCanonical}"
+<% } %>\
+        }
+    }
+}

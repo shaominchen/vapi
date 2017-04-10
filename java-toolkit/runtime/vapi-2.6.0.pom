@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2015-2016 VMware, Inc. -->
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.vmware.vapi</groupId>
+  <artifactId>vapi</artifactId>
+  <packaging>pom</packaging>
+  <version>2.6.0</version>
+  <name>vapi</name>
+  <description>Parent POM for vAPI</description>
+
+  <properties>
+    <!-- Build related properties -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <compiler.version>1.7</compiler.version>
+    <compiler.source.version>1.7</compiler.source.version>
+    <compiler.target.version>1.7</compiler.target.version>
+    <vapi.metadata.root>${GOBUILD_VAPI_CORE_METADATA_ROOT}</vapi.metadata.root>
+    <idl.toolkit.root>${GOBUILD_VAPI_CORE_IDL_ROOT}</idl.toolkit.root>
+    <idl.toolkit.models>${idl.toolkit.root}/models</idl.toolkit.models>
+    <vapi.std.vmidl>${idl.toolkit.models}/com.vmware.vapi.std.vmidl</vapi.std.vmidl>
+    <java-toolkit.generator.bin.dir>${gradle.buildroot}/java-toolkit/publish/bin</java-toolkit.generator.bin.dir>
+    <java.runtime.publish.dir>${build.publish}/lib/java</java.runtime.publish.dir>
+    <java.runtime.deps.publish.dir>${build.publish}/lib/deps</java.runtime.deps.publish.dir>
+
+    <!-- Build number is overriden by official builds with the actual build number -->
+    <build_number>00000</build_number>
+    <!-- OSGi fersion for vAPI deliverables -->
+    <bundle.version>${vapi.version}</bundle.version>
+
+    <!-- Component versions -->
+    <sso.version>1.0</sso.version>
+    <idl.version>${project.version}</idl.version>
+    <vapi.version>${project.version}</vapi.version>
+
+    <!-- Component versions for third party dependencies -->
+    <springframework.version>4.2.5.RELEASE</springframework.version>
+    <commons-lang.version>2.6</commons-lang.version>
+    <commons-codec.version>1.10</commons-codec.version>
+    <commons-io.version>2.4</commons-io.version>
+    <commons-cli.version>1.2</commons-cli.version>
+    <commons-logging.version>1.2</commons-logging.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.12</slf4j.version>
+    <httpclient.version>4.5.1</httpclient.version>
+    <httpasyncclient.version>4.1</httpasyncclient.version>
+    <tomcat.version>7.0.55</tomcat.version>
+    <jackson2.version>2.4.4</jackson2.version>
+    <jackson.version>1.9.13</jackson.version>
+    <org.json.version>20090211</org.json.version>
+    <stax2-api.version>3.1.4</stax2-api.version>
+    <woodstox-core-asl.version>4.4.1</woodstox-core-asl.version>
+    <ini4j.version>0.5.2</ini4j.version>
+    <jsonassert.version>1.0.0</jsonassert.version>
+    <groovy-all.version>2.1.9</groovy-all.version>
+    <jsoup.version>1.7.2</jsoup.version>
+    <ant.version>1.8.4</ant.version>
+    <jquery.version>1.9.1</jquery.version>
+    <jquery-ui.version>1.10.3</jquery-ui.version>
+    <!-- Component versions for test -->
+    <jetty.version>6.1.26</jetty.version>
+    <easymock.version>3.0</easymock.version>
+    <junit.version>4.12</junit.version>
+    <testng.version>6.9.10</testng.version>
+    <xmlunit.version>1.6</xmlunit.version>
+
+    <!-- Plugin versions -->
+    <plugin.properties-maven-plugin.version>1.0-alpha-2</plugin.properties-maven-plugin.version>
+    <plugin.build-helper-maven-plugin.version>1.9.1</plugin.build-helper-maven-plugin.version>
+    <plugin.maven-dependency-plugin.version>2.9</plugin.maven-dependency-plugin.version>
+    <plugin.maven-compiler-plugin.version>3.2</plugin.maven-compiler-plugin.version>
+    <plugin.maven-surefire-plugin.version>2.19.1</plugin.maven-surefire-plugin.version>
+    <plugin.maven-resources-plugin.version>2.6</plugin.maven-resources-plugin.version>
+    <plugin.maven-source-plugin.version>2.4</plugin.maven-source-plugin.version>
+    <plugin.maven-jar-plugin.version>2.5</plugin.maven-jar-plugin.version>
+    <plugin.maven-javadoc-plugin.version>2.10.1</plugin.maven-javadoc-plugin.version>
+    <plugin.maven-site-plugin.version>3.4</plugin.maven-site-plugin.version>
+    <plugin.maven-antrun-plugin.version>1.8</plugin.maven-antrun-plugin.version>
+    <plugin.maven-install-plugin.version>2.5.2</plugin.maven-install-plugin.version>
+    <plugin.maven-assembly-plugin.version>2.5.3</plugin.maven-assembly-plugin.version>
+    <plugin.maven-eclipse-plugin.version>2.9</plugin.maven-eclipse-plugin.version>
+    <plugin.com.springsource.bundlor.maven.version>1.0.0.RELEASE</plugin.com.springsource.bundlor.maven.version>
+    <plugin.exec-maven-plugin.version>1.3.2</plugin.exec-maven-plugin.version>
+    <plugin.findbugs-maven-plugin.version>2.5.5</plugin.findbugs-maven-plugin.version>
+    <plugin.maven-pmd-plugin.version>3.3</plugin.maven-pmd-plugin.version>
+    <plugin.replacer.version>1.5.3</plugin.replacer.version>
+    <plugin.appassembler-maven-plugin.version>1.9</plugin.appassembler-maven-plugin.version>
+    <plugin.jacoco-maven-plugin.version>0.7.2.201409121644</plugin.jacoco-maven-plugin.version>
+  </properties>
+
+  <build>
+    <directory>${buildroot}/${project.name}</directory>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${plugin.maven-compiler-plugin.version}</version>
+          <configuration>
+            <source>${compiler.source.version}</source>
+            <target>${compiler.target.version}</target>
+            <compilerArguments>
+              <Werror />
+              <Xlint:serial />
+              <Xlint:-options />
+            </compilerArguments>
+            <showDeprecation>true</showDeprecation>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${plugin.maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>no version</id>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+              <configuration>
+                <finalName>${project.name}</finalName>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${plugin.maven-dependency-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${plugin.maven-resources-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${plugin.maven-javadoc-plugin.version}</version>
+          <configuration>
+            <additionalparam>${javadoc.opts}</additionalparam>
+            <excludePackageNames>com.vmware.vapi.internal.*</excludePackageNames>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>no version</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <finalName>${project.name}</finalName>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.springsource.bundlor</groupId>
+          <artifactId>com.springsource.bundlor.maven</artifactId>
+          <version>${plugin.com.springsource.bundlor.maven.version}</version>
+          <executions>
+            <execution>
+              <id>bundlor</id>
+              <goals>
+                <goal>bundlor</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>${plugin.properties-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>read-gobuild-properties-file</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>read-project-properties</goal>
+              </goals>
+              <configuration>
+                <files>
+                  <file>${gobuildroot}/${OBJDIR}/gobuild/specinfo/specinfo.properties</file>
+                </files>
+                <quiet>true</quiet>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${plugin.maven-eclipse-plugin.version}</version>
+          <configuration>
+            <additionalConfig>
+              <file>
+                <name>.settings/org.eclipse.jdt.core.prefs</name>
+                <content><![CDATA[eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.compliance=${compiler.version}
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=${compiler.target.version}
+org.eclipse.jdt.core.compiler.source=${compiler.source.version}
+]]>
+                </content>
+              </file>
+            </additionalConfig>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${plugin.maven-surefire-plugin.version}</version>
+          <configuration>
+            <!-- Sets the VM argument line used when unit tests are run for JaCoCo. -->
+            <argLine>${surefireArgLine}</argLine>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${plugin.jacoco-maven-plugin.version}</version>
+          <configuration>
+            <!-- Exclude generated and test classes -->
+            <excludes>
+              <exclude>com/vmware/vapi/StructDefinitions.class</exclude>
+              <exclude>com/vmware/vapi/admin/*</exclude>
+              <exclude>com/vmware/vapi/std/**/*</exclude>
+              <exclude>com/vmware/vapi/util/StructTypeUtil.class</exclude>
+              <exclude>com/vmware/vapi/metadata/SourceCreateSpec.class</exclude>
+              <exclude>com/vmware/vapi/metadata/SourceInfo.class</exclude>
+              <exclude>com/vmware/vapi/metadata/SourceType.class</exclude>
+              <exclude>com/vmware/vapi/metadata/StructDefinitions.class</exclude>
+              <exclude>com/vmware/vapi/metadata/authentication/*</exclude>
+              <exclude>com/vmware/vapi/metadata/authentication/service/*</exclude>
+              <exclude>com/vmware/vapi/metadata/cli/*</exclude>
+              <exclude>com/vmware/vapi/metadata/metamodel/*</exclude>
+              <exclude>com/vmware/vapi/metadata/metamodel/resource/*</exclude>
+              <exclude>com/vmware/vapi/metadata/metamodel/service/*</exclude>
+              <exclude>com/vmware/vapi/metadata/privilege/*</exclude>
+              <exclude>com/vmware/vapi/metadata/privilege/service/*</exclude>
+              <exclude>com/vmware/vapi/metadata/routing/*</exclude>
+              <exclude>com/vmware/vapi/metadata/routing/service/*</exclude>
+              <exclude>com/erawmv/providers/*</exclude>
+              <exclude>com/example/*</exclude>
+              <exclude>com/vmware/vapi/metadata/enumeration/*</exclude>
+              <exclude>com/vmware/vapi/is/test/*</exclude>
+              <exclude>com/vmware/vapi/sample/first/*</exclude>
+              <exclude>com/vmware/vapi/test/**/*</exclude>
+              <exclude>com/rsa/names/**/*</exclude>
+              <exclude>oasis/names/tc/saml/**/*</exclude>
+              <exclude>org/w3/**/*</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${plugin.maven-jar-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>default-jar</id>
+              <configuration>
+                <archive>
+                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-jar</id>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>default-jar-no-version</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <finalName>${project.name}</finalName>
+                <archive>
+                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-jar-no-version</id>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+              <configuration>
+                <finalName>${project.name}</finalName>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${plugin.maven-assembly-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>${plugin.findbugs-maven-plugin.version}</version>
+          <configuration>
+            <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+			<!-- TODO: reaching out of the srcroot is ugly; we need to make all self-contained under
+			           /java-toolkit/java-runtime      -->
+            <excludeFilterFile>${srcroot}/../../tools/findbugs/findbugs-exclude.xml</excludeFilterFile>
+            <includeTests>false</includeTests>
+            <threshold>Low</threshold>
+            <maxRank>20</maxRank>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${plugin.maven-pmd-plugin.version}</version>
+          <configuration>
+            <outputDirectory>${project.build.directory}/pmd</outputDirectory>
+            <targetDirectory>${project.build.directory}/pmd</targetDirectory>
+            <rulesets>
+              <ruleset>rulesets/java/basic.xml</ruleset>
+              <ruleset>rulesets/java/imports.xml</ruleset>
+              <ruleset>rulesets/java/unusedcode.xml</ruleset>
+            </rulesets>
+            <excludes>
+              <exclude>com/vmware/vapi/protocol/**/rpc/amqp/*.java</exclude>
+            </excludes>
+            <includeTests>false</includeTests>
+            <minimumPriority>5</minimumPriority>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${plugin.maven-site-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>replacer</artifactId>
+          <version>${plugin.replacer.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${plugin.exec-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${plugin.build-helper-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>${plugin.maven-antrun-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>publish-deliverables</id>
+              <phase>install</phase>
+              <configuration>
+                <target if="build.publish">
+                  <copy todir="${java.runtime.publish.dir}">
+                    <fileset dir="${project.build.directory}" casesensitive="no">
+                      <include name="*.jar"/>
+                      <exclude name="*test*"/>
+                    </fileset>
+                  </copy>
+                  <copy file="${basedir}/pom.xml" tofile="${java.runtime.publish.dir}/${project.name}.pom"/>
+                  <copy file="${basedir}/pom.xml" tofile="${java.runtime.publish.dir}/${project.name}-${project.version}.pom"/>
+                </target>
+              </configuration>
+              <goals>
+                <goal>run</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${plugin.maven-install-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>appassembler-maven-plugin</artifactId>
+          <version>${plugin.appassembler-maven-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <!-- Plugins run for all modules -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${plugin.maven-javadoc-plugin.version}</version>
+        <configuration>
+          <additionalparam>${javadoc.opts}</additionalparam>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${plugin.maven-surefire-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>${plugin.findbugs-maven-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${plugin.maven-pmd-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- vAPI -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-common</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI runtime -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-runtime</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI inventory service serializer -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-inventoryservice</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI inventory service publish -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-inventoryservice-publish</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI SAML token authentication lib -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-authn</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-rest-authn</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI SAML token lib -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-samltoken</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-authentication</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI runtime tests -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-runtime</artifactId>
+        <version>${vapi.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- vAPI integration tests -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-integration-tests</artifactId>
+        <version>${vapi.version}</version>
+        <type>test-jar</type>
+      </dependency>
+
+      <!-- vAPI metadata service -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-metadata-service</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI metadata client library -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-metadata-lib</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI common client -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-common-client</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+
+      <!-- vAPI REST -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-rest</artifactId>
+        <version>${vapi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-rest</artifactId>
+        <version>${vapi.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- vAPI Uber Provider -->
+      <dependency>
+        <groupId>com.vmware.vapi</groupId>
+        <artifactId>vapi-uber-provider</artifactId>
+        <version>${vapi.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- SSO -->
+      <dependency>
+        <groupId>com.vmware.sso</groupId>
+        <artifactId>samltoken</artifactId>
+        <version>${sso.version}</version>
+      </dependency>
+
+      <!-- IDL -->
+      <dependency>
+        <groupId>com.vmware.idl-toolkit</groupId>
+        <artifactId>idl-core</artifactId>
+        <version>${idl.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vmware.idl-toolkit</groupId>
+        <artifactId>idl-transformer</artifactId>
+        <version>${idl.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vmware.idl-toolkit</groupId>
+        <artifactId>vmodl-parser</artifactId>
+        <version>${idl.version}</version>
+      </dependency>
+
+      <!-- ===========================
+              3rd party deps below
+           ============================ -->
+
+      <!-- Apache Tomcat -->
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-catalina</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-util</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-servlet-api</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-coyote</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-api</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-juli</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+
+      <!-- Spring -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-asm</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-oxm</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${springframework.version}</version>
+      </dependency>
+
+      <!-- apache commons -->
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>${commons-logging.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${commons-lang.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${commons-codec.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>${commons-cli.version}</version>
+      </dependency>
+
+      <!-- .INI for Java -->
+      <dependency>
+        <groupId>org.ini4j</groupId>
+        <artifactId>ini4j</artifactId>
+        <version>${ini4j.version}</version>
+      </dependency>
+
+      <!-- JUnit -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+
+      <!-- testng -->
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>${testng.version}</version>
+      </dependency>
+
+      <!-- EasyMock -->
+      <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>${easymock.version}</version>
+      </dependency>
+
+      <!-- JSON utility -->
+      <dependency>
+        <groupId>org.skyscreamer</groupId>
+        <artifactId>jsonassert</artifactId>
+        <version>${jsonassert.version}</version>
+      </dependency>
+
+      <!-- Log4J -->
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+
+      <!-- Slf4j -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <!-- Apache HTTP components -->
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${httpclient.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpasyncclient</artifactId>
+        <version>${httpasyncclient.version}</version>
+      </dependency>
+
+      <!-- Woodstox -->
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>wstx-asl</artifactId>
+        <version>${wstx-asl.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>stax2-api</artifactId>
+        <version>${stax2-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>woodstox-core-asl</artifactId>
+        <version>${woodstox-core-asl.version}</version>
+        <exclusions>
+          <!--
+               This is built-in/provided by Java 6+.
+               Also the new woodstox (4.4.1) wrongly declares what seems to be older
+               version of this transitive dependency (1.0-2 instead of 1.0.1) which
+               leads to compilation errors in Eclipse.
+               So let's switch it off
+          -->
+          <exclusion>
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- vapi-runtime specific -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson2.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-core-asl</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>${protobuf-java.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-util</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-sslengine</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-java5-threadpool</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>${xmlunit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>${org.json.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1-beta-8</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>xom</groupId>
+        <artifactId>xom</artifactId>
+        <version>1.0b3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- vapi-restdoc specific -->
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-all</artifactId>
+        <version>${groovy-all.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>${jsoup.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant</artifactId>
+        <version>${ant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery</artifactId>
+        <version>${jquery.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery-ui</artifactId>
+        <version>${jquery-ui.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>WinProfile</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <idlJavaGenerator>java-generator.bat</idlJavaGenerator>
+        <vmodlParser>vmodl-parser.bat</vmodlParser>
+        <vmodlGenerator>vmodl-generator.bat</vmodlGenerator>
+        <GOBUILD_PLATFORM_SERVICES_JAR_DIR>${GOBUILD_RD_PLATFORM_SERVICES_ROOT}/win64/jars</GOBUILD_PLATFORM_SERVICES_JAR_DIR>
+        <!-- not really availale today; but we might need to add it for Windows -->
+        <gradleBuildWrapper>gradle.bat</gradleBuildWrapper>
+      </properties>
+    </profile>
+    <profile>
+      <id>UnixProfile</id>
+      <activation>
+        <os>
+          <family>unix</family>
+        </os>
+      </activation>
+      <properties>
+        <idlJavaGenerator>./java-generator</idlJavaGenerator>
+        <vmodlParser>./vmodl-parser</vmodlParser>
+        <vmodlGenerator>./vmodl-generator</vmodlGenerator>
+        <GOBUILD_PLATFORM_SERVICES_JAR_DIR>${GOBUILD_RD_PLATFORM_SERVICES_ROOT}/lin64/jars</GOBUILD_PLATFORM_SERVICES_JAR_DIR>
+        <gradleBuildWrapper>./gradle.sh</gradleBuildWrapper>
+      </properties>
+    </profile>
+
+    <!-- Disable DocLint for Java >= 8 -->
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.opts>-Xdoclint:none</javadoc.opts>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>thrift-test</id>
+      <modules>
+        <module>demo/thrift-test</module>
+      </modules>
+    </profile>
+
+    <!-- Profile for mesuring unit tests coverage with JaCoCo -->
+    <profile>
+      <id>restdoc-swagger</id>
+      <modules>
+        <module>../../demo/restdoc-swagger</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>vca-sdk</id>
+      <modules>
+        <module>../../demo/vca-sdk</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>vapi-telemetry</id>
+      <modules>
+        <module>telemetry</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>asynccall</id>
+      <modules>
+        <module>../../demo/asynccall</module>
+      </modules>
+    </profile>
+
+     <!-- exploration in VAPI binding modifications to support REST natively -->
+    <profile>
+      <id>restvm</id>
+      <modules>
+        <module>../../demo/restvm/provider</module>
+        <module>../../demo/restvm/client</module>
+      </modules>
+    </profile>
+    
+    <profile>
+      <id>ut-coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${plugin.jacoco-maven-plugin.version}</version>
+            <executions>
+              <!--
+                 Prepares the property pointing to the JaCoCo runtime agent which
+                 is passed as VM argument when Maven the Surefire plugin is executed.
+              -->
+              <execution>
+                <id>pre-unit-test</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                  <!-- Sets the path to the file which contains the execution data. -->
+                  <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                  <!--
+                     Sets the name of the property containing the settings
+                     for JaCoCo runtime agent.
+                  -->
+                  <propertyName>surefireArgLine</propertyName>
+                </configuration>
+              </execution>
+              <!--
+                 Ensures that the code coverage report for unit tests is created after
+                 unit tests have been run.
+              -->
+              <execution>
+                <id>post-unit-test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <configuration>
+                  <!-- Sets the path to the file which contains the execution data. -->
+                  <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                  <!-- Sets the output directory for the code coverage report. -->
+                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <modules>
+    <module>gradle-int</module>
+    <module>gobuild</module>
+    <module>runtime</module>
+    <module>common</module>
+    <module>common-client</module>
+    <module>dynamic-provider-lib</module>
+    <module>samltoken</module>
+    <module>metadata-service</module>
+    <module>metadata</module>
+    <module>inventoryservice</module>
+    <module>inventoryservice-publish</module>
+    <module>authn</module>
+    <module>authentication</module>
+    <module>authz</module>
+    <module>rest</module>
+    <module>rest-authn</module>
+    <module>rest-authentication</module>
+    <module>restdoc</module>
+    <module>uber-provider</module>
+    <module>test</module>
+    <module>test-osgi</module>
+    <module>perf</module>
+  </modules>
+</project>

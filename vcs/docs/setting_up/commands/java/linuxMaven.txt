@@ -1,0 +1,2 @@
+vapi-pdk$ export PATH=$TCROOT/noarch/apache-maven-3.2.5/bin:$PATH
+vapi-pdk$ export BUILD_ROOT=$VAPI_PDK/build

@@ -1,0 +1,17 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.headerComment(structure)}
+package ${structure.namespace};
+
+<% vmodl.getImports(structure).each { %>\
+import ${it};
+<% } %>\
+
+<% if (structure.isErrorType()) { %>\
+${vmodl.render('error.vmodl', [error:structure])}
+<% } else { %>\
+${vmodl.render('structure.vmodl', [structure:structure])}
+<% } %>\

@@ -1,0 +1,13 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.headerComment(enumeration)}
+package ${enumeration.namespace};
+
+<% vmodl.getImports(enumeration).each { %>\
+import ${it};
+<% } %>\
+
+${vmodl.render('enumeration.vmodl', [enumeration:enumeration])}

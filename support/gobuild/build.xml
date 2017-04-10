@@ -1,0 +1,16 @@
+<project name="gobuild" default="compcache">
+    <!--
+    <import file="${MAINSRCROOT}/support/gobuild/ant/auto-components.xml" />
+    -->
+    <import file="auto-components.xml" />
+
+    <target name="compcache">
+        <antcall target="download-components">
+            <param name="BUILDROOT" value="${BUILDROOT}"/>
+            <param name="GOBUILD_TARGET" value="${GOBUILD_TARGET}"/>
+            <param name="GOBUILD_AUTO_COMPONENTS_HOSTTYPE" value="${HOSTTYPE}"/>
+        </antcall>
+    </target>
+
+    <property file="${BUILDROOT}/gobuild/specinfo/specinfo.properties"/>
+</project>

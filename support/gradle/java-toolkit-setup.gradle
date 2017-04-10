@@ -1,0 +1,25 @@
+// Copyright 2015 VMware, Inc.  All rights reserved.
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+//fyi - this script assumes that auto-components has already been called, as needed
+
+String javaToolkitHome = System.properties['java.toolkit.home'] ?:
+        System.env['JAVA_TOOLKIT_HOME'] ?:
+        System.env['GOBUILD_VAPI_CORE_JAVA_ROOT'] ?:
+        project.ext.has('GOBUILD_VAPI_CORE_JAVA_ROOT') ? project.GOBUILD_VAPI_CORE_JAVA_ROOT : null
+
+assert javaToolkitHome
+println "java-toolkit-home = ${javaToolkitHome}"
+
+// setup a system property for the java-toolkit's shared gradle files to utilize
+System.properties['java.toolkit.home'] = javaToolkitHome
+
+// setup a project property for use within the gradle build
+project.ext.javaToolkitHome = new File(javaToolkitHome).absoluteFile
+project.ext.javaToolkitBin = new File(javaToolkitHome, 'bin')
+
+def suffix = Os.isFamily(Os.FAMILY_WINDOWS) ? '.bat' : '.sh'
+project.ext.javaUberProvider = new File(javaToolkitHome, "uber-provider/java/bin/vapi-uber-provider${suffix}")
+assert project.javaToolkitHome.exists()
+

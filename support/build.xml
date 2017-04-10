@@ -1,0 +1,78 @@
+<project name="vapi-scons" default="dist">
+  <description>
+    Helper ant script for building vAPI-Java client and provider code
+  </description>
+
+  <property environment="env" />
+  <property name="build" location="${buildDir}/build"/>
+  <property name="dist" location="${buildDir}/dist"/>
+  <property name="rootdir" location="${java.src.provider}/../" />
+
+  <target name="init">
+    <mkdir dir="${build}" />
+    <mkdir dir="${dist}" />
+  </target>
+
+  <path id="classpath">
+    <pathelement path="${classpath}"/>
+  </path>
+
+  <condition property="resource.exists">
+    <available file="${java.src.provider}/../resources" type="dir"/>
+  </condition>
+
+  <target name="compile-generated" depends="init"
+	  description="compile the generated stub/skeleton code">
+    <javac destdir="${build}" debug="on" includeAntRuntime="no" classpathref="classpath">
+      <src path="${java.src.generated}" />
+      <compilerarg value="-Xlint:unchecked" />
+      <compilerarg value="-Xlint:serial" />
+      <compilerarg value="-Werror" />
+    </javac>
+  </target>
+
+  <target name="compile-provider" depends="init" if="java.src.provider"
+	  description="compile the provider implementation code">
+    <javac destdir="${build}" debug="on" includeAntRuntime="no" classpathref="classpath">
+      <src path="${java.src.provider}" />
+      <compilerarg value="-Xlint:unchecked" />
+      <compilerarg value="-Xlint:serial" />
+      <compilerarg value="-Werror" />
+    </javac>
+  </target>
+
+  <target name="dist-with-resources" depends="compile-generated,compile-provider" if="resource.exists"
+      description="generate the distribution">
+    <jar jarfile="${dist}/${baseName}.jar">
+      <fileset dir="${build}" />
+      <fileset dir="${rootdir}/resources" />
+    </jar>
+  </target>
+
+  <target name="dist" depends="compile-generated,compile-provider,dist-with-resources" unless="resource.exists"
+	  description="generate the distribution">
+    <jar jarfile="${dist}/${baseName}.jar">
+      <fileset dir="${build}" />
+    </jar>
+  </target>
+
+  <target name="doc-gen">
+    <javadoc destdir="${build}/api"
+             sourcepath="${java.src.generated}"
+             packagenames="*"
+             windowtitle="${baseName}"
+    />
+  </target>
+
+  <target name="doc" depends="doc-gen"
+          description="package documentation">
+    <jar jarfile="${dist}/${baseName}-doc.jar">
+      <fileset dir="${build}/api" />
+    </jar>
+  </target>
+
+  <target name="clean" description="clean up">
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+  </target>
+</project>

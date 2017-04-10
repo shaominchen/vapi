@@ -1,0 +1,272 @@
+<%
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+%><%
+/*
+ * Renders a Java type binding given an IDL type.
+ *
+ * @variable java is a reference to the JavaLanguageHelper instance
+ * @variable structure is a reference to the IdlStructure instance to render
+ */ %>\
+${java.getComment(structure.doc, 0)}\
+public<% if (structure.containingFile == null) { %> static<% } %>\
+<% // TODO: remove the hardcoded com.vmware.vapi.std.errors.Error below and use more general condition %>\
+<%   if (!structure.isErrorType()) { %> final<% } %>\
+ class ${java.getJavaStructName(structure.name)}\
+<%   if (structure.isErrorType()) { %>\
+<%     if ("com.vmware.vapi.std.errors.Error".equals(structure.qualifiedName)) { %>\
+ extends com.vmware.vapi.bindings.ApiError\
+<%     } else { %>\
+ extends ${java.getBaseStructureReferenceName(structure)}\
+<%     } %>\
+<%   } %> implements java.io.Serializable, com.vmware.vapi.bindings.StaticStructure {
+
+    private static final long serialVersionUID = 1L;
+<% structure.constants.each { c -> %>\
+
+<% /* structure constants */ %>\
+${java.getComment(c.doc, 1)}\
+    public static final ${java.getConstantTypeName(c.type)} ${java.getJavaConstantName(c.name)} = ${java.getConstantValue(c)};
+<% } %>\
+<% structure.enumerations.each { e -> %>\
+
+${java.render('enum.partial', [enumeration:e], 1)}
+<% } %>\
+<% structure.impliedAttributes.each { a -> %>\
+
+    private ${java.getTypeName(a)} ${java.getJavaFieldName(a.name)};
+<% } %>\
+<% /* StructValue field is generated only for base classes, never for derived. */ %>\
+<% if (structure.extendsType == null) { %>\
+
+    protected final com.vmware.vapi.data.StructValue __dynamicStructureFields;
+<% }%>\
+<% /* Generate all-fields constructor only for errors and standard structures that have fields. */ %>\
+<% def genConstructorWithAllFields = (structure.isErrorType() || java.inStdPackage(structure)) && java.hasMemeberFields(structure) %>\
+<% if (genConstructorWithAllFields) { %>\
+
+    public ${java.getJavaStructName(structure.name)}(${java.getSelfAndSuperFieldsAsFormalParams(structure)}) {
+        this(createEmptyStructValue(), ${java.getSelfAndSuperFieldsAsActualParams(structure)});
+    }
+<% } %>\
+
+    /**
+     * Default constructor.
+     */
+    public ${java.getJavaStructName(structure.name)}() {
+        this(createEmptyStructValue());
+    }
+
+    protected ${java.getJavaStructName(structure.name)}(com.vmware.vapi.data.StructValue __dynamicStructureFields) {
+<% if (structure.extendsType == null) { %>\
+        org.apache.commons.lang.Validate.notNull(__dynamicStructureFields);
+        this.__dynamicStructureFields = __dynamicStructureFields;
+<%     if ("com.vmware.vapi.std.errors.Error".equals(structure.qualifiedName)) { %>\
+        setMessages(java.util.Collections.<com.vmware.vapi.std.LocalizableMessage>emptyList());
+<%     } %>\
+<% } else { %>\
+        super(__dynamicStructureFields);
+<% } %>\
+    }
+<%   if (genConstructorWithAllFields) { %>\
+
+    protected ${java.getJavaStructName(structure.name)}(com.vmware.vapi.data.StructValue __dynamicStructureFields, ${java.getSelfAndSuperFieldsAsFormalParams(structure)}) {
+<% if (structure.extendsType == null) { %>\
+        this(__dynamicStructureFields);
+<% } else { %>\
+        super(__dynamicStructureFields, ${java.getSuperFieldsAsActualParams(structure)});
+<% } %>\
+<% structure.impliedAttributes.each { a -> %>\
+        this.${java.getJavaFieldName(a.name)} = ${java.getJavaFieldName(a.name)};
+<% } %>\
+    }
+<% } %>\
+<% structure.impliedAttributes.each { a -> %>\
+
+${java.getPropertyComment(a, 1)}\
+    public ${java.getTypeName(a)} ${java.getPropertyAccessorName(a)}() {
+        return this.${java.getJavaFieldName(a.name)};
+    }
+
+${java.getPropertyComment(a, 1, true)}\
+    public void ${java.getPropertyMutatorName(a)}(${java.getTypeName(a)} ${java.getJavaFieldName(a.name)}) {
+        this.${java.getJavaFieldName(a.name)} = ${java.getJavaFieldName(a.name)};
+    }
+<% } %>\
+
+    @java.lang.Override
+<% if (structure.isErrorType()) { %>\
+    public com.vmware.vapi.bindings.type.ErrorType _getType() {
+<% } else { %>\
+    public com.vmware.vapi.bindings.type.StructType _getType() {
+<% } %>\
+        return ${java.getStructDefFullName(structure)};
+    }
+
+    @java.lang.Override
+    public com.vmware.vapi.data.StructValue _getDataValue() {
+        com.vmware.vapi.data.StructValue dataValue = __dynamicStructureFields.copy();
+        this._updateDataValue(dataValue);
+        return dataValue;
+    }
+
+    protected void _updateDataValue(com.vmware.vapi.data.StructValue structValue) {
+<% if (structure.extendsType != null) { %>\
+        super._updateDataValue(structValue);
+<% } %>\
+<% structure.impliedAttributes.each { a -> %>\
+        structValue.setField("${java.getSerializationName(a)}",
+                com.vmware.vapi.internal.bindings.BindingsUtil.toDataValue(
+                        this.${java.getJavaFieldName(a.name)}, this._getType().getField("${java.getSerializationName(a)}")));
+<% } %>\
+    }
+
+    @java.lang.Override
+    public void _validate() {
+        this._getType().validate(this._getDataValue());
+    }
+
+    @java.lang.Override
+    public boolean equals(java.lang.Object obj) {
+        return com.vmware.vapi.internal.bindings.BindingsUtil.areEqual(this, obj);
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return com.vmware.vapi.internal.bindings.BindingsUtil.computeHashCode(this);
+    }
+
+    @java.lang.Override
+<% if (structure.isErrorType()) { %>\
+    public java.lang.String getMessage() {
+<% } else { %>\
+    public java.lang.String toString() {
+<% } %>\
+        return com.vmware.vapi.internal.bindings.BindingsUtil.convertToString(this, __dynamicStructureFields);
+    }
+
+    @java.lang.Override
+    public boolean _hasTypeNameOf(Class<? extends com.vmware.vapi.bindings.Structure> clazz) {
+        return com.vmware.vapi.internal.bindings.BindingsUtil.hasTypeNameOf(__dynamicStructureFields, clazz);
+    }
+
+    @java.lang.Override
+    public <T extends com.vmware.vapi.bindings.Structure> T _convertTo(Class<T> clazz) {
+        return com.vmware.vapi.internal.bindings.BindingsUtil.convertTo(this, clazz);
+    }
+
+    @java.lang.Override
+    public void _setDynamicField(String fieldName, com.vmware.vapi.data.DataValue fieldValue) {
+        if (_getType().getFieldNames().contains(fieldName)) {
+             throw new com.vmware.vapi.client.exception.BindingsException("The structure contains static field with name " + fieldName);
+        }
+        __dynamicStructureFields.setField(fieldName, fieldValue);
+    }
+
+    @java.lang.Override
+    public com.vmware.vapi.data.DataValue _getDynamicField(String fieldName) {
+        if (!__dynamicStructureFields.getFieldNames().contains(fieldName)) {
+             throw new com.vmware.vapi.client.exception.BindingsException("The structure doesn't contain dynamic field with name " + fieldName);
+        }
+        return __dynamicStructureFields.getField(fieldName);
+    }
+
+    @java.lang.Override
+    public java.util.Set<java.lang.String> _getDynamicFieldNames() {
+        return __dynamicStructureFields.getFieldNames();
+    }
+
+    /**
+     * <b>WARNING:</b> Internal API, subject to change in future versions.
+     *
+<% if (structure.isErrorType()) { %>\
+     * @return {@link com.vmware.vapi.bindings.type.ErrorType} instance representing the static bindings
+     * type for this <code>Error</code>.
+     */
+    public static com.vmware.vapi.bindings.type.ErrorType _getClassType() {
+<% } else { %>\
+     * @return {@link com.vmware.vapi.bindings.type.StructType} instance representing the static bindings
+     * type for this <code>Structure</code>.
+     */
+    public static com.vmware.vapi.bindings.type.StructType _getClassType() {
+<% } %>\
+        return ${java.getStructDefFullName(structure)};
+    }
+
+    @java.lang.Override
+    public java.lang.String _getCanonicalName() {
+        return __dynamicStructureFields.getName();
+    }
+
+    /**
+     * Returns the canonical type name. See {@link #_getCanonicalName()}.
+     *
+     * @return canonical type name
+     */
+    public static java.lang.String _getCanonicalTypeName() {
+        return _getClassType().getName();
+    }
+
+    /**
+     * <b>WARNING:</b> Internal API, subject to change in future versions.<br>
+     *
+     * Returns new instance of this binding class and injects the provided data value.<br>
+     *
+     * <b>WARNING:</b> The returned object is not fully initialized.<br>
+     *
+     * @param structValue the source of the data contained in the binding object. Could
+     *                    contain more data than fields of this class can describe i.e.
+     *                    newer version of the binding object. Could be null.
+     * @return the static bindings <code>StructType</code>
+     */
+    public static ${java.getJavaStructName(structure.name)} _newInstance(com.vmware.vapi.data.StructValue structValue) {
+        return new ${java.getJavaStructName(structure.name)}(structValue);
+    }
+
+    private static com.vmware.vapi.data.StructValue createEmptyStructValue() {
+<% if (structure.isErrorType()) {
+      instanceClass = "com.vmware.vapi.data.ErrorValue";
+   } else {
+      instanceClass = "com.vmware.vapi.data.StructValue";
+   }
+%>\
+        return new ${instanceClass}(${java.getStructDefFullName(structure)}.getName());
+    }
+
+    /**
+     * Builder class for {@link ${java.getJavaStructName(structure.name)}}.
+     */
+    public static final class Builder {
+<% java.getSelfAndSuperAttributes(structure).each { a -> %>\
+        private ${java.getTypeName(a)} ${java.getJavaFieldName(a.name)};
+<% } %>\
+
+<% def requiredSelfAndSuperAttributes = java.getSelfAndSuperAttributes(structure, java.&isRequired) %>\
+        /**
+         * Constructor with parameters for the required properties of
+         * {@link ${java.getJavaStructName(structure.name)}}.
+         */
+        public Builder(${java.formatAsFormalParams(requiredSelfAndSuperAttributes)}) {
+<% requiredSelfAndSuperAttributes.each { a -> %>\
+            this.${java.getJavaFieldName(a.name)} = ${java.getJavaFieldName(a.name)};
+<% } %>\
+        }
+<% java.getSelfAndSuperAttributes(structure, java.&isOptional).each { a -> %>\
+
+${java.getPropertyComment(a, 2, true)}\
+        public Builder ${java.getPropertyMutatorName(a)}(${java.getTypeName(a)} ${java.getJavaFieldName(a.name)}) {
+            this.${java.getJavaFieldName(a.name)} = ${java.getJavaFieldName(a.name)};
+            return this;
+        }
+<% } %>\
+
+        public ${java.getJavaStructName(structure.name)} build() {
+            ${java.getJavaStructName(structure.name)} result = new ${java.getJavaStructName(structure.name)}();
+<% java.getSelfAndSuperAttributes(structure).each { a -> %>\
+            result.${java.getPropertyMutatorName(a)}(this.${java.getJavaFieldName(a.name)});
+<% } %>\
+            return result;
+        }
+    }
+}

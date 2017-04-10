@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2012-2016 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>vapi</artifactId>
+    <groupId>com.vmware.vapi</groupId>
+    <version>2.6.0</version>
+  </parent>
+  <groupId>com.vmware.vapi</groupId>
+  <artifactId>vapi-common-client</artifactId>
+  <packaging>jar</packaging>
+  <name>vapi-common-client</name>
+  <description>vAPI Common Services Client Bindings</description>
+
+  <properties>
+    <gen.java.dest>${project.build.directory}/java-bindings</gen.java.dest>
+    <gen.package.prefix>com.vmware</gen.package.prefix>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${gen.java.dest}/metadata</directory>
+        <targetPath>metadata</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>idl-toolkit</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${idlJavaGenerator}</executable>
+              <workingDirectory>${java-toolkit.generator.bin.dir}</workingDirectory>
+              <arguments>
+                <argument>--output</argument>
+                <argument>${gen.java.dest}</argument>
+                <argument>--skip</argument>
+                <argument>com.vmware.vapi.std.errors</argument>
+                <argument>--skip</argument>
+                <argument>com.vmware.vapi.std</argument>
+                <argument>${idl.toolkit.models}/vapi</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <!-- this is not delivered by vapi-core-java ( in ${idl.toolkit.models} ) -->
+          <execution>
+            <id>Generate metadata for vAPI common VMODL2</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${vmodlParser}</executable>
+              <workingDirectory>${idl.toolkit.root}/bin</workingDirectory>
+              <arguments>
+                <argument>-name</argument>
+                <argument>vapi_common</argument>
+                <argument>--json-writer</argument>
+                <argument>${gen.java.dest}/metadata/vapi.common.json</argument>
+                <!-- Base64 encode literals in doc model, e.g. {@code } content,
+                     otherwise some of the resulting JSON is invalid  -->
+                <argument>-Ddoc.model.literal.encoded=1</argument>
+                <argument>${idl.toolkit.models}/vapi</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${gen.java.dest}/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.springsource.bundlor</groupId>
+        <artifactId>com.springsource.bundlor.maven</artifactId>
+        <configuration>
+          <manifestTemplatePath>${basedir}/conf/osgi/commonClientTemplate.mf</manifestTemplatePath>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-runtime</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

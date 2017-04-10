@@ -1,0 +1,3 @@
+vapi-pdk$ export VAPI_PDK=$(pwd)
+vapi-pdk$ export TCROOT=/build/toolchain
+vapi-pdk$ export PATH=$TCROOT/lin64/jdk-1.7.0_79/bin/:$PATH

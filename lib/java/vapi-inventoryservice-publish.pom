@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2013-2016 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>vapi</artifactId>
+    <groupId>com.vmware.vapi</groupId>
+    <version>2.6.0</version>
+  </parent>
+  <groupId>com.vmware.vapi</groupId>
+  <artifactId>vapi-inventoryservice-publish</artifactId>
+  <packaging>jar</packaging>
+  <name>vapi-inventoryservice-publish</name>
+  <description>vAPI Inventory Service Publishing</description>
+
+  <properties>
+    <gen.java.dest>${project.build.directory}/java-bindings</gen.java.dest>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Generate IS Publishing VMODL2 test bindings</id>
+            <phase>generate-test-sources</phase>
+            <configuration>
+              <skip>${skipGenerate}</skip>
+              <executable>${idlJavaGenerator}</executable>
+              <workingDirectory>${java-toolkit.generator.bin.dir}</workingDirectory>
+              <arguments>
+                <argument>--output</argument>
+                <argument>${gen.java.dest}</argument>
+                <argument>--library</argument>
+                <argument>${vapi.std.vmidl}</argument>
+                <argument>${project.basedir}/src/test/vmodl</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${gen.java.dest}/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.springsource.bundlor</groupId>
+        <artifactId>com.springsource.bundlor.maven</artifactId>
+        <configuration>
+          <manifestTemplatePath>${basedir}/conf/osgi/inventoryServicePublishTemplate.mf</manifestTemplatePath>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- vAPI dependencies -->
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-common-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vmware.vapi</groupId>
+      <artifactId>vapi-inventoryservice</artifactId>
+      <!-- TODO: put this in the test scope after dedicated exception is created for the metadata extractor -->
+      <!-- <scope>test</scope> -->
+    </dependency>
+
+    <!-- 3rd party dependencies -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- scope=test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

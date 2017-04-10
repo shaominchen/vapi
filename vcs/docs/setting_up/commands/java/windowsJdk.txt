@@ -1,0 +1,1 @@
+vapi-pdk> set JAVA_HOME=%TCROOT%\win64\jdk-1.7.0_79

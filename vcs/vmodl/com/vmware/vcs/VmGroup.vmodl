@@ -1,0 +1,122 @@
+package com.vmware.vcs;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name VmGroup} {@term service} provides {@term operations} to manage
+ * vmgroups for vSphere Container Service.
+ */
+@Resource("com.vmware.vcs.VmGroup")
+interface VmGroup {
+
+    /**
+     * The {@name Info} {@term structure} contains information about the vmgroup.
+     */
+    class Info {
+        /** name. */
+        String name;
+
+        /** Description. */
+        Optional<String> description;
+
+        /** Default datastore. */
+        Optional<String> defaultDatastore;
+    }
+
+    /**
+     * The {@name CreateSpec} {@term structure} is the specification used for the
+     * vmgroup creation.
+     */
+    class CreateSpec {
+        /** Name. */
+        String name;
+
+        /** Description. */
+        Optional<String> description;
+
+        /**
+         * Default datastore.
+         *
+         * @field.optional If unspecified, defaults to "VM_DS".
+         */
+        Optional<String> defaultDatastore;
+    }
+
+    /**
+     * The {@name UpdateSpec} {@term structure} is the specification used for the
+     * incremental update of the vmgroup.
+     */
+    class UpdateSpec {
+        /**
+         * Name.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<String> name;
+
+        /**
+         * Description.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<String> description;
+
+        /**
+         * Default datastore.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<String> defaultDatastore;
+    }
+
+    /**
+     * Creates a new vmgroup.
+     *
+     * @param spec Vmgroup creation specification.
+     * @return Identifier of the newly-created vmgroup.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    ID create(CreateSpec spec) throws InvalidArgument;
+
+    /**
+     * Returns the properties of a vmgroup.
+     *
+     * @param vgId Identifier of the vmgroup.
+     * @return Vmgroup properties.
+     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     *         does not exist.
+     */
+    Info get(ID vgId) throws NotFound;
+
+    /**
+     * Updates the properties of a vmgroup.
+     *
+     * @param vgId Identifier of the vmgroup.
+     * @param spec Vmgroup properties.
+     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     *         does not exist.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    void update(ID vgId, UpdateSpec spec) throws NotFound, InvalidArgument;
+
+    /**
+     * Deletes a vmgroup.
+     *
+     * @param vgId Identifier of the vmgroup.
+     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     *         does not exist.
+     */
+    void delete(ID vgId) throws NotFound;
+
+    /**
+     * Enumerates the set of registered vmgroups.
+     *
+     * @return Set of vmgroup IDs.
+     */
+    Set<ID> list();
+}

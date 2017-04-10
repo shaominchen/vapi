@@ -1,0 +1,17 @@
+<% /*
+* Render constant information
+*/%>\
+"constants":
+[
+<% node.constants.eachWithIndex { constant, sidx -> %>\
+    {
+        "name": "${constant.name.asCanonical}",
+        "documentation": "${metadata.getDocumentation(constant)}",
+        "type": ${metadata.getConstantTypeString(constant)},
+        "value": ${metadata.getConstantValue(constant)}
+    }
+<% if (sidx != node.constants.size() - 1) { %>\
+    ,
+<% } %>\
+<% } %>\
+]
