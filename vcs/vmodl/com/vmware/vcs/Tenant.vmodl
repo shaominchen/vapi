@@ -1,0 +1,195 @@
+/* **********************************************************
+ * Copyright 2017 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vcs;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+import static com.vmware.vcs.Resources.CLUSTER;
+import static com.vmware.vcs.Resources.DATACENTER;
+import static com.vmware.vcs.Resources.TENANT;
+
+/**
+ * The {@name Tenant} {@term service} provides {@term operations} to manage
+ * tenants for vSphere Container Service.
+ */
+@Resource(TENANT)
+interface Tenant {
+
+	/**
+	 * Resource quota configuration.
+	 */
+	class ResourceQuota {
+		/** Resource limit. */
+		long limit;
+
+		/** Resource reservation. */
+		long reservation;
+	}
+
+    /**
+     * The {@name Info} {@term structure} contains information about the tenant.
+     */
+    class Info {
+        /** name. */
+        String name;
+
+        /** Description. */
+        Optional<String> description;
+
+        /** vCenter datacenter ID. */
+        @Resource(DATACENTER)
+        ID datacenter;
+
+        /** vCenter cluster ID. */
+        @Resource(CLUSTER)
+        ID cluster;
+
+        /** Storage resource quota. */
+        Optional<ResourceQuota> storage;
+
+        /** CPU resource quota. */
+        Optional<ResourceQuota> cpu;
+
+        /** Memory resource quota. */
+        Optional<ResourceQuota> memory;
+    }
+
+    /**
+     * The {@name CreateSpec} {@term structure} is the specification used for the
+     * tenant creation.
+     */
+    class CreateSpec {
+        /** Name. */
+        String name;
+
+        /** Description. */
+        Optional<String> description;
+
+        /** vCenter datacenter ID. */
+        @Resource(DATACENTER)
+        ID datacenter;
+
+        /** vCenter cluster ID. */
+        @Resource(CLUSTER)
+        ID cluster;
+
+        /** Storage resource quota. */
+        Optional<ResourceQuota> storage;
+
+        /** CPU resource quota. */
+        Optional<ResourceQuota> cpu;
+
+        /** Memory resource quota. */
+        Optional<ResourceQuota> memory;
+    }
+
+    /**
+     * The {@name UpdateSpec} {@term structure} is the specification used for the
+     * incremental update of the tenant.
+     */
+    class UpdateSpec {
+        /**
+         * Name.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<String> name;
+
+        /**
+         * Description.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<String> description;
+
+        /**
+         * vCenter datacenter ID.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        @Resource(DATACENTER)
+        Optional<ID> datacenter;
+
+        /**
+         * vCenter cluster ID.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        @Resource(CLUSTER)
+        Optional<ID> cluster;
+
+        /**
+         * Storage resource quota.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<ResourceQuota> storage;
+
+        /**
+         * CPU resource quota.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<ResourceQuota> cpu;
+
+        /**
+         * Memory resource quota.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+        Optional<ResourceQuota> memory;
+    }
+
+    /**
+     * Creates a new tenant.
+     *
+     * @param spec Tenant creation specification.
+     * @return Identifier of the newly-created tenant.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    ID create(CreateSpec spec) throws InvalidArgument;
+
+    /**
+     * Returns the properties of a tenant.
+     *
+     * @param tenant Tenant identifier.
+     * @return Tenant properties.
+     * @throws NotFound if the tenant associated with {@param.name tenant}
+     *         does not exist.
+     */
+    Info get(ID tenant) throws NotFound;
+
+    /**
+     * Updates the properties of a tenant.
+     *
+     * @param tenant Tenant identifier.
+     * @param spec Tenant properties.
+     * @throws NotFound if the tenant associated with {@param.name tenant}
+     *         does not exist.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    void update(ID tenant, UpdateSpec spec) throws NotFound, InvalidArgument;
+
+    /**
+     * Deletes a tenant.
+     *
+     * @param tenant Tenant identifier.
+     * @throws NotFound if the tenant associated with {@param.name tenant}
+     *         does not exist.
+     */
+    void delete(ID tenant) throws NotFound;
+
+    /**
+     * Enumerates the set of registered tenants.
+     *
+     * @return Set of tenant IDs.
+     */
+    Set<ID> list();
+}

@@ -1,0 +1,163 @@
+/* **********************************************************
+ * Copyright 2017 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vcs;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+import static com.vmware.vcs.Resources.TENANT;
+import static com.vmware.vcs.Resources.VCS_CLUSTER;
+
+
+/**
+ * The {@name Cluster} {@term service} provides {@term operations} to manage
+ * clusters for vSphere Container Service.
+ */
+@Resource(VCS_CLUSTER)
+interface Cluster {
+
+	/**
+	 * Different cluster types supported by vSphere Container Service.
+	 */
+	enum Type {
+		/** Kubernetes cluster. */
+		KUBERNETES,
+
+		/** Apach Mesos cluster. */
+		MESOS,
+		
+		/** Docker Swarm cluster. */
+		SWARM
+	}
+
+	/**
+     * The {@name Info} {@term structure} contains information about the cluster.
+     */
+    class Info {
+        /** name. */
+        String name;
+
+        /** Cluster type. */
+        Type type;
+
+        /** Cluster image. */
+        String image;
+
+        /** Tenant ID. */
+        @Resource(TENANT)
+        ID tenant;
+
+        /** Worker count. */
+        long workerCount;
+
+        /** Master count. */
+        long masterCount;
+    }
+
+    /**
+     * The {@name CreateSpec} {@term structure} is the specification used for the
+     * cluster creation.
+     */
+    class CreateSpec {
+        /** name. */
+        String name;
+
+        /** Cluster type. */
+        Type type;
+
+        /** Cluster image. */
+        String image;
+
+        /** Cluster version. */
+        String version;
+
+        /** Tenant ID. */
+        @Resource(TENANT)
+        ID tenant;
+
+        /** Worker count. */
+        long workerCount;
+
+        /** Master count. */
+        long masterCount;
+    }
+
+    /**
+     * The {@name UpdateSpec} {@term structure} is the specification used for the
+     * incremental update of the cluster.
+     */
+    class UpdateSpec {
+        /**
+         * Worker count.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+    	Optional<Long> workerCount;
+
+        /**
+         * Master count.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */    	
+    	Optional<Long> masterCount;
+
+        /**
+         * Cluster version.
+         *
+         * @field.optional If unspecified, leaves value unchanged.
+         */
+    	Optional<String> version;
+    }
+
+    /**
+     * Creates a new cluster.
+     *
+     * @param spec Cluster creation specification.
+     * @return Identifier of the newly-created cluster.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    ID create(CreateSpec spec) throws InvalidArgument;
+
+    /**
+     * Returns the properties of a cluster.
+     *
+     * @param cluster Cluster identifier.
+     * @return Cluster properties.
+     * @throws NotFound if the cluster associated with {@param.name cluster}
+     *         does not exist.
+     */
+    Info get(ID cluster) throws NotFound;
+
+    /**
+     * Updates the properties of a cluster.
+     *
+     * @param cluster Cluster identifier.
+     * @param spec Cluster properties.
+     * @throws NotFound if the cluster associated with {@param.name cluster}
+     *         does not exist.
+     * @throws InvalidArgument if the name exceeds 64 characters, or
+     * 		   if the description exceeds 256 characters.
+     */
+    void update(ID cluster, UpdateSpec spec) throws NotFound, InvalidArgument;
+
+    /**
+     * Deletes a cluster.
+     *
+     * @param cluster Cluster identifier.
+     * @throws NotFound if the cluster associated with {@param.name cluster}
+     *         does not exist.
+     */
+    void delete(ID cluster) throws NotFound;
+
+    /**
+     * Enumerates the set of registered clusters.
+     *
+     * @return Set of cluster IDs.
+     */
+    Set<ID> list();
+}

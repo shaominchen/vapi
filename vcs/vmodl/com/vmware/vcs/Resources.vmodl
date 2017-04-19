@@ -1,0 +1,34 @@
+/* **********************************************************
+ * Copyright 2017 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vcs;
+
+import vmodl.lang.*;
+
+/**
+ * The {@name Resources} {@term service} provides constants for the resource
+ * types for all identifiers present in the {@term services} in the
+ * {@term com.vmware.vcs} {@term package}.
+ */
+@SymbolTableOnly
+interface Resources {
+
+    /** Resource type for clusters of compute resources */
+    String CLUSTER = "ClusterComputeResource";
+
+    /** Resource type for datacenters */
+    String DATACENTER = "Datacenter";
+
+    /** Resource type for datastores */
+    String DATASTORE = "Datastore";
+
+    /** Resource type for vm-groups */
+    String VM_GROUP = "VmGroup";
+
+    /** Resource type for tenants */
+    String TENANT = "TENANT";
+
+    /** Resource type for clusters of container nodes */
+    String VCS_CLUSTER = "ClusterContainerNode";
+}
