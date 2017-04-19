@@ -31,7 +31,8 @@
         <property name="threadPool" ref="httpThreadPool" />
         <property name="endpoints">
             <list>
-                <ref bean="httpServerEndpoint"/>
+            	<!-- <ref bean="httpServerEndpoint"/> -->
+            	<ref bean="httpsServerEndpoint"/>
             </list>
         </property>
         <property name="services">
@@ -55,6 +56,16 @@
         <property name="maxIdleTime" value="${http.threadPool.maxIdleTime}" />
         <property name="maxQueueSize" value="${http.threadPool.maxQueueSize}" />
     </bean>
+
+    <!-- HTTPS endpoint configuration -->
+    <bean id="httpsServerEndpoint"
+         class="com.vmware.vapi.protocol.server.rpc.http.impl.HttpsEndpoint">
+      <!-- port to listen on -->
+      <constructor-arg value="${server.port}"/>
+      <property name="keyStorePath" value="${server.ssl.keystore}"/>
+      <property name="keyStorePassword" value="${server.ssl.keystore.password}"/>
+      <property name="keyStoreType" value="${server.ssl.keystore.type}"/>
+     </bean>
 
     <!-- HTTP endpoint configuration -->
     <bean id="httpServerEndpoint"
@@ -123,12 +134,22 @@
                 -->
                 <list>
                     <ref bean="vmGroupService" />
+                    <ref bean="cisSessionService" />
                 </list>
                 <ref bean="metamodelServiceInterfaces" />
                 <ref bean="cliServiceInterfaces" />
+                <ref bean="authnServiceInterfaces" />
                 <ref bean="navigationServiceInterfaces" />
             </list>
         </constructor-arg>
+    </bean>
+
+    <!-- cis Session service implementation specification -->
+    <bean id="cisSessionService" class="com.vmware.cis.SessionApiInterface">
+        <constructor-arg ref="cisSessionImpl" />
+    </bean>
+
+    <bean id="cisSessionImpl" class="com.vmware.cis.impl.SessionImpl">
     </bean>
 
     <!-- VmGroup service implementation specification -->
@@ -149,7 +170,9 @@
     <bean id="cliServiceInterfaces"
           factory-bean="metadataServiceBuilder"
           factory-method="createCliServices" />
-
+    <bean id="authnServiceInterfaces"
+          factory-bean="metadataServiceBuilder"
+          factory-method="createAuthenticationServices" />
     <!--
         Bean used to create a MetadataServiceBuilder object which adds metadata sources
         defined by the "sources" bean. These sources will be pre-loaded into the
@@ -192,6 +215,20 @@
                     <constructor-arg
                         value="com.vmware.vcs_cli.json" />
                     <constructor-arg value="CLI metadata for VmGroup service" />
+                    <constructor-arg value="true" />
+                </bean>
+            </constructor-arg>
+        </bean>
+        <bean
+            class="com.vmware.vapi.metadata.service.MetadataServiceBuilder.MetadataSource">
+            <constructor-arg value="AUTHENTICATION" />
+            <constructor-arg value="vcs-provider" />
+            <constructor-arg>
+                <bean
+                    class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
+                    <constructor-arg
+                        value="com.vmware.vcs_authentication.json" />
+                    <constructor-arg value="AUTHENTICATION metadata for VmGroup service" />
                     <constructor-arg value="true" />
                 </bean>
             </constructor-arg>

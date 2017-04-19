@@ -1,3 +1,7 @@
+/* **********************************************************
+ * Copyright 2017 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
 package com.vmware.vcs;
 
 import vmodl.lang.*;
@@ -5,11 +9,14 @@ import vmodl.lang.*;
 import com.vmware.vapi.std.errors.InvalidArgument;
 import com.vmware.vapi.std.errors.NotFound;
 
+import static com.vmware.vcs.Resources.DATASTORE;
+import static com.vmware.vcs.Resources.VM_GROUP;
+
 /**
  * The {@name VmGroup} {@term service} provides {@term operations} to manage
  * vmgroups for vSphere Container Service.
  */
-@Resource("com.vmware.vcs.VmGroup")
+@Resource(VM_GROUP)
 interface VmGroup {
 
     /**
@@ -23,7 +30,8 @@ interface VmGroup {
         Optional<String> description;
 
         /** Default datastore. */
-        Optional<String> defaultDatastore;
+        @Resource(DATASTORE)
+        Optional<ID> defaultDatastore;
     }
 
     /**
@@ -37,12 +45,9 @@ interface VmGroup {
         /** Description. */
         Optional<String> description;
 
-        /**
-         * Default datastore.
-         *
-         * @field.optional If unspecified, defaults to "VM_DS".
-         */
-        Optional<String> defaultDatastore;
+        /** Default datastore. */
+        @Resource(DATASTORE)
+        Optional<ID> defaultDatastore;
     }
 
     /**
@@ -69,7 +74,8 @@ interface VmGroup {
          *
          * @field.optional If unspecified, leaves value unchanged.
          */
-        Optional<String> defaultDatastore;
+        @Resource(DATASTORE)
+        Optional<ID> defaultDatastore;
     }
 
     /**
@@ -85,33 +91,33 @@ interface VmGroup {
     /**
      * Returns the properties of a vmgroup.
      *
-     * @param vgId Identifier of the vmgroup.
+     * @param vmGroup Vmgroup identifier.
      * @return Vmgroup properties.
-     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     * @throws NotFound if the vmgroup associated with {@param.name vmGroup}
      *         does not exist.
      */
-    Info get(ID vgId) throws NotFound;
+    Info get(ID vmGroup) throws NotFound;
 
     /**
      * Updates the properties of a vmgroup.
      *
-     * @param vgId Identifier of the vmgroup.
+     * @param vmGroup Vmgroup identifier.
      * @param spec Vmgroup properties.
-     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     * @throws NotFound if the vmgroup associated with {@param.name vmGroup}
      *         does not exist.
      * @throws InvalidArgument if the name exceeds 64 characters, or
      * 		   if the description exceeds 256 characters.
      */
-    void update(ID vgId, UpdateSpec spec) throws NotFound, InvalidArgument;
+    void update(ID vmGroup, UpdateSpec spec) throws NotFound, InvalidArgument;
 
     /**
      * Deletes a vmgroup.
      *
-     * @param vgId Identifier of the vmgroup.
-     * @throws NotFound if the vmgroup associated with {@param.name vgId}
+     * @param vmGroup Vmgroup identifier.
+     * @throws NotFound if the vmgroup associated with {@param.name vmGroup}
      *         does not exist.
      */
-    void delete(ID vgId) throws NotFound;
+    void delete(ID vmGroup) throws NotFound;
 
     /**
      * Enumerates the set of registered vmgroups.

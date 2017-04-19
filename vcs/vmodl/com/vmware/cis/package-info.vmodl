@@ -1,0 +1,8 @@
+/**
+ * The {@name com.vmware.cis} {@term package} provides {@term services} to manage
+ * storage for stateful containers running on vSphere.
+ */
+@Component
+package com.vmware.cis;
+
+import vmodl.lang.Component;

@@ -97,7 +97,28 @@
                                 <argument>${gen.java.dest}</argument>
                                 <argument>--library</argument>
                                 <argument>${idl.toolkit.root}/vmidl/vapi_stdlib.vmidl</argument>
-                                <argument>${project.basedir}/../../../vmodl/</argument>
+                                <argument>${project.basedir}/../../../vmodl/com/vmware/vcs</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <!-- Generate language bindings - includes server skeleton -->
+                    <execution>
+                        <id>session-java-generation</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <executable>${idlJavaGenerator}</executable>
+                            <workingDirectory>${java.toolkit.root}/bin</workingDirectory>
+                            <arguments>
+                                <argument>--profile</argument>
+                                <argument>provider</argument>
+                                <argument>--output</argument>
+                                <argument>${gen.java.dest}</argument>
+                                <argument>--library</argument>
+                                <argument>${idl.toolkit.root}/vmidl/vapi_stdlib.vmidl</argument>
+                                <argument>${project.basedir}/../../../vmodl/com/vmware/cis</argument>
                             </arguments>
                         </configuration>
                         <goals>
@@ -117,7 +138,10 @@
                                 <argument>${gen.java.dest}</argument>
                                 <argument>--library</argument>
                                 <argument>${idl.toolkit.root}/vmidl/vapi_stdlib.vmidl</argument>
-                                <argument>${project.basedir}/../../../vmodl/</argument>
+                                <argument>--metadata</argument>
+                                <argument>${project.basedir}/../../../vmodl/metadata/authn.ini</argument>
+                                <argument>${project.basedir}/../../../vmodl/com/vmware/vcs</argument>
+                                <argument>${project.basedir}/../../../vmodl/com/vmware/cis/Session.vmodl</argument>
                             </arguments>
                         </configuration>
                         <goals>
@@ -172,6 +196,11 @@
                         <program>
                             <id>vcs-provider</id>
                             <mainClass>com.vmware.vcs.impl.VcsServerMain</mainClass>
+                            <jvmSettings>
+                                <extraArguments>
+                                    <extraArgument>-Dcom.vmware.vapi.runtime.log.raw.request=true</extraArgument>
+                                </extraArguments>
+                            </jvmSettings>
                         </program>
                     </programs>
                     <assembleDirectory>${vcs.provider.assemble.dir}</assembleDirectory>
