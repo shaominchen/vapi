@@ -50,7 +50,7 @@
     <bean id ="httpThreadPool"
           class="org.apache.catalina.core.StandardThreadExecutor">
         <property name="name" value="HttpThreadPool" />
-        <property name="namePrefix" value="VmGroup-tcserver-" />
+        <property name="namePrefix" value="Vcs-tcserver-" />
         <property name="minSpareThreads" value="${http.threadPool.minSpareThreads}" />
         <property name="maxThreads" value="${http.threadPool.maxThreads}" />
         <property name="maxIdleTime" value="${http.threadPool.maxIdleTime}" />
@@ -134,6 +134,8 @@
                 -->
                 <list>
                     <ref bean="vmGroupService" />
+                    <ref bean="tenantService" />
+                    <ref bean="clusterService" />
                     <ref bean="cisSessionService" />
                 </list>
                 <ref bean="metamodelServiceInterfaces" />
@@ -161,6 +163,28 @@
     <!-- VmGroup service configuration -->
     <bean id="vmGroupImpl"
           class="com.vmware.vcs.impl.VmGroupImpl" >
+    </bean>
+
+    <!-- Tenant service implementation specification -->
+    <bean id="tenantService"
+          class="com.vmware.vcs.TenantApiInterface">
+        <constructor-arg ref="tenantImpl" />
+    </bean>
+
+    <!-- Tenant service configuration -->
+    <bean id="tenantImpl"
+          class="com.vmware.vcs.impl.TenantImpl" >
+    </bean>
+
+    <!-- Cluster service implementation specification -->
+    <bean id="clusterService"
+          class="com.vmware.vcs.ClusterApiInterface">
+        <constructor-arg ref="clusterImpl" />
+    </bean>
+
+    <!-- Cluster service configuration -->
+    <bean id="clusterImpl"
+          class="com.vmware.vcs.impl.ClusterImpl" >
     </bean>
 
     <!-- Creation of API interfaces for the metadata services -->
@@ -200,7 +224,7 @@
                     class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
                     <constructor-arg
                         value="com.vmware.vcs_metamodel.json" />
-                    <constructor-arg value="Metamodel metadata for VmGroup service" />
+                    <constructor-arg value="Metamodel metadata for VCS service" />
                     <constructor-arg value="true" />
                 </bean>
             </constructor-arg>
@@ -214,7 +238,7 @@
                     class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
                     <constructor-arg
                         value="com.vmware.vcs_cli.json" />
-                    <constructor-arg value="CLI metadata for VmGroup service" />
+                    <constructor-arg value="CLI metadata for VCS service" />
                     <constructor-arg value="true" />
                 </bean>
             </constructor-arg>
@@ -228,7 +252,7 @@
                     class="com.vmware.vapi.metadata.service.DataSourceManager.DataSourceSpec">
                     <constructor-arg
                         value="com.vmware.vcs_authentication.json" />
-                    <constructor-arg value="AUTHENTICATION metadata for VmGroup service" />
+                    <constructor-arg value="AUTHENTICATION metadata for VCS service" />
                     <constructor-arg value="true" />
                 </bean>
             </constructor-arg>

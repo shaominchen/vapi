@@ -47,6 +47,9 @@ interface Cluster {
         /** Cluster image. */
         String image;
 
+        /** Cluster version. */
+        String version;
+
         /** Tenant ID. */
         @Resource(TENANT)
         ID tenant;

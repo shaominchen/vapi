@@ -5,16 +5,13 @@
 package com.vmware.vcs.impl;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vmware.vapi.bindings.LocalizableMessageFactory;
 import com.vmware.vapi.bindings.server.AsyncContext;
-import com.vmware.vapi.l10n.StringFormatTemplateFormatter;
 import com.vmware.vapi.std.LocalizableMessage;
 import com.vmware.vapi.std.errors.Error;
 import com.vmware.vapi.std.errors.InvalidArgument;
@@ -22,38 +19,18 @@ import com.vmware.vapi.std.errors.NotFound;
 
 import com.vmware.vcs.VmGroupProvider;
 import com.vmware.vcs.VmGroupTypes;
+import com.vmware.vcs.util.MessageFactory;
 
-/*
+/**
  * Implementation of the VmGroup service.
  */
 public class VmGroupImpl implements VmGroupProvider {
-    /**
-     * Name of the message bundle. The file corresponding to this name will be
-     * resolved based on the locale for which it is requested.
-     * For example: The message catalog file for bundle name 'vcs' and locale
-     * 'Locale.US' should be in a file named vcs_en_US.properties.
-     * Message catalog files for the supported locales should be accessible
-     * through the classpath.
-     */
-    public static final String MSG_BUNDLE_FILE = "vcs";
-
-    private static LocalizableMessageFactory msgFactory;
     private final Logger logger = LoggerFactory.getLogger(VmGroupImpl.class);
-    private Map<String, VmGroupTypes.Info> vgMap;
+    private static LocalizableMessageFactory msgFactory = MessageFactory.getInstance();
+    private Map<String, VmGroupTypes.Info> vmGroups = new ConcurrentHashMap<String, VmGroupTypes.Info>();
     private int idCounter = 0;
     private static final int NAME_MAX_LEN = 64;
     private static final int DESC_MAX_LEN = 256;
-
-    public VmGroupImpl() {
-        vgMap = new ConcurrentHashMap<String, VmGroupTypes.Info>();
-    }
-
-    static {
-        ResourceBundle resourceBundle =
-            ResourceBundle.getBundle(MSG_BUNDLE_FILE, Locale.US);
-        msgFactory = new LocalizableMessageFactory(
-                            resourceBundle, new StringFormatTemplateFormatter());
-    }
 
     @Override
     public void create(VmGroupTypes.CreateSpec spec,
@@ -73,19 +50,19 @@ public class VmGroupImpl implements VmGroupProvider {
                 updateDefaultDatastore(info, spec.getDefaultDatastore());
             }
         }
-        catch(Error err) {
+        catch (Error err) {
             logger.error(err.toString());
             asyncContext.setError(err);
             return;
         }
 
-        vgMap.put(vgId, info);
+        vmGroups.put(vgId, info);
         asyncContext.setResult(vgId);
     }
 
     @Override
     public void get(String vgId, AsyncContext<VmGroupTypes.Info> asyncContext) {
-        VmGroupTypes.Info info = vgMap.get(vgId);
+        VmGroupTypes.Info info = vmGroups.get(vgId);
         if (info == null) {
             NotFound err = getNotFoundError(vgId);
             asyncContext.setError(err);
@@ -98,7 +75,7 @@ public class VmGroupImpl implements VmGroupProvider {
     @Override
     public void update(String vgId, VmGroupTypes.UpdateSpec spec,
                        AsyncContext<Void> asyncContext) {
-        VmGroupTypes.Info info = vgMap.get(vgId);
+        VmGroupTypes.Info info = vmGroups.get(vgId);
         if (info == null) {
             NotFound err = getNotFoundError(vgId);
             logger.error(err.toString());
@@ -119,7 +96,7 @@ public class VmGroupImpl implements VmGroupProvider {
                 updateDefaultDatastore(info, spec.getDefaultDatastore());
             }
         }
-        catch(Error err) {
+        catch (Error err) {
             logger.error(err.toString());
             asyncContext.setError(err);
             return;
@@ -129,7 +106,7 @@ public class VmGroupImpl implements VmGroupProvider {
 
     @Override
     public void delete(String vgId, AsyncContext<Void> asyncContext) {
-        VmGroupTypes.Info info = vgMap.remove(vgId);
+        VmGroupTypes.Info info = vmGroups.remove(vgId);
         if (info == null) {
             NotFound err = getNotFoundError(vgId);
             logger.error(err.toString());
@@ -141,11 +118,11 @@ public class VmGroupImpl implements VmGroupProvider {
 
     @Override
     public void list(AsyncContext<java.util.Set<String>> asyncContext) {
-        asyncContext.setResult(vgMap.keySet());
+        asyncContext.setResult(vmGroups.keySet());
     }
 
     private synchronized String generateId() {
-        return String.format("vg-%d", ++idCounter);
+        return String.format("vmgroup-%d", ++idCounter);
     }
 
     private void updateName(VmGroupTypes.Info info, String name) {
