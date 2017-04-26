@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.vmware.vcs.VmGroup;
-
 import com.vmware.vapi.bindings.StubFactory;
 import com.vmware.vapi.protocol.JsonProtocolConnectionFactory;
 import com.vmware.vapi.protocol.ProtocolConnection;
@@ -29,11 +28,11 @@ import com.vmware.vapi.protocol.ProtocolConnection;
 @ContextConfiguration(locations = {"classpath:spring/test.xml" })
 public class VmGroupImplTest extends AbstractTestNGSpringContextTests {
 
-    @Test
-    public void testVapi() {
+	@Test
+    public void testVapi() throws Exception {
         JsonProtocolConnectionFactory pcf = new JsonProtocolConnectionFactory();
-        ProtocolConnection conneciton = pcf.getInsecureConnection("http", "http://localhost:8088/api");
-        StubFactory sf = new StubFactory(conneciton.getApiProvider());
+        ProtocolConnection connection = pcf.getInsecureConnection("http", "http://localhost:8088/api");
+        StubFactory sf = new StubFactory(connection.getApiProvider());
         VmGroup vmGroup = sf.createStub(VmGroup.class);
         Assert.assertEquals(vmGroup.list().size(), 0);
     }
@@ -51,13 +50,13 @@ public class VmGroupImplTest extends AbstractTestNGSpringContextTests {
         String content = IOUtils.toString(response.getEntity().getContent());
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        JSONAssert.assertEquals("{\"value\":[ \"vg-1\" ]}", content, false);
+        JSONAssert.assertEquals("{\"value\":[ \"vmgroup--1\" ]}", content, false);
     }
 
     @Test(dependsOnMethods = { "testCreateVm" })
     public void testUpdateVm() throws ClientProtocolException, IOException  {
         CloseableHttpClient client = HttpClients.createDefault();
-        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vg-1";
+        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vmgroup-1";
 
         HttpPatch httpRequest = new HttpPatch(url);
         httpRequest.addHeader("Content-Type", "application/json");
@@ -71,7 +70,7 @@ public class VmGroupImplTest extends AbstractTestNGSpringContextTests {
     @Test(dependsOnMethods = { "testUpdateVm" })
     public void testGetVmInfo() throws ClientProtocolException, IOException, JSONException {
         CloseableHttpClient client = HttpClients.createDefault();
-        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vg-1";
+        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vmgroup-1";
 
         HttpGet httpRequest = new HttpGet(url);
         httpRequest.addHeader("Content-Type", "application/json");
@@ -90,7 +89,7 @@ public class VmGroupImplTest extends AbstractTestNGSpringContextTests {
     @Test(dependsOnMethods = { "testGetVmInfo" })
     public void testDeleteVm() throws ClientProtocolException, IOException, JSONException {
         CloseableHttpClient client = HttpClients.createDefault();
-        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vg-1";
+        String url = "http://localhost:8088/rest/com/vmware/vcs/vm-group/vmgroup-1";
 
         HttpDelete httpRequest = new HttpDelete(url);
         httpRequest.addHeader("Content-Type", "application/json");
@@ -206,22 +205,6 @@ public class VmGroupImplTest extends AbstractTestNGSpringContextTests {
         HttpRequestBase httpRequest = new HttpGet(url);
         httpRequest.addHeader("Content-Type", "application/json");
         HttpResponse response = client.execute(httpRequest);
-
-        String content = IOUtils.toString(response.getEntity().getContent());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        JSONAssert.assertEquals("{\n" +
-            "  \"value\": [\n" +
-            "    {\n" +
-            "      \"name\": \"com.vmware.vcs.vm_group\",\n" +
-            "      \"documentation\": \"The {@name VmGroup} {@term service} provides {@term operations} to manage vmgroups for vSphere Container Service.\",\n" +
-            "      \"method\": \"OPTIONS\",\n" +
-            "      \"href\": \"http:\\/\\/localhost:8088\\/rest\\/com\\/vmware\\/vcs\\/vm-group\",\n" +
-            "      \"metadata\": {\n" +
-            "        \"method\": \"GET\",\n" +
-            "        \"href\": \"http:\\/\\/localhost:8088\\/rest\\/com\\/vmware\\/vapi\\/metadata\\/metamodel\\/service\\/operation\\/com.vmware.vapi.rest.navigation.options\\/get\"\n" +
-            "      }\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}", content, false);
     }
 }

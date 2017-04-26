@@ -10,7 +10,7 @@
 
     <context:annotation-config />
 
-    <import resource="classpath:vcs-spring.xml" />
+    <import resource="classpath:vcs-spring-test.xml" />
     <import resource="classpath:rest-modules.xml" />
 
 </beans>
