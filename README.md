@@ -11,7 +11,7 @@ This is the vAPI (a.k.a. VMODL2) exposed by vSphere Container Service.
 7. Set the value of "localRepository" in the settings.xml file to a directory path that you want to use as maven local repository
 8. To build the project, run "maven clean install" in vcs/java/provider folder
 9. To start the server, run build/maven/vcs/vcs-provider/appassembler/bin/vcs-provider
-10. To test the server is actually running, open http://localhost:8088/rest in a browser - it should show a json containing rest metadata.
+10. To test the server is actually running, open https://localhost:8443/rest in a browser - it should show a json containing rest metadata.
 
 To exercise the deployed REST APIs, it's recommended to use Postman client. To use Postman, download "Postman for Chrome", import the workflow available in vcs/tools/postman.json file. This workflow has included all the VmGroup REST API requests. Once the import is successful, you should be able to invoke VmGroup REST APIs by clicking some buttons in Postman client.
 
