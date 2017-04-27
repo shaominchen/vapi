@@ -1,0 +1,41 @@
+package com.vmware.vapi.test.is;
+
+import vmodl.lang.*;
+
+/**
+ * Definition of a tag construct that is part of the Tagging Service.
+ * A tag can be attached to vSphere objects.
+ */
+@Model
+@Resource("com.vmware.cis.tagging.Tag")
+public class TagModel {
+
+   /**
+    * ID of the tag.
+    */
+   @ModelKey
+   @Resource("com.vmware.cis.tagging.Tag") ID id;
+
+   /**
+    * ID of the parent category in which this tag will be created.
+    */
+   @Resource("com.vmware.cis.tagging.Category") ID categoryId;
+
+   /**
+    * Display name of the tag.
+    */
+   String name;
+
+   /**
+    * Tag description.
+    */
+   String description;
+
+   /**
+    * A tag can be used by various users.
+    * To add to this set, the user needs to have edit privilege on the tag.
+    * Similarly, to unsubscribe from this tag, you need edit privilege on the tag.
+    * A user should not modify other users subscription from this set.
+    */
+   Set<String> usedBy;
+}

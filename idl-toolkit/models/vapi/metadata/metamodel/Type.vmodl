@@ -1,0 +1,146 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * The {@name Type} {@term structure} describes the type information of
+ * a typed element in the interface definiton language. The following
+ * elements in the metamodel are typed:
+ * <ul>
+ *   <li>Field element in a structure element. See {@link StructureInfo#fields}</li>
+ *   <li>Parameter element in an operation element. See {@link OperationInfo#params}</li>
+ *   <li>Result element in an operation element. See {@link OperationInfo#output}</li>
+ * </ul>
+ * The type could be one of the three following categories:
+ * <ul>
+ *  <li>Built-in types: These are types present in the interface definition language
+ *      type system. They are provided by the infrastructure. </li>
+ *  <li>User defined named type: API designers can create custom types and use them
+ *      for the typed elements. These types have a unique identifier.</li>
+ *  <li>Generic type instantiation: The language infrastructure also provides
+ *      generic types such as list, map, set and so on. An instantiation of one of
+ *      these generic types could also be used for the typed elements.</li>
+ * </ul>
+ */
+class Type {
+    /**
+     * The {@name Category} {@term enumerated type} provides {@term enumeration value} for
+     * each category of the type.
+     */
+    enum Category {
+        /** The type is one of the built-in types specified in {@link BuiltinType} */
+        BUILTIN,
+
+        /** The type is one of the user defined named types. */
+        USER_DEFINED,
+
+        /** The type is an instantiation of one of the generic types. */
+        GENERIC
+    }
+
+    /**
+     * The {@name BuiltinType} {@term enumerated type} provides {@term enumeration value}
+     * for each of the built-in types present in the interface definition language type system.
+     */
+    enum BuiltinType {
+        /** The built-in type is a void. The value is {@term unset}. */
+        VOID,
+
+        /** The built-in type is a boolean. The value is true or false. */
+        BOOLEAN,
+
+        /**
+         * The built-in type is a long. The value is a 64 bit
+         * signed integer.
+         */
+        LONG,
+
+        /**
+         * The built-in type is a double. The value is a
+         * 64 bit floating point number.
+         */
+        DOUBLE,
+
+        /**
+         * The built-in type is a string. The value is a variable-length
+         * sequence of zero or more unicode characters.
+         */
+        STRING,
+
+        /**
+         * The built-in type is a binary. The value is a variable-length
+         * sequence of zero or more bytes.
+         */
+        BINARY,
+
+        /**
+         * The built-in type is a secret. The value is a variable-length
+         * sequence of zero or more unicode characters. The value contains sensitive
+         * data that should not be printed or displayed anywhere.
+         */
+        SECRET,
+
+        /**
+         * The built-in type is a datetime. The value should be in the UTC timezone
+         * and the precision is milliseconds.
+         */
+        DATE_TIME,
+
+        /**
+         * The built-in type is an ID. The value represents an
+         * identifier for a resource.
+         */
+        ID,
+
+        /**
+         * The built-in type is an URI. The value follows the IRI
+         * specification in RFC 3987.
+         */
+        URI,
+
+        /**
+         * The built-in type is an arbitrary {@term error} type. This is used if the
+         * value of a typed element can be one of any user defined named type
+         * which is an {@term error}.
+         */
+        ANY_ERROR,
+
+        /**
+         * The built-in type is a dynamic structure. This is used if the value
+         * of a typed element can be one of any user defined named type.
+         */
+        DYNAMIC_STRUCTURE,
+
+        /**
+         * The built-in type is an opaque. This is used if the value of a typed
+         * element could be of any type and the actual type will be known only
+         * during the execution of the API. This is mostly used in infrastructure
+         * {@term services}.
+         */
+        OPAQUE,
+    }
+
+    /** Category of this type. */
+    @UnionTag
+    Category category;
+
+    /** Category of the built-in type. */
+    @UnionCase(tag="category", value="BUILTIN")
+    BuiltinType builtinType;
+
+    /** Identifier and type of the user defined type. */
+    @UnionCase(tag="category", value="USER_DEFINED")
+    UserDefinedType userDefinedType;
+
+    /**
+     * Instantiation of one of the generic types available in the interface
+     * definition language.
+     */
+    @UnionCase(tag="category", value="GENERIC")
+    GenericInstantiation genericInstantiation;
+}

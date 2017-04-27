@@ -1,0 +1,355 @@
+/*
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.combos;
+
+import vmodl.crud.*;
+import vmodl.lang.*;
+
+/**
+ * Service which contains definitions of structures used to test the Inventory
+ * Service serializer.
+ */
+@Resource("com.vmware.inventory_service_helper")
+interface InventoryServiceHelper {
+    /**
+     * Resource model which has a dynamic structure field.
+     */
+    @Model
+    class ModelWithDynamicStructureField {
+        /**
+         * Primary key.
+         */
+        @ModelKey
+        ID id;
+
+        /**
+         * Any structure.
+         */
+        DynamicStructure struct;
+    }
+
+    /**
+     * Ordinary structure which has a dynamic structure field.
+     */
+    class StructureWithDynamicField {
+        /** Any structure. */
+        DynamicStructure struct;
+    }
+
+    /**
+     * Resource model which has Optional of structure with a dynamic field.
+     */
+    @Model
+    class ModelWithOptionalOfStructureWithDynamicField {
+        /** Primary key. */
+        @ModelKey
+        ID id;
+
+        /**
+         * Any structure.
+         * @field.optional reason
+         */
+        Optional<StructureWithDynamicField> optional;
+    }
+
+    /**
+     * Resource model which has List of structure with a dynamic field.
+     */
+    @Model
+    class ModelWithListOfStructureWithDynamicField {
+        /** Primary key. */
+        @ModelKey
+        ID id;
+
+        /** list */
+        List<StructureWithDynamicField> list;
+    }
+
+    /**
+     * Resource model which has Map of structure with a dynamic field.
+     */
+    @Model
+    class ModelWithMapOfStructureWithDynamicField {
+        /** Primary key. */
+        @ModelKey
+        ID id;
+
+        /** map */
+        Map<String, StructureWithDynamicField> map;
+    }
+
+    /**
+     * Resource model which has a list of dynamic structure field.
+     * <b>NOT SUPPORTED</b> - negative test case
+     */
+    @Model
+    class ModelWithListOfDynamicStructureField {
+        /** Primary key. */
+        @ModelKey
+        ID id;
+
+        /** list */
+        List<DynamicStructure> list;
+    }
+
+    /**
+     * Resource model which has a Map of dynamic structure field.
+     * <b>NOT SUPPORTED</b> - negative test case
+     */
+    @Model
+    class ModelWithMapOfDynamicStructureField {
+        /** Primary key. */
+        @ModelKey
+        ID id;
+
+        /** list */
+        Map<String, DynamicStructure> map;
+    }
+
+    /**
+     * Resource model which has an opaque field.
+     */
+    @Model
+    class ModelWithOpaqueField {
+        /**
+         * Primary key.
+         */
+        @ModelKey
+        ID id;
+
+        /**
+         * Any data value.
+         */
+        Opaque opaq;
+    }
+
+    /** Library from vCD-e API */
+    @Includable
+    @Crud @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+    class Library {
+        /** content version  */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        String contentVersion;
+
+        /** creation date */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        DateTime creationDate;
+
+        /** current storage backings */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        List<StorageBacking> currentStorageBackings;
+
+        /** description */
+        @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        String description;
+
+        /** last modified date */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        DateTime lastModifiedDate;
+
+        /** name */
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        String name;
+
+        /** storage backings */
+        @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        List<StorageBacking> storageBackings;
+
+        /** type */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        String type;
+
+        /** version */
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        String version;
+    }
+
+    /** LocalLibrary from vCD-e API */
+    @Model
+    @Resource("com.vmware.content.Library")
+    @Include(Library.class)
+    @Crud @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+    class LocalLibrary {
+        /** ID */
+        @ModelKey
+        @Create(Usage.UNUSED) @Read(Usage.REQUIRED) @Update(Usage.UNUSED)
+        ID id;
+
+        /** publish info */
+        @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        PublishInfo publishInfo;
+    }
+
+    /** StorageBacking from vCD-e API */
+    @Includable
+    @Crud @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+    class StorageBacking {
+        /** Authn method enum */
+        enum AuthenticationMethod {
+            /** password */
+            PASSWORD,
+
+            /** no authn */
+            NONE
+        }
+
+        /** storage URI */
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        URI storageUri;
+
+        /** authn method */
+        @UnionTag
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        AuthenticationMethod authenticationMethod;
+
+        /** user name */
+        @UnionCase(tag = "authenticationMethod", value = "PASSWORD")
+        String userName;
+
+        /** password */
+        @UnionCase(tag = "authenticationMethod", value = "PASSWORD")
+        Secret password;
+    }
+
+    /** PublishInfo vCD-e API */
+    @Includable
+    @Crud @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+    class PublishInfo {
+        /** Authn method enum */
+        enum AuthenticationMethod {
+            /** basic authn */
+            BASIC,
+
+            /**no authn */
+            NONE
+        }
+
+        /** authn method */
+        @UnionTag
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        AuthenticationMethod authenticationMethod;
+
+        /** pasword */
+        @UnionCase(tag = "authenticationMethod", value = "BASIC")
+        @Create(Usage.OPTIONAL) @Read(Usage.OPTIONAL) @Update(Usage.OPTIONAL)
+        Secret password;
+
+        /** published */
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        boolean published;
+
+        /** publish URL */
+        @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        URI publishUrl;
+
+        /** user name */
+        @UnionCase(tag = "authenticationMethod", value = "BASIC")
+        @Create(Usage.OPTIONAL) @Read(Usage.OPTIONAL) @Update(Usage.OPTIONAL)
+        String userName;
+    }
+
+    //  structures below represent the model (vCD-e one, with some
+    //  simplifications) used to test added support for serializing dynamic
+    // strcuture for bug 1051326
+
+    /**
+     * A tuple representation of a VM and its desired Policies, along with any associated
+     * parameters.
+     */
+    @Resource("com.vmware.VirtualMachine")
+    @Model
+    @Crud
+    public class VmPolicyParams {
+        /**
+         * Identifier of the VM, Optional when the VM is not yet created
+         */
+        @Create(Usage.OPTIONAL) @Read(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        @ModelKey
+        ID vmId;
+
+        /**
+         * Map of Policy ID to SinglePolicyParams across different Policies desired by this VM.
+         */
+        @Create(Usage.REQUIRED) @Read(Usage.UNUSED) @Update(Usage.OPTIONAL)
+        @Resource("com.vmware.Policy")
+        Map<ID, SinglePolicyParams> policyParams;
+    }
+
+    /**
+     * Parameters for an individual Policy desired by the VM.
+     */
+    //TODO: FOBD and CRUD were not meant to be used together.
+    @FieldsOptionalByDefault
+    @Crud @Create(Usage.REQUIRED) @Read(Usage.UNUSED) @Update(Usage.OPTIONAL)
+    public class SinglePolicyParams {
+        /**
+         * Identifier of the Policy in this association.
+         */
+        @Resource("com.vmware.Policy")
+        ID policyId;
+
+        /**
+         * The desired value of this Policy. This is extension specific.
+         *
+         * PolicyValue is typically implemented with a constraint on the PolicyOptions that are
+         * available for a ProvisioningPolicy. This is typically Extension specific, and that's why
+         * PolicyValue is modeled a completely opaque object to the PBM system.
+         *
+         * The conceptual modeling of PolicyValue is to enable specifying policy
+         * requirements for a VM in this manner:
+         *    {Provisioning Policy Foo := Policy Value }
+         * For e.g.
+         *    {Location := Palo Alto || Fremont}
+         *    {Anti-Affinity Policy := {Group-1, Group-2}}
+         */
+        DynamicStructure policyValue;
+
+        /**
+         * Optional flag indicating whether the Policy association is to be removed for this VM.
+         */
+        @Create(Usage.UNUSED)
+        boolean remove;
+    }
+
+    /**
+     * TagBasedPolicyValue represents a specific instance of a Policy.
+     * ProvisioningPolicies are consumed by Vms via TagBasedPolicyValue.
+     *
+     * TagBasedPolicyValue is typically implemented with a constraint on the PolicyTags that are
+     * available for a Policy.
+     *
+     * The conceptual modeling of TagBasedPolicyValue is to enable specifying policy
+     * requirements for a VM in this manner:
+     *    {Policy Foo := Tag Based Policy Value }
+     * For e.g.
+     *    {Location := Palo Alto || Fremont}
+     */
+    @Resource("com.vmware.TagPolicyOption")
+    public class TagPolicyValue {
+        /**
+         * Identifier of the desired Tag.
+         */
+        ID policyTagId;
+    }
+
+    /**
+     * AntiAffinityPolicyValue represents the value supported for an Anti-Affinity Provisioning Policy.
+     * It can specify one or more Availability Groups that a VM should be mapped to.
+     *
+     * The conceptual modeling of AntiAffinityPolicyValue is to enable specifying policy
+     * requirements for a VM in this manner:
+     *    {Policy Foo := AntiAffinityPolicyValue }
+     * For e.g.
+     *    {Location := Group1 || Group2}
+     */
+    @Resource("com.vmware.AvailabilityGroup")
+    public class AntiAffinityPolicyValue {
+        /**
+         * Id of the AntiAffinityPolicy the VM wishes to subscribe to.
+         */
+        ID AntiAffinityPolicyId;
+    }
+
+    // END of structures for bug 1051326
+}

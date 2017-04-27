@@ -1,0 +1,14 @@
+package com.vmware.vapi.test.structures.another;
+
+import com.vmware.vapi.test.structures.TopLevelStructInFile;
+
+/**
+ * Top-level structure which refers structures from another package.
+ */
+class ReferringTopLevelStruct {
+    /** field refers other structure */
+    TopLevelStructInFile field1;
+
+    // Illegal: can't access nested structure out-side the its enclosing service
+    // NestedStruct field2;
+}

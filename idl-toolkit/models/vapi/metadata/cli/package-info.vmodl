@@ -1,0 +1,10 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.cli} {@term package} provides
+ * {@term services} that expose all the information required to display
+ * namespace or command help, execute a command and display it's result.
+ */
+package com.vmware.vapi.metadata.cli;

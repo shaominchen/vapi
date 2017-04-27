@@ -1,0 +1,29 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name InvalidElementConfiguration} {@term error} indicates that an
+ * attempt to modify the configuration of an element or a group containing the
+ * element failed due to the configuraton of the element.
+ *
+ * A typical case is when the {@term operation} is am attempt to change the
+ * group membership of the element fails, in which case a configuration change
+ * on the element may allow the group membership change to succeed.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Attempt to move a host with a fault tolerant virtual machine out of a
+ *       cluster (i.e. make the host a standalone host). </li>
+ *   <li>Attempt to remove a host from a DRS cluster without putting the host
+ *       into maintenance mode. </li>
+ * </ul>
+ */
+@Export
+public class InvalidElementConfiguration extends Error {
+}

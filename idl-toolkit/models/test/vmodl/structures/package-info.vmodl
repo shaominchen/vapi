@@ -1,0 +1,17 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 structures.
+ * <p>
+ * VMODL2 allows for arbitrary data structures to be created, which is
+ * simply a class with a set of properties.  The properties may be a
+ * primitive type, a structure type or a generic type that wraps either
+ * of the former types.
+ * <p>
+ * The examples here are meant to test the proper code generation and
+ * use for a target language.
+ */
+package vmodl.test.uber.structures;
+

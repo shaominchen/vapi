@@ -1,0 +1,47 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.interposition;
+
+import vmodl.lang.*;
+
+/**
+ * Information about an interposed request for operation invocation. All
+ * interposers would receive an instance of this structure as an input
+ * parameter.
+ */
+@Export
+public class InvocationRequest {
+
+    /**
+     * Fully qualified name of the service which contains the interposed
+     * operation. In canonical format. For example org.example.hello.
+     */
+    String serviceId;
+
+    /**
+     * Name of the interposed operation. In canonical format. For example
+     * say_hello.
+     */
+    String operationId;
+
+    /**
+     * Input of the interposed operation.
+     */
+    Opaque operationInput;
+
+    /**
+     * User which started the interposed operation.
+     * @field.optional There could be no authentication information.
+     *     For example when methods are invoked anonymously.
+     */
+    Optional<SecurityPrincipal> user;
+
+    /**
+     * Groups of the user who started the interposed operation. Would be empty
+     * if there is no authentication information.
+     */
+    List<SecurityPrincipal> groups;
+}

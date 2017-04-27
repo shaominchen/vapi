@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+
+<% service.structures.each { s -> %>
+  <xsd:complexType name="${s.name}" >
+    <xsd:sequence>
+      <% s.attributes.each { a -> %>
+      <xsd:element name="${a.name}" type="${a.xsdType}" ${(xml.isOptional(a.type))?'minOccurs="0"':''} ${(xml.isList(a.type))?'maxOccurs="unbounded"':''} />
+      <% } %>
+    </xsd:sequence>
+  </xsd:complexType>
+<% } %>
+
+</xsd:schema>

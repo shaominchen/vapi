@@ -1,0 +1,107 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.fobd;
+
+import vmodl.test.uber.shared.*;
+
+import vmodl.lang.*;
+
+/**
+ * Specifies a test interface for VMODL2 structure types
+ * that utilize the <i>FOBD (Fields Optional By Default)</i> semantics.
+ */
+@FieldsOptionalByDefault
+class UberFobdStruct {
+
+    /** boolean field
+     * @field.optional boolean reason
+     */
+    boolean booleanOptional;
+
+    /** double field
+     * @field.optional double reason
+     */
+    double doubleOptional;
+
+    /** long field
+     * @field.optional long reason
+     */
+    long longOptional;
+
+    /** String field
+     * @field.optional String reason
+     */
+    String stringOptional;
+
+    /** DateTime field
+     * @field.optional DateTime reason
+     */
+    DateTime dateTimeOptional;
+
+    /** Secret field
+     * @field.optional Secret reason
+     */
+    Secret secretOptional;
+
+    /** URI field
+     * @field.optional URI reason
+     */
+    URI uriOptional;
+
+    /** field using enum
+     * @field.optional enum reason
+     */
+    SharedGreekEnum enumOptional;
+
+    /** list field
+     * @field.optional string list reason
+     */
+    List<String> listStringOptional;
+
+    /** field using other structure
+     * @field.optional structure reason
+     */
+    SharedSimpleStruct structureOptional;
+
+    /** boolean field */
+    @Required
+    boolean booleanRequired;
+
+    /** double field */
+    @Required
+    double doubleRequired;
+
+    /** long field */
+    @Required
+    long longRequired;
+
+    /** String field */
+    @Required
+    String stringRequired;
+
+    /** DateTime field */
+    @Required
+    DateTime dateTimeRequired;
+
+    /** Secret field */
+    @Required
+    Secret secretRequired;
+
+    /** URI field */
+    @Required
+    URI uriRequired;
+
+    /** field using enum */
+    @Required
+    SharedGreekEnum enumRequired;
+
+    /** list field */
+    @Required
+    List<String> listStringRequired;
+
+    /** field using other structure */
+    @Required
+    SharedSimpleStruct structureRequired;
+}
+

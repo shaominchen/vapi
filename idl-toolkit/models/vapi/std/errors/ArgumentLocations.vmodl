@@ -1,0 +1,37 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+import vmodl.lang.List;
+
+/**
+ * The {@name ArgumentLocations} {@term structure} describes which part(s) of
+ * the input to the {@term operation} caused the {@term error}.
+ * <p>
+ * Some types of {@term errors} are caused by the value of one of the inputs to
+ * the {@term operation}, possibly due to an interaction with other inputs to
+ * the {@term operation}.
+ * This {@term structure} is intended to be used as the payload to identify
+ * those inputs when the {@term operation} reports {@term errors} like
+ * {@link InvalidArgument} or {@link NotFound}.
+ * See {@link Error#data}.
+ */
+@Export
+public class ArgumentLocations {
+    /**
+     * String describing the location of the input that triggered the
+     * {@term error}.
+     */
+    String primary;
+
+    /**
+     * {@term List} (possibly empty) of strings describing the locations of
+     * other inputs that caused the the primary input to trigger the
+     * {@term error}.
+     */
+    List<String> secondary;
+}

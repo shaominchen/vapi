@@ -1,0 +1,194 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.structures;
+
+import vmodl.crud.*;
+import vmodl.lang.*;
+
+/** Test service for conversion of dynamic data. This is used to test the
+ *  "permissive" mode of the TypeConverter.
+ */
+interface DynamicConversion {
+
+    /** Struct used for method parameter */
+    public class Input {
+        /** String field */
+        String string;
+
+        /** Dynamic data/structure field */
+        DynamicStructure struct;
+    }
+
+    /** test struct */
+    public class OtherStruct {
+        /** optional string field
+         * @field.optional reason
+         */
+        Optional<String> a;
+    }
+
+    /** test struct */
+    public class SimpleList {
+        /** optional string field
+         * @field.optional reason
+         */
+        Optional<String> a;
+
+        /** list of long field*/
+        List<Long> b;
+    }
+
+    /** test struct */
+    public class SimpleLong {
+        /** long field */
+        long b;
+    }
+
+    /** test struct */
+    public class SimpleDouble {
+        /** double field */
+        double b;
+    }
+
+    /** test struct */
+    public class SimpleBoolean {
+        /** boolean field */
+        boolean b;
+    }
+
+    /** test struct */
+    public class SimpleSecret {
+        /** Secret field */
+        Secret b;
+    }
+
+    /** test struct */
+    public class SimpleOptional {
+        /** optional long field
+         * @field.optional reason
+         */
+        Optional<Long> b;
+    }
+
+    /** test struct */
+    public class SimpleMap {
+        /** Map field */
+        Map<String, String> b;
+    }
+
+    /** test struct */
+    public class SimpleSet {
+        /** set field */
+        Set<Long> b;
+    }
+
+    /** test struct */
+    public class SimpleBinary {
+        /** Binary field */
+        Binary b;
+    }
+
+    /**
+     * Sample model class
+     */
+    @Crud @Create(Usage.REQUIRED) @Read(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+    public class Model {
+
+        /**
+         * Name of the model, required
+         */
+        String name;
+
+        /**
+         * Description of the model
+         */
+        @Create(Usage.OPTIONAL)
+        String description;
+    }
+
+    public class CreateParams {
+
+        /**
+         * The model to be created
+         */
+        Model model;
+    }
+
+    /**
+     * Test operation
+     *
+     * @param createParams create params
+     */
+    void create(@HasFieldsOf(CreateParams.class) DynamicStructure createParams);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleStruct(Input input);
+
+    /** Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleList(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleLong(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleDouble(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleBoolean(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleSecret(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleOptional(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleMap(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleSet(Input input);
+
+    /**
+     * Test operation.
+     *
+     * @param input test input
+     */
+    void acceptSimpleBinary(Input input);
+}

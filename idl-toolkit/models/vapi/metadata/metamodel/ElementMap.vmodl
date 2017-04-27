@@ -1,0 +1,29 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.Map;
+
+/**
+ * The {@name ElementMap} {@term structure} contains the metadata
+ * elements.
+ * <p>
+ * One of the sources for metadata is the annotations present in
+ * the interface definition language. When an annotation is represented
+ * in the {@name ElementMap}, {@name ElementMap} describes the data
+ * specified in the arguments for the annotation.
+ * <p>
+ * For example, in {@code @UnionCase(tag="tag", value="SELECT")}, ElementMap
+ * describes the keyword arguments tag and value.
+ */
+class ElementMap {
+
+    /**
+     * Metamodel information of the metadata elements. The key
+     * parameter of the {@term map} is the identifier for the element and the value
+     * corresponds to the element value.
+     */
+    Map<String, ElementValue> elements;
+}

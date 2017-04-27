@@ -1,0 +1,169 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@link AuthenticationScheme} class defines constants for authentication
+ * scheme identifiers for authentication mechanisms present in the vAPI infrastructure
+ * shipped by VMware.
+ * <p>
+ * A third party extension can define and implements it's own
+ * authentication mechanism and define a constant in a different IDL file.
+ */
+@Export
+class AuthenticationScheme {
+    /**
+     * Indicates that the request doesn't need any authentication.
+     */
+    static final String NO_AUTHENTICATION = "com.vmware.vapi.std.security.no_authentication";
+
+    /**
+     * Indicates that the security context in a request is using a SAML bearer
+     * token based authentication scheme.
+     * <p>
+     * In this scheme, the following pieces of information
+     * has to be passed in the SecurityContext structure in the
+     * execution context of the request:
+     * <ul>
+     * <li>The scheme identifier: com.vmware.vapi.std.security.saml_bearer_token</li>
+     * <li>The token itself</li>
+     * </ul>
+     * <p>
+     * Sample security context in JSON format that matches the specification:
+     * {@code
+     * {
+     *     'schemeId': 'com.vmware.vapi.std.security.saml_bearer_token',
+     *     'token': 'the token itself'
+     * }
+     * }
+     * vAPI runtime provide convenient factory methods that take SAML bearer token
+     * and to create the security context that conforms to the above mentioned format.
+     */
+    static final String SAML_BEARER_TOKEN = "com.vmware.vapi.std.security.saml_bearer_token";
+
+    /**
+     * Indicates that the security context in a request is using a SAML
+     * holder-of-key token based authentication scheme.
+     * <p>
+     * In this scheme, the following pieces of information
+     * has to be passed in the SecurityContext structure in the
+     * execution context of the request:
+     * <ul>
+     * <li>The scheme identifier: com.vmware.vapi.std.security.saml_hok_token</li>
+     * <li>Signature of the request: This includes - algorithm used for signing
+     *     the request, SAML holder of key token and signature digest </li>
+     * <li>Request timestamp: This includes the {@code created} and {@code expires}
+     *     timestamp of the request. The timestamp should match the following
+     *     format - YYYY-MM-DDThh:mm:ss.sssZ (e.g. 1878-03-03T19:20:30.451Z).
+     * </ul>
+     * <p>
+     * Sample security context in JSON format that matches the specification:
+     * {@code
+     * {
+     *     'schemeId': 'com.vmware.vapi.std.security.saml_hok_token',
+     *     'signature': {
+     *         'alg': 'RS256',
+     *         'samlToken': ...,
+     *         'value': ...,
+     *     },
+     *     'timestamp': {
+     *         'created': '2012-10-26T12:24:18.941Z',
+     *         'expires': '2012-10-26T12:44:18.941Z',
+     *     }
+     * }
+     * }
+     * vAPI runtime provide convenient factory methods that take SAML holder of key token
+     * and private key to create the security context that conforms to the above
+     * mentioned format.
+     */
+    static final String SAML_HOK_TOKEN = "com.vmware.vapi.std.security.saml_hok_token";
+
+    /**
+     * Indicates that the security context in a request is using a session
+     * identifier based authentication scheme.
+     * <p>
+     * In this scheme, the following pieces of information
+     * has to be passed in the SecurityContext structure in the
+     * execution context of the request:
+     * <ul>
+     * <li>The scheme identifier - com.vmware.vapi.std.security.session_id</li>
+     * <li>Valid session identifier - This is usually returned by a login
+     *     method of a session manager interface for a particular vAPI service
+     *     of this authentication scheme</li>
+     * </ul>
+     * Sample security context in JSON format that matches the specification:
+     * {@code
+     * {
+     *     'schemeId': 'com.vmware.vapi.std.security.session_id',
+     *     'sessionId': ....,
+     * }
+     * }
+     * vAPI runtime provides convenient factory methods that take session identifier
+     * as input parameter and create a security context that conforms to the above
+     * format.
+     */
+    static final String SESSION_ID = "com.vmware.vapi.std.security.session_id";
+
+    /**
+     * Indicates that the security context in a request is using username/password
+     * based authentication scheme.
+     * <p>
+     * In this scheme, the following pieces of information
+     * has to be passed in the SecurityContext structure in the
+     * execution context of the request:
+     * <ul>
+     * <li>The scheme identifier - com.vmware.vapi.std.security.user_pass</li>
+     * <li>Username</li>
+     * <li>Password</li>
+     * </ul>
+     * <p>
+     *
+     * Sample security context in JSON format that matches the specification:
+     * {@code
+     * {
+     *     'schemeId': 'com.vmware.vapi.std.security.user_pass',
+     *     'userName': ....,
+     *     'password': ...
+     * }
+     * }
+     * <br>
+     * vAPI runtime provides convenient factory methods that take username and password
+     * as input parameters and create a security context that conforms to the above
+     * format.
+     */
+    static final String USER_PASSWORD = "com.vmware.vapi.std.security.user_pass";
+
+    /**
+     * Indicates that the security context in a request is using OAuth2
+     * based authentication scheme.
+     * <p>
+     * In this scheme, the following pieces of information
+     * has to be passed in the SecurityContext structure in the
+     * execution context of the request:
+     * <ul>
+     * <li>The scheme identifier - com.vmware.vapi.std.security.oauth</li>
+     * <li>Valid OAuth2 access token - This is usually acquired by OAuth2
+     *     Authorization Server after successful authentication of the
+     *     end user.</li>
+     * </ul>
+     * <p>
+     *
+     * Sample security context in JSON format that matches the specification:
+     * {@code
+     * {
+     *     'schemeId': 'com.vmware.vapi.std.security.oauth',
+     *     'accesstoken': ....
+     * }
+     * }
+     * <br>
+     * vAPI runtime provides convenient factory methods that takes OAuth2 access token
+     * as input parameter and creates a security context that conforms to the above
+     * format.
+     */
+    static final String OAUTH_ACCESS_TOKEN = "com.vmware.vapi.std.security.oauth";
+}

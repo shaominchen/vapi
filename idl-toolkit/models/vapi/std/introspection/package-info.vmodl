@@ -1,0 +1,11 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@link com.vmware.vapi.std.introspection} {@term package} provides
+ * {@term services} that expose basic information about the vAPI
+ * {@term services} registered with a vAPI provider.
+ */
+package com.vmware.vapi.std.introspection;

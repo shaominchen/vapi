@@ -1,0 +1,215 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.cli;
+
+import vmodl.lang.List;
+import vmodl.lang.Optional;
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Command} {@term service} provides {@term operations}
+ * to get information about command line interface (CLI) commands.
+ */
+interface Command {
+
+    /** The {@name FormatterType} {@term enumerated type} defines supported
+     *  CLI output formatter types. See {@link Info#formatter}.
+     */
+    enum FormatterType {
+        /** Displays command output as it is. */
+        SIMPLE,
+        /** Displays command output in table format. */
+        TABLE,
+        /** Displays command output in JSON format. */
+        JSON,
+        /** Displays command output in XML format. */
+        XML,
+        /** Displays command output in CSV format. */
+        CSV,
+        /** Displays command output in HTML format. */
+        HTML,
+    }
+
+    /** The {@name GenericType} {@term enumerated type} defines generic types supported
+     *  by {@name Command} {@term service}. See {@link OptionInfo#generic}.
+     */
+    enum GenericType {
+        /** Default case. */
+        NONE,
+        /** Input parameter is an optional. */
+        OPTIONAL,
+        /** Input parameter is a list. */
+        LIST,
+        /**
+        * Input parameter is an optional of type list.
+        * <p>
+        * New in vSphere 6.5.
+        */
+        OPTIONAL_LIST,
+        /**
+        * Input parameter is a list of optionals.
+        * <p>
+        * New in vSphere 6.5.
+        */
+        LIST_OPTIONAL
+    }
+
+    /**
+     * The {@name OutputFieldInfo} {@term structure} describes the name used by
+     * the CLI to display a single {@term field} of a {@term structure} element in the
+     * interface definition language.
+     */
+    class OutputFieldInfo {
+        /** Name of the {@term field}. */
+        String fieldName;
+
+        /** Name used by the CLI to display the {@term field}. */
+        String displayName;
+    }
+
+    /**
+     * The {@name OutputInfo} {@term structure} describes the names used by the
+     * CLI to display the {@term fields} of a {@term structure} element in the interface
+     * definition language as well as the order in which the {@term fields} will
+     * be displayed.
+     */
+    class OutputInfo {
+        /** Name of the {@term structure}. */
+        @Resource(Resources.STRUCTURE)
+        ID structureId;
+
+        /**
+         * The order in which the {@term fields} of the {@term structure} will be
+         * displayed by the CLI as well as the names used to display the {@term fields}.
+         */
+        List<OutputFieldInfo> outputFields;
+    }
+
+    /**
+     * The {@name OptionInfo} {@term structure} describes information about a
+     * specific input option of a command.
+     */
+    class OptionInfo {
+        /** The long option name of the parameter as used by the user. */
+        String longOption;
+
+        /**
+         * The single character value option name.
+         * @field.optional If not present, there's no single character option for the parameter.
+         */
+        Optional<String> shortOption;
+
+        /**
+         * The fully qualified name of the option referred to by the operation element in {@link Info#operationId}.
+         */
+        String fieldName;
+
+        /**
+         * The description of the option to be displayed to the user when
+         * they request usage information for a CLI command.
+         */
+        String description;
+
+        /**
+         * The type of option. This is used to display information about what kind of data
+         * is expected (string, number, boolean, etc.) for the option when they request
+         * usage information for a CLI command.
+         * For {@term enumerated type} this stores the fully qualified {@term enumerated type} id.
+         */
+        String type;
+
+        /**
+         * This is used to tell the user whether the option is required or optional,
+         * or whether they can specify the option multiple times.
+         */
+        GenericType generic;
+    }
+
+    /**
+     * The {@name Identity} {@term structure} uniquely identifies a
+     * command in the CLI commands tree.
+     */
+    class Identity {
+        /** The dot-separated path of the namespace containing the command in the CLI command tree. */
+        String path;
+
+        /** Name of the command. */
+        String name;
+    }
+
+    /**
+     * The {@name Info} {@term structure} contains information about a command. It
+     * includes the identity of the command, a description, information about the
+     * {@term service} and {@term operation} that implement the command, and CLI-specific
+     * information for the command.
+     */
+    class Info {
+        /** Basic command identity. */
+        Identity identity;
+
+        /** The text description displayed to the user in help output. */
+        String description;
+
+        /** The service identifier that contains the operations for this CLI command. */
+        @Resource(Resources.SERVICE)
+        ID serviceId;
+
+        /**
+         *  The operation identifier corresponding to this CLI command.
+         */
+        @Resource(Resources.OPERATION)
+        ID operationId;
+
+        /** The input for this command. */
+        List<OptionInfo> options;
+
+        /**
+         * The formatter to use when displaying the output of this command.
+         * @field.optional If not present, client can choose a default output formatter.
+         */
+        Optional<FormatterType> formatter;
+
+        /**
+         *  List of output structure name and output field info.
+         */
+        List<OutputInfo> outputFieldList;
+    }
+
+    /**
+     * Returns the identifiers of all commands, or commands in a specific namespace.
+     *
+     * @param path The dot-separated path of the namespace for which command identifiers should be returned.
+     * @param.optional path If {@term unset} identifiers of all commands registered with the infrastructure will be returned.
+     * @return Identifiers of the requested commands.
+     * @throws NotFound if a namespace corresponding to {@param.name path} doesn't exist.
+     */
+    List<Identity> list(Optional<String> path) throws NotFound;
+
+    /**
+     * Retrieves information about a command including information about how to execute
+     * that command.
+     *
+     * @param identity Identifier of the command for which to retreive information.
+     * @return Information about the command including information about how to execute that command.
+     * @throws NotFound if a command corresponding to {@param.name identity} doesn't exist.
+     */
+    Info get(Identity identity) throws NotFound;
+
+    /**
+     * Returns the aggregate fingerprint of all the command metadata from all
+     * the metadata sources.
+     * <p>
+     * The fingerprint provides clients an efficient way to check if the metadata
+     * for commands has been modified on the server.
+     *
+     * @return Fingerprint of all the command metadata present on the server.
+     */
+    String fingerprint();
+}
+

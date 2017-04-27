@@ -1,0 +1,40 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.crud;
+
+import vmodl.crud.Crud;
+import vmodl.crud.Usage.OPTIONAL;
+import vmodl.crud.Update;
+import vmodl.crud.Create;
+import vmodl.crud.Read;
+import vmodl.lang.Includable;
+import vmodl.lang.Include;
+
+/**
+ * Test vmodl for CRUD annotations with included structure
+ */
+@Crud
+@Read(OPTIONAL) @Create(OPTIONAL) @Update(OPTIONAL)
+@Include(RequiredField.class)
+class CrudObjectIncludable {
+
+    /**
+     * optional field
+     */
+    String value;
+}
+
+/**
+ * Data class containing required field
+ */
+@Includable
+@Crud @Read(OPTIONAL) @Create(OPTIONAL) @Update(OPTIONAL)
+class RequiredField {
+
+    /**
+     * required field
+     */
+    String requiredField;
+}

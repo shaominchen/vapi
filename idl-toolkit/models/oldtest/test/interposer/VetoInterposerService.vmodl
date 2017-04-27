@@ -1,0 +1,23 @@
+package com.vmware.vapi.test.interposer;
+
+import com.vmware.vapi.std.errors.NotAllowedInCurrentState;
+import com.vmware.vapi.std.interposition.InvocationRequest;
+
+import vmodl.lang.DynamicStructure;
+import vmodl.lang.HasFieldsOf;
+
+/**
+ * VETO interposer service.
+ */
+interface VetoInterposerService {
+
+    /**
+     * Interposer which could throw.
+     *
+     * @param invocationRequest invocation request
+     * @throws NotAllowedInCurrentState interposer error
+     */
+    void interpose(@HasFieldsOf(InvocationRequest.class) DynamicStructure invocationRequest)
+            throws NotAllowedInCurrentState;
+
+}

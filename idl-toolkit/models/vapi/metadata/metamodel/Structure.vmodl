@@ -1,0 +1,48 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ *  The {@name Structure} {@term service} providers {@term operations}
+ *  to retrieve metamodel information about a structure element in the
+ *  interface definition language.
+ */
+@vmodl.lang.Resource(Resources.STRUCTURE)
+interface Structure {
+
+    /** Resource type for structure. */
+    String RESOURCE_TYPE = Resources.STRUCTURE;
+
+    /**
+     * Returns the identifiers for the structure elements that are contained
+     * in all the package elements and service elements.
+     *
+     * @return The list of identifiers for the structure elements.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves information about the structure element corresponding to
+     * {@param.name structureId}.
+     * <p>
+     * The {@link StructureInfo} contains the metamodel information about the
+     * structure element. It contains information about all the field elements
+     * and enumeration elements contained in this structure element.
+     *
+     * @param structureId Identifier of the structure element.
+     * @return The {@link StructureInfo} instance that corresponds to
+     *         {@param.name structureId}.
+     * @throws NotFound if the structure element associated with {@param.name structureId}
+     *                  is not contained in any of the package elements or
+     *                  service elements.
+     */
+    StructureInfo get(ID structureId) throws NotFound;
+}

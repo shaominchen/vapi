@@ -1,0 +1,31 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name ResourceInUse} {@term error} indicates that the {@term operation}
+ * could not be completed because a resource is in use.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Trying to remove a VMFS datastore when the is a virtual machine
+ *       registered on any host attached to the datastore. </li>
+ *   <li>Trying to add a virtual switch if the physical network adapter being
+ *       bridged is already in use. </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>Trying to power off a virtual machine that is in the process of being
+ *     powered on. The {@link ResourceBusy} {@term error} would be used instead.
+ *   </li>
+ * </ul>
+ */
+@Export
+public class ResourceInUse extends Error {
+}

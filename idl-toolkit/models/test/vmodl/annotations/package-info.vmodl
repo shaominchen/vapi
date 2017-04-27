@@ -1,0 +1,13 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 annotations.
+ * <p>
+ * The tests herein are organized by sub-packages, which contain tests for
+ * a particular functionality in VMODL2.  Each category may utilize one or
+ * more annotations, which will be spelled out by each category.
+ */
+package vmodl.test.uber.annotations;
+

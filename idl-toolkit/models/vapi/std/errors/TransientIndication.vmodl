@@ -1,0 +1,26 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name TransientIndication} {@term structure} indicates whether or not
+ * the {@term error} is transient.
+ * <p>
+ * Some types of {@term errors} are transient in certain situtations and not
+ * transient in other situtations.  This {@term error} payload can be used to
+ * indicate to clients whether a particular {@term error} is transient.
+ * See {@link Error#data}.
+ */
+@Export
+public class TransientIndication {
+    /**
+     * Indicates that the {@term error} this {@term structure} is attached to is
+     * transient.
+     */
+    boolean isTransient;
+}

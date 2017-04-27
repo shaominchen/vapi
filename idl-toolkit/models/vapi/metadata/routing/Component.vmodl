@@ -1,0 +1,57 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc. All rights reserved. -- VMware Confidential
+ * *********************************************************
+ */
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Operations to retrieve information about the routing information in a vAPI
+ * component.
+ *
+ * A Component is said to contain routing information if any of its packages,
+ * services or methods contain routing information
+ */
+@Resource(Resources.COMPONENT)
+interface Component {
+
+    /** Resource type for vAPI Component. */
+    String RESOURCE_TYPE = Resources.COMPONENT;
+
+    /**
+     * List all the vAPI components that contain operations which have routing
+     * information.
+     *
+     * @return list of fully qualified component names
+     */
+    List<ID> list();
+
+    /**
+     * Get the routing information for a vAPI component
+     *
+     * @param componentId
+     *            fully qualified component name
+     * @return routing information for the vAPI component
+     * @throws NotFound
+     *             If the component name does not exist
+     */
+    ComponentData get(ID componentId) throws NotFound;
+
+    /**
+     * Checksum of all routing metadata for a vAPI component on the server
+     *
+     * @param componentId
+     *            fully qualified component name
+     * @return checksum of routing metadata for a vAPI component
+     * @throws NotFound
+     *             If the component name does not exist
+     */
+    String fingerprint(ID componentId) throws NotFound;
+}

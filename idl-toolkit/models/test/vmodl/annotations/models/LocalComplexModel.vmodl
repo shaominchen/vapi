@@ -1,0 +1,27 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.models;
+
+import vmodl.test.uber.UberResources;
+import vmodl.lang.*;
+
+/**
+ * Test model with complex ID
+ */
+@Model
+@Resource(UberResources.UBER)
+class LocalComplexModel {
+    /**
+     * Id of the structure.
+     */
+    @ModelKey
+    ID id;
+
+    /**
+     * Id of the structure.
+     */
+    @ModelKey(order=2)
+    @Resource(UberResources.FOO)
+    ID id2;
+}

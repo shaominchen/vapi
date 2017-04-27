@@ -1,0 +1,10 @@
+/* **********************************************************
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.std} {@term package} provides standard
+ * types that can be used in the interface specification of any {@term service}.
+ */
+package com.vmware.vapi.std;

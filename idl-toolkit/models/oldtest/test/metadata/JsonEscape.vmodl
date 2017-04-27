@@ -1,0 +1,24 @@
+package com.vmware.vapi.test.metadata;
+
+/**
+ * Service used to test if metadata generators escape all the characters in JSON
+ * that have to be escaped
+ */
+interface JsonEscape {
+    class Escape {
+        /**
+         * "Quotes" in the documentation
+         */
+        String quotes;
+
+        /**
+         * Reverse Solidus \ in the documentation
+         */
+        String reverseSolidus;
+    }
+
+    /**
+     * "Quotes", Reverse solidus \
+     */
+    Escape echo();
+}

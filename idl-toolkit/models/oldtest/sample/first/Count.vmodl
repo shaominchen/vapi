@@ -1,0 +1,95 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.sample.first;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotAllowedInCurrentState;
+
+import vmodl.lang.*;
+
+/** A first example of the vAPI framework: a stateful counter. */
+interface Count {
+    /** Data type representing an item in the sample store inventory. */
+    class Properties {
+        /** The current counter value. */
+        long counter;
+
+        /** The number of calls to inc. */
+        long inc;
+
+        /** The number of calls to dec. */
+        long dec;
+
+        /** The number of calls to reset. */
+        long reset;
+
+        /**
+         * The smallest value allowed for counter If unset, there is no
+         * limit.
+         * @field.optional reason
+         */
+        Optional<Long> lowerLimit;
+
+        /**
+         * The largest value allowed for counter If unset, there is no
+         * limit.
+         * @field.optional reason
+         */
+        Optional<Long> upperLimit;
+    }
+
+    /**
+     *  Increment the count.
+     *
+     *  @return Value after increment.
+     *  @throws NotAllowedInCurrentState if the count would be larger than the
+     *          upper limit.
+     */
+    long inc() throws NotAllowedInCurrentState;
+
+    /**
+     *  Decrement the count.
+     *
+     *  @return Value after decrement.
+     *  @throws NotAllowedInCurrentState if the count would be smaller than the
+     *          lower limit.
+     */
+    long dec() throws NotAllowedInCurrentState;
+
+    /**
+     *  Reset the count.
+     */
+    void reset();
+
+    /**
+     *  Get the historical information the counter.
+     *
+     *  @return Historical information for counter.
+     */
+    Properties get();
+
+    /**
+     * Set the lower and/or upper limit for the counter
+     *
+     * @param lowerLimit Lower limit of the counter
+     * @param.optional lowerLimit reason
+     * @param upperLimit Upper limit of the counter
+     * @param.optional upperLimit reason
+     *
+     * @throws InvalidArgument if lowerLimit &gt; upperLimit
+     * @throws NotAllowedInCurrentState if upperLimit is omitted and lowerLimit
+     *         &gt; the existing upper limit or lowerLimit is omitted and
+     *         upperLimit &lt; the existing lower limit.
+     */
+    void setLimits(Optional<Long> lowerLimit,
+                   Optional<Long> upperLimit)
+        throws InvalidArgument, NotAllowedInCurrentState;
+
+    /**
+     *  Reset the lower and upper limits for the counter
+     */
+    void resetLimits();
+}
+

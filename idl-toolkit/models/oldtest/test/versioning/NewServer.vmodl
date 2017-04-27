@@ -1,0 +1,122 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.versioning;
+
+import vmodl.lang.*;
+
+/**
+ * Represents newer version of API (OldServer - previous version)
+ */
+interface NewServer {
+
+    /** test struct */
+    public class Struct {
+        /** required field */
+        String mandatory;
+
+        /** optional field
+         * @field.optional reason
+         */
+        Optional<String> optional;
+    }
+
+    /** older version of the test struct */
+    public class OldStruct {
+        /** required field */
+        String mandatory;
+    }
+
+    /** test struct with optional struct */
+    public class StructWithOptionalStruct {
+        /** required field */
+        String mandatory;
+
+        /** optional struct */
+        Optional<NestedStruct> optionalStruct;
+    }
+
+    /** test struct with list of structs */
+    public class StructWithListStruct {
+        /** required field */
+        String mandatory;
+
+        /** list of structs */
+        List<NestedStruct> listStruct;
+    }
+
+    /** test struct with nested struct types */
+    public class StructWithNestedStructs {
+        /** required field */
+        String mandatory;
+
+        /** optional struct */
+        Optional<NestedStruct> optionalStruct;
+
+        /** list of structs */
+        List<NestedStruct> listStruct;
+
+        /** nested struct */
+        NestedStruct nestedStruct;
+    }
+
+    /** test nested struct */
+    public class NestedStruct {
+        String stringField;
+    }
+
+    /** test error - v1, old */
+    public class OldCustomError extends Exception {
+        /** v1 field */
+        String required;
+    }
+
+    /** test error - v2, with added field */
+    public class CustomError extends Exception {
+        /** v1 field */
+        String mandatory;
+
+        /** new v2 field */
+        Optional<String> newField;
+    }
+
+    /**
+     * Test operation.
+     *
+     * @param param1 param 1
+     * @param param2 param 2 (not there in old version - OldServer)
+     * @param.optional param2 reason
+     */
+    void method(String param1,
+                Optional<String> param2);
+
+    /**
+     * New operation - not there in OldServer
+     *
+     * @param struct input param
+     */
+    void acceptStruct(Struct struct);
+
+    /**
+     * New operation - not there in OldServer
+     *
+     * @return struct return value
+     */
+    Struct returnStruct();
+
+    /**
+     * Returns old struct (with less fields set)
+     *
+     * @return old struct return value
+     */
+    OldStruct returnOldStruct();
+
+    /**
+     * Accepts and error as parameter.
+     *
+     * @err a std error
+     * @return always {@code true}
+     */
+    boolean acceptError(CustomError param1);
+}

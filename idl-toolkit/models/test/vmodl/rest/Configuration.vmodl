@@ -1,0 +1,76 @@
+package vmodl.test.uber.rest;
+
+import vmodl.lang.*;
+
+/** Configuration for user service */
+interface Configuration {
+
+    /** User Info */
+    class Info {
+        /** max users */
+        long maxUsers;
+
+        /** min age */
+        long minAge;
+
+        /** num users */
+        long numUsers;
+    }
+
+    /** User Info update spec */
+    class UpdateSpec {
+        /**
+         * max users
+         * @field.optional good reason
+         */
+        Optional<Long> maxUsers;
+
+        /**
+         * min age
+         * @field.optional good reason
+         */
+        Optional<Long> minAge;
+    }
+
+    /** User Info set spec */
+    class SetSpec {
+        /** max users */
+        long maxUsers;
+
+        /** min age */
+        long minAge;
+    }
+
+    /**
+     * Create User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/configuration?~action=get}
+     *
+     * TODO: {@code GET /com/vmware/vapi/test/rest/configuration}
+     *
+     * @return info result
+     */
+    Info get();
+
+    /**
+     * Update User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/configuration?~action=update}
+     *
+     * TODO: {@code PATCH /com/vmware/vapi/test/rest/configuration}
+     *
+     * @param spec update spec param
+     */
+    void update(UpdateSpec spec);
+
+    /**
+     * Set User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/configuration?~action=set}
+     *
+     * TODO: {@code PUT /com/vmware/vapi/test/rest/configuration}
+     *
+     * @param spec set spec param
+     */
+    void set(SetSpec spec);
+}

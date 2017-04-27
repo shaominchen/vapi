@@ -1,0 +1,174 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.Include;
+import vmodl.lang.List;
+import vmodl.lang.Optional;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+import vmodl.lang.URI;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.metadata.SourceCreateSpec;
+import com.vmware.vapi.metadata.SourceType;
+import com.vmware.vapi.std.errors.AlreadyExists;
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Source} {@term service} provides {@term operations} to
+ * manage the sources of metamodel metadata information.
+ * <p>
+ * The interface definition language infrastructure provides tools to
+ * generate various kinds of metadata in JSON format from the interface
+ * definition files and additional properties files. One of the generated
+ * files contains metamodel information. The generated file can be
+ * registered as a source of metadata.
+ * <p>
+ * The metamodel file contains all the data present in the interface
+ * definition files. Each metamodel file contains data about one
+ * component element. When a metamodel file is added as a source,
+ * each source contributes only one component element's metadata.
+ * <p>
+ * Metamodel metadata can also be discovered from a remote server that
+ * supports the metamodel metadata {@term services} (see
+ * {@link com.vmware.vapi.metadata.metamodel}). Since multiple components
+ * can be registered with a single metadata server, when a remote server
+ * is registered as a source, that source can contribute more than one
+ * component.
+ */
+@vmodl.lang.Resource(Resources.METAMODEL_SOURCE)
+interface Source {
+
+    /** Resource type for metadata source. */
+    String RESOURCE_TYPE = Resources.METAMODEL_SOURCE;
+
+    /**
+     * The {@name Info} {@term structure} contains the metadata source
+     * information.
+     */
+    class Info {
+        /** English language human readable description of the source. */
+        String description;
+
+        /** Type of the metadata source. */
+        @UnionTag
+        SourceType type;
+
+        /**
+         * Absolute file path of the metamodel metadata file that has
+         * the metamodel information about one component element. The {@name filePath}
+         * is the path to the file in the server's filesystem.
+         */
+        @UnionCase(tag="type", value="FILE")
+        String filepath;
+
+        /**
+         * Connection information for the remote server. This must be
+         * in the format http(s)://IP:port/namespace.
+         * <p>
+         * The remote server must support the {@term services} in the
+         * {@link com.vmware.vapi.metadata.metamodel} {@term package}.
+         * It must expose metamodel information of one or more
+         * components.
+         */
+        @UnionCase(tag="type", value="REMOTE") URI address;
+    }
+
+    /**
+     * The {@name CreateSpec} {@term structure} contains the registration
+     * information of a metamodel source.
+     */
+    @Include(SourceCreateSpec.class)
+    class CreateSpec {
+
+    }
+
+    /**
+     * Creates a new metadata source. Once the server validates the registration
+     * information of the metadata source, the metamodel metadata is retrieved
+     * from the source. This populates elements in all the {@term services}
+     * defined in {@link com.vmware.vapi.metadata.metamodel} {@term package}.
+     *
+     * @param sourceId metadata source identifier.
+     * @param spec create specification.
+     *
+     * @throws AlreadyExists if the metadata source identifier is already
+     *                       registered with the infrastructure.
+     * @throws InvalidArgument if the type of the source specified in {@link CreateSpec#type}
+     *                         is invalid.
+     * @throws InvalidArgument if the file specified in {@link CreateSpec#filepath}
+     *                         is not a valid JSON file or if the format of the metamodel
+     *                         metadata in the JSON file is invalid.
+     * @throws InvalidArgument if the URI specified in {@link CreateSpec#address} is unreachable
+     *                         or if there is a transport protocol or message protocol mismatch
+     *                         between the client and the server or if the remote server do not
+     *                         have {@term services} present in {@link com.vmware.vapi.metadata.metamodel}
+     *                         {@term package}.
+     * @throws NotFound if the file specified in {@link CreateSpec#filepath}
+     *                  does not exist.
+     */
+    void create(ID sourceId, CreateSpec spec)
+        throws AlreadyExists, InvalidArgument, NotFound;
+
+    /**
+     * Deletes an existing metamodel metadata source from the infrastructure.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @throws NotFound if the metadata source associated with {@param.name sourceId}
+     *                  is not found.
+     */
+    void delete(ID sourceId) throws NotFound;
+
+    /**
+     * Retrieves information about the metadata source corresponding to
+     * {@param.name sourceId}.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @return The {@link Info} instance that corresponds to
+     *         {@param.name sourceId}
+     * @throws NotFound if the metadata source associated with {@param.name sourceId}
+     *                  is not found.
+     */
+    Info get(ID sourceId) throws NotFound;
+
+    /**
+     * Returns the identifiers of the metadata sources currently registered
+     * with the infrastructure.
+     *
+     * @return The list of identifiers for metadata sources currently
+     *         registered.
+     */
+    List<ID> list();
+
+    /**
+     * Reloads the metamodel metadata from all the metadata sources or of a
+     * particular metadata source if {@param.name sourceId} is specified.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @param.optional sourceId If unspecified, all the metadata sources
+     *                          are reloaded.
+     * @throws NotFound if the metadata source associated with {@param.name sourceId}
+     *                  is not found.
+     */
+    void reload(Optional<ID> sourceId) throws NotFound;
+
+    /**
+     * Returns the aggregate fingerprint of metadata from all the metadata
+     * sources or from a particular metadata source if {@param.name sourceId}
+     * is specified.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @param.optional sourceId If unspecified, the fingerprint of all the
+     *                          metadata sources is returned.
+     * @return Aggregate fingerprint of all the metadata sources or of a
+     *         particular metadata source.
+     * @throws NotFound if the metadata source associated with {@param.name sourceId}
+     *                  is not found.
+     */
+    String fingerprint(Optional<ID> sourceId) throws NotFound;
+}

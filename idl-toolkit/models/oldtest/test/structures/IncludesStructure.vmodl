@@ -1,0 +1,9 @@
+package com.vmware.vapi.test.structures;
+
+import vmodl.lang.Include;
+
+/** Top level structure without fields that includes another structure */
+@Include(IncludableTopLevel.class)
+public class IncludesStructure {
+    // this structure is meant to be without fields. keep it this way.
+}

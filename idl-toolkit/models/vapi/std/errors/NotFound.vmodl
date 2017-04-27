@@ -1,0 +1,27 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name NotFound} {@term error} indicates that a specified element could not be found.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Invoke the {@term operation} to retrieve information about a virtual
+ *       machine, passing an id that does not identify an existing virtual
+ *       machine. </li>
+ *   <li>Invoke the {@term operation} to modify the configuration of a virtual
+ *       nic, passing an id that does not identify an existing virtual nic in
+ *       the specified virtual machine. </li>
+ *   <li>Invoke the {@term operation} to remove a vswitch, passing an id that
+ *       does not identify an existing vswitch. </li>
+ * </ul>
+ */
+@Export
+public class NotFound extends Error {
+}

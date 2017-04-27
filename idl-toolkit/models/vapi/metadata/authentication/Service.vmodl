@@ -1,0 +1,49 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Service} {@term service} provides {@term operations}
+ * to retrieve authentication information of a service element.
+ * <p>
+ * A service element is said to contain authentication information if there
+ * is a default authentication assigned to all operation elements contained in
+ * a service element or if one of the operation elements contained in this service
+ * element has authentication information.
+ */
+@Resource(Resources.SERVICE)
+interface Service {
+
+    /** Resource type for service. */
+    String RESOURCE_TYPE = Resources.SERVICE;
+
+    /**
+     * Returns the identifiers for the service elements that have
+     * authentication information.
+     *
+     * @return The list of identifiers for the service elements that
+     *         have authentication information.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves authentication information about the service element
+     * corresponding to {@param.name serviceId}.
+     *
+     * @param serviceId Identifier of the service element.
+     * @return The {@link ServiceInfo} instance that corresponds to
+     *         {@param.name serviceId}
+     * @throws NotFound if the service element associated with {@param.name serviceId}
+     *                  does not have any authentication information.
+     */
+    ServiceInfo get(ID serviceId) throws NotFound;
+}

@@ -1,0 +1,33 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege;
+
+import vmodl.lang.ID;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ServiceInfo} {@term structure} contains privilege information
+ * of a service element.
+ * <p>
+ * For an explanation of privilege information contained within service
+ * elements, see {@link com.vmware.vapi.metadata.privilege.Service}.
+ */
+class ServiceInfo {
+    /**
+     * Information about all operation elements contained in this service element
+     * that contain privilege information. The key in the {@term map} is the identifier
+     * of the operation element and the value in the {@term map} is the privilege
+     * information for the operation element.
+     * <p>
+     * For an explanation of containment of privilege information within operation
+     * elements, see {@link com.vmware.vapi.metadata.privilege.service.Operation}.
+     */
+    @Resource(Resources.OPERATION)
+    Map<ID, OperationInfo> operations;
+}
+

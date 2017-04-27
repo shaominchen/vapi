@@ -1,0 +1,14 @@
+/* **********************************************************
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.std.errors} {@term package} provides the standard
+ * {@term errors} that can be included in the list of {@term errors} in the
+ * specification of {@term operations} to indicate that the {@term operation}
+ * might report those {@term errors}.
+ * It also provides some {@term structures} intended to be used as payload to
+ * provide additional information about those {@term errors}.
+ */
+package com.vmware.vapi.std.errors;

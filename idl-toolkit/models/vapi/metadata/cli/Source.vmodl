@@ -1,0 +1,166 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.cli;
+
+import vmodl.lang.ID;
+import vmodl.lang.Include;
+import vmodl.lang.List;
+import vmodl.lang.Optional;
+import vmodl.lang.Resource;
+import vmodl.lang.URI;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.metadata.SourceCreateSpec;
+import com.vmware.vapi.metadata.SourceType;
+import com.vmware.vapi.std.errors.AlreadyExists;
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Source} {@term service} provides {@term operations} to
+ * manage the sources of command line interface (CLI) metadata information.
+ * <p>
+ * The interface definition language infrastructure provides tools to
+ * generate various kinds of metadata in JSON format from the interface
+ * definition files and additional properties files. One of the generated
+ * files contains CLI information.
+ * <p>
+ * A CLI metadata file contains information about one component element.
+ * When a CLI metadata file is added as a source, each source
+ * contributes only one component element's metadata.
+ * <p>
+ * CLI metadata can also be discovered from a remote server that
+ * supports the CLI metadata services (see {@link com.vmware.vapi.metadata.cli})
+ * {@term package}. Since multiple components can be registered with
+ * a single metadata server, when a remote server is registered as a
+ * source, that source can contribute more than one component.
+ */
+
+@Resource(Resources.SOURCE)
+interface Source {
+    /**
+     * The {@name Info} {@term structure} contains the metadata source
+     * information.
+     */
+    class Info {
+        /** English language human readable description of the source. */
+        String description;
+
+        /** The type ({@enum.values SourceType}) of the metadata source. */
+        @UnionTag
+        SourceType type;
+
+        /**
+         * Absolute file path of the CLI metadata file that has the CLI
+         * information about one component. The {@name #filepath}
+         * is the path to the file in the server's filesystem.
+         */
+        @UnionCase(tag = "type", value = "FILE")
+        String filepath;
+
+        /**
+         * Connection information for the remote server. This should be
+         * in the format http(s)://IP:port/namespace.
+         * <p>
+         * The remote server must contain the {@term services} in the
+         * {@link com.vmware.vapi.metadata.cli} {@term package}.
+         * It must expose CLI information of one or more
+         * components.
+         */
+        @UnionCase(tag = "type", value = "REMOTE")
+        URI address;
+    }
+
+    /**
+     * The {@name CreateSpec} {@term structure} contains the registration
+     * information of a CLI source.
+     */
+    @Include(SourceCreateSpec.class)
+    class CreateSpec {
+
+    }
+
+    /**
+     * Creates a new metadata source. Once the server validates the registration
+     * information of the metadata source, the CLI metadata is retrieved
+     * from the source. This populates elements in all the {@term services}
+     * defined in {@link com.vmware.vapi.metadata.cli} {@term package}.
+     *
+     * @param sourceId metadata source identifier.
+     * @param spec create specification.
+     *
+     * @throws AlreadyExists If the metadata source identifier is already
+     *                       registered with the infrastructure.
+     * @throws InvalidArgument If type of the source specified in {@link CreateSpec#type}
+     *                         is invalid.
+     * @throws InvalidArgument If the file specified in {@link CreateSpec#filepath}
+     *                         is not a valid JSON file or if the format of the CLI
+     *                         metadata in the JSON file is invalid.
+     * @throws InvalidArgument If the URI specified in {@link CreateSpec#address} is unreachable
+     *                         or if there is a transport protocol or message protocol mismatch
+     *                         between the client and the server or if the remote server do not
+     *                         have {@term services} present in {@link com.vmware.vapi.metadata.cli}
+     *                         {@term package}.
+     * @throws NotFound If the file specified in {@link CreateSpec#filepath}
+     *                  does not exist.
+     */
+    void create(ID sourceId, CreateSpec spec) throws AlreadyExists, InvalidArgument, NotFound;
+
+    /**
+     * Deletes an existing CLI metadata source from the infrastructure.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @throws NotFound If the metadata source identifier is not found.
+     */
+    void delete(ID sourceId) throws NotFound;
+
+    /**
+     * Retrieves information about the metadata source corresponding to
+     * {@param.name sourceId}.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @return The {@link Info} instance that corresponds to
+     *         {@param.name sourceId}
+     * @throws NotFound If the metadata source identifier is not found.
+     */
+    Info get(ID sourceId) throws NotFound;
+
+    /**
+     * Returns the identifiers of the metadata sources currently registered
+     * with the infrastructure.
+     *
+     * @return The list of identifiers for metadata sources currently
+     *         registered.
+     */
+    List<ID> list();
+
+    /**
+     * Reloads the CLI metadata from all the metadata sources or of a
+     * particular metadata source if {@param.name sourceId} is specified.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @param.optional sourceId If unspecified, all the metadata sources
+     *                          are reloaded.
+     * @throws NotFound If the metadata source identifier is not found.
+     */
+     void reload(Optional<ID> sourceId) throws NotFound;
+
+    /**
+     * Returns the aggregate fingerprint of metadata from all the metadata
+     * sources or from a particular metadata source if {@param.name sourceId}
+     * is specified.
+     *
+     * @param sourceId Identifier of the metadata source.
+     * @param.optional sourceId If unspecified, the fingerprint of all the
+     *                          metadata sources is returned.
+     * @return Aggregate fingerprint of all the metadata sources or of a
+     *         particular metadata source.
+     * @throws NotFound If the metadata source identifier is not found.
+     */
+     String fingerprint(Optional<ID> sourceId) throws NotFound;
+}
+

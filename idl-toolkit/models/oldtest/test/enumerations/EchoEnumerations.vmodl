@@ -1,0 +1,43 @@
+package com.vmware.vapi.test.enumerations;
+
+/**
+ * Test service which echoes various kinds of enums.
+ */
+interface EchoEnumerations {
+
+    /**
+     * Echoes a value from an enum defined at top level scope.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    TestEnum testEnumTopLevel(TestEnum input);
+
+    /**
+     * Echoes a value from an enum defined inside a top level structure.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    com.vmware.vapi.test.enumerations.TestStruct.TestEnumNestedInStruct
+        testEnumNestedInStruct(com.vmware.vapi.test.enumerations.TestStruct.TestEnumNestedInStruct input);
+
+    /**
+     * Echoes a value from an enum defined inside another service.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    com.vmware.vapi.test.enumerations.TestService.TestEnumNestedInService
+        testEnumNestedInService(com.vmware.vapi.test.enumerations.TestService.TestEnumNestedInService input);
+
+    /**
+     * Echoes a value from an enum defined inside a structure which is
+     * defined inside another service.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    com.vmware.vapi.test.enumerations.TestService.TestStructNestedInService.TestEnumNestedInStructNestedInService
+        testEnumNestedInStructNestedInService(com.vmware.vapi.test.enumerations.TestService.TestStructNestedInService.TestEnumNestedInStructNestedInService input);
+}

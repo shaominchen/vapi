@@ -1,0 +1,15 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@link com.vmware.vapi.metadata} {@term package} provides metadata {@term services}. These
+ * are {@term services} that provide different facets of API information. Clients can
+ * use these {@term services} to:
+ * <ul>
+ *   <li> Discover APIs available in the infrastructure. </li>
+ *   <li> Fetch metadata that can be used to build presentation layers like CLI, REST, etc.</li>
+ *   <li> Fetch authentication and authorization metadata. </li>
+ * </ul>
+ */
+package com.vmware.vapi.metadata;

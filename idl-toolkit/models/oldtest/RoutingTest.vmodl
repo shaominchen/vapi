@@ -1,0 +1,27 @@
+package com.vmware.vapi.test.routing;
+
+import vmodl.lang.*;
+
+@Resource("com.vmware.resource_routerdemo")
+interface RoutingTest {
+
+    @Model
+    @Resource("com.vmware.foo.vm")
+    class Vm {
+        /**
+         * The id of the VM.
+         */
+        @ModelKey
+        Optional<ID> id;
+
+        /**
+         * The name of the VM.
+         */
+        String name;
+    }
+
+    /**
+     * Creates a new VM in a specified cluster. This call should be routed on clusterId
+     */
+    ID createVmInCluster(@Resource("com.vmware.foo.cluster") ID clusterId, Vm vm);
+}

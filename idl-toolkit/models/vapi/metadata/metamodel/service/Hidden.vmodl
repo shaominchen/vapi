@@ -1,0 +1,27 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel.service;
+
+import vmodl.lang.List;
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name Hidden} {@term service} provides {@term operations} to retrieve the
+ * list of {@term services} that are hidden and should not be exposed in
+ * various presentation layers of API infrastructure.
+ */
+@Resource(Resources.SERVICE)
+interface Hidden {
+
+    /**
+     * Returns the {@term service} identifiers that should be hidden.
+     *
+     * @return The list of {@term service} identifiers that should be hidden.
+     */
+    List<ID> list();
+}

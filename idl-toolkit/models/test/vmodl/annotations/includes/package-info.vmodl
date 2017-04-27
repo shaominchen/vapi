@@ -1,0 +1,26 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for annotations that enable including structures
+ * in other structures (a more literal form of composition.)
+ * <p>
+ * The <i>include</i> annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @Includable}
+ *   <dt> This marker declares a class to be includable by another.
+ *   An error will be reported for attempting to include a class
+ *   without this marker.
+ *  <dd> {@literal @Include(Foo.class)}
+ *   <dt> This annotation includes the specified class in this one,
+ *   where {@code Foo.class} is a reference to a class that is marked
+ *   as includable.
+ *  <dd> {@literal @HasFieldsOf(Foo.class)}
+ *   <dt> This annotation constrains an element (field, parameter or
+ *   method result) of type {@code DynamicStructure}, such that it
+ *   must contain the field of the given type
+ * </dl>
+ */
+package vmodl.test.uber.annotations.includes;
+

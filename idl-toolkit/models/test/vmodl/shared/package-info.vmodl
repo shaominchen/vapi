@@ -1,0 +1,17 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 shared types.
+ * <p>
+ * VMODL2 allows for the declaration of top-level types, which may be
+ * shared across packages.
+ * <p>
+ * The examples here are meant to test the proper code generation and
+ * use for a target language.
+ * In general, these examples are to be used from other test packages, so
+ * testing of "import" functionality may be done for each target language.
+ */
+package vmodl.test.uber.shared;
+

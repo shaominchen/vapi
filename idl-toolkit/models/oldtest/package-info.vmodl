@@ -1,0 +1,4 @@
+@Component
+package com.vmware.vapi.test;
+
+import vmodl.lang.Component;

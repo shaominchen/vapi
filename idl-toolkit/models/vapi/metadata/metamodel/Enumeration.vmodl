@@ -1,0 +1,51 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Enumeration} {@term service} provides {@term operations}
+ * to retrieve metamodel information about an enumeration element in the
+ * interface definition language.
+ * <p>
+ * The {@name Enumeration} has a list of enumeration value elements.
+ */
+@vmodl.lang.Resource(Resources.ENUMERATION)
+interface Enumeration {
+
+    /** Resource type for enumeration. */
+    String RESOURCE_TYPE = Resources.ENUMERATION;
+
+
+    /**
+     * Returns the identifiers for the enumeration elements that are
+     * contained in all the package elements, service elements and
+     * structure elements.
+     *
+     * @return The list of identifiers for the enumeration elements.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves information about the enumeration element corresponding to
+     * {@param.name enumerationId}.
+     * <p>
+     * The {@link EnumerationInfo} contains the metamodel information about the
+     * enumeration value element contained in the enumeration element.
+     *
+     * @param enumerationId Identifier of the enumeration element.
+     * @return The {@link EnumerationInfo} instance that corresponds to
+     *         {@param.name enumerationId}
+     * @throws NotFound if the enumeration element associated with {@param.name enumerationId}
+     *                  is not contained in any of the package elements, service
+     *                  elements and structure elements.
+     */
+    EnumerationInfo get(ID enumerationId) throws NotFound;
+}

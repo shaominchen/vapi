@@ -1,0 +1,43 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name InvalidRequest} {@term error} indicates that the request is
+ * malformed in such a way that the server is unable to process it.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>The XML in a SOAP request is not well-formed so the server cannot parse
+ *       the request. </li>
+ *   <li>The XML in a SOAP request is well-formed but does not match the
+ *       structure required by the SOAP specification. </li>
+ *   <li>A JSON-RPC request is not valid JSON. </li>
+ *   <li>The JSON sent in a JSON-RPC request is not a valid JSON-RPC
+ *       Request object. </li>
+ *   <li>The Request object from a JSON-RPC request does not match the structure
+ *       required by the API infrastructure. </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ * <li>The {@term parameter} has a value that is not with the required range.
+ *     The {@link InvalidArgument} {@term error} would be used instead. </li>
+ * <li>The name of the {@term operation} specified in the request doesn't not
+ *     match any known {@term operation}. The {@link NotFound} {@term error}
+ *     would be used instead. </li>
+ * </ul>
+ * <p>
+ * Some transport protocols (for example JSON-RPC) include their own mechanism
+ * for reporting these kinds of errors, and the API infrastructure for a
+ * programming language may expose the errors using a language specific
+ * mechanism, so this {@term error} might not be used.
+ */
+@Export
+public class InvalidRequest extends Error {
+}

@@ -1,0 +1,60 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+/**
+ * The {@name MetadataIdentifier} {@term service} provides
+ * string constants that can be used as identifiers for the metadata
+ * elements.
+ * <p>
+ * Most of the types in {@link com.vmware.vapi.metadata.metamodel} package
+ * has a metadata field whose type is {@code Map<String, ElementMap>}.
+ * {@link MetadataIdentifier} contains the identifiers used in the keys of the
+ * above Map type.
+ */
+interface MetadataIdentifier {
+
+    /** Identifier representing the CanonicalName metadata. */
+    String CANONICAL_NAME = "CanonicalName";
+
+    /** Identifier representing the Component metadata. */
+    String COMPONENT = "Component";
+
+    /** Identifier representing the Create metadata. */
+    String CREATE = "Create";
+
+    /** Identifier representing the Crud metadata. */
+    String CRUD = "Crud";
+
+    /** Identifier representing the HasFieldsOf metadata. */
+    String HAS_FIELDS_OF = "HasFieldsOf";
+
+    /** Identifier representing the Includable metadata. */
+    String INCLUDABLE = "Includable";
+
+    /** Identifier representing the Include metadata. */
+    String INCLUDE = "Include";
+
+    /** Identifier representing the IsOneOf metadata. */
+    String IS_ONE_OF = "IsOneOf";
+
+    /** Identifier representing the Model metadata. */
+    String MODEL = "Model";
+
+    /** Identifier representing the Read metadata. */
+    String READ = "Read";
+
+    /** Identifier representing the Resource metadata. */
+    String RESOURCE = "Resource";
+
+    /** Identifier representing the UnionCase metadata. */
+    String UNION_CASE = "UnionCase";
+
+    /** Identifier representing the UnionTag metadata. */
+    String UNION_TAG = "UnionTag";
+
+    /** Identifier representing the Update metadata. */
+    String UPDATE = "Update";
+}

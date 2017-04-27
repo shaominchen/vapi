@@ -1,0 +1,22 @@
+package com.vmware.vapi.test.errors.custom;
+
+import com.vmware.vapi.std.errors.Error;
+import com.vmware.vapi.test.structures.TopLevelStructInFile;
+
+import vmodl.lang.DateTime;
+
+/**
+ * A custom errors for testing purposes.
+ *
+ * </p>Extends from std.Error and defines several fields.
+ */
+public class CustomError extends Error {
+    /** String field */
+    String strField;
+
+    /** DateTime field */
+    DateTime dateTimeField;
+
+    /** structure field */
+    TopLevelStructInFile structField;
+}

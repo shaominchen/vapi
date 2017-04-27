@@ -1,0 +1,21 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.introspection;
+
+import vmodl.lang.SymbolTableOnly;
+
+/** Resource types for all identifiers used in the vAPI introspection services */
+@SymbolTableOnly
+interface Resources {
+    /** Resource for vAPI provider*/
+    String PROVIDER = "com.vmware.vapi.provider";
+
+    /** Resource for vAPI service */
+    String SERVICE = "com.vmware.vapi.service";
+
+    /** Resource for vAPI operation */
+    String OPERATION = "com.vmware.vapi.operation";
+}

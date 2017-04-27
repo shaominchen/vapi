@@ -1,0 +1,22 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.errors;
+
+import vmodl.lang.*;
+
+/**
+ * Top-level error type
+ */
+class TopLevelErrorInFile extends Exception {
+    /** doc dbl1
+     * @field.optional reason
+     */
+    Optional<Double> dbl1;
+
+    /** doc str1
+     * @field.optional reason
+     */
+    Optional<String> str1;
+}

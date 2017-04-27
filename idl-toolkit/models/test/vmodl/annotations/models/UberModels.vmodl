@@ -1,0 +1,146 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.models;
+
+import vmodl.test.uber.UberResources;
+import vmodl.test.uber.shared.SharedComplexStruct;
+
+import vmodl.lang.*;
+
+
+/** Specifies a test interface for VMODL2 models. */
+interface UberModels {
+
+    /**
+     * echo model
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    LocalSimpleModel testLocalSimpleModel(LocalSimpleModel input);
+
+    /**
+     * echo optional model
+     *
+     * @param input test value
+     * @param.optional input good reason
+     * @return same as {@param.name input}
+     * @return.optional input good reason
+     */
+    Optional<LocalSimpleModel> testOptionalLocalSimpleModel(
+            Optional<LocalSimpleModel> input);
+
+    /**
+     * echo model
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    LocalComplexModel testLocalComplexModel(LocalComplexModel input);
+
+    /**
+     * echo optional model
+     *
+     * @param input test value
+     * @param.optional input good reason
+     * @return same as {@param.name input}
+     * @return.optional input good reason
+     */
+    Optional<LocalComplexModel> testOptionalLocalComplexModel(
+            Optional<LocalComplexModel> input);
+
+
+    /**
+     * echo model
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    NestedSimpleModel testNestedSimpleModel(NestedSimpleModel input);
+
+    /**
+     * echo optional model
+     *
+     * @param input test value
+     * @param.optional input good reason
+     * @return same as {@param.name input}
+     * @return.optional input good reason
+     */
+    Optional<NestedSimpleModel> testOptionalNestedSimpleModel(
+            Optional<NestedSimpleModel> input);
+
+    /**
+     * echo model
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    NestedComplexModel testNestedComplexModel(NestedComplexModel input);
+
+    /**
+     * echo optional model
+     *
+     * @param input test value
+     * @param.optional input good reason
+     * @return same as {@param.name input}
+     * @return.optional input good reason
+     */
+    Optional<NestedComplexModel> testOptionalNestedComplexModel(
+            Optional<NestedComplexModel> input);
+
+
+    /** A test model structure */
+    @Model
+    @Resource(UberResources.UBER)
+    class NestedSimpleModel {
+        /** the model key */
+        @ModelKey
+        ID id;
+
+        /** a model property */
+        String name;
+    }
+
+    /** A test model structure */
+    @Model
+    @Resource(UberResources.UBER)
+    class NestedComplexModel {
+        /** Primary ID - the model key */
+        @ModelKey
+        ID primary;
+
+        /** Other ID field */
+        @ModelIndex
+        @Resource(UberResources.FOO)
+        ID foreign1;
+
+        /** Third ID field */
+        @Resource(UberResources.BAR)
+        ID foreign2;
+
+        /** String field */
+        @ModelIndex
+        String stringField;
+
+        /** Reference to other structure */
+        SharedComplexStruct nested;
+    }
+
+    /** A test model with optional IDs */
+    @Model
+    @Resource(UberResources.UBER)
+    class NestedModelWithOptionalId {
+        /** Primary ID - the model key
+         * @field.optional reason
+         */
+        @ModelKey
+        Optional<ID> primary;
+
+        /** Other ID field
+         * @field.optional reason
+         */
+        Optional<ID> foreign;
+    }
+}
+

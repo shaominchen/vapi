@@ -1,0 +1,135 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc. All rights reserved. -- VMware Confidential
+ * *********************************************************
+ */
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.Include;
+import vmodl.lang.List;
+import vmodl.lang.Optional;
+import vmodl.lang.Resource;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+import vmodl.lang.URI;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.metadata.SourceCreateSpec;
+import com.vmware.vapi.metadata.SourceType;
+import com.vmware.vapi.std.errors.AlreadyExists;
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/** Operations to manage the metadata sources for routing information */
+@Resource(Resources.SOURCE)
+interface Source {
+
+    /** Resource type for vAPI metadata source. */
+    String RESOURCE_TYPE = Resources.SOURCE;
+    /** Metadata source info. */
+
+    class Info {
+        /** Description of the source. */
+        String description;
+
+        /** Type of the metadata source. */
+        @UnionTag
+        SourceType type;
+
+        /** Absolute file path of the file that has the metadata information. */
+        @UnionCase(tag = "type", value = "FILE")
+        String filepath;
+
+        /**
+         * URI of the remote vAPI endpoint. This should be of the format
+         * http(s):IP:port/namespace.
+         */
+        @UnionCase(tag = "type", value = "REMOTE")
+        URI address;
+    }
+
+    /** Metadata source create spec. */
+    @Include(SourceCreateSpec.class)
+    class CreateSpec {
+
+    }
+
+    /**
+     * Create a new metadata source.
+     *
+     * @param sourceId
+     *             metadata source identifier.
+     * @param spec
+     *             create specification.
+     *
+     * @throws AlreadyExists
+     *             If the metadata source identifier is already present.
+     * @throws InvalidArgument
+     *             If type of the source specified in @{link CreateSpec#type} is
+     *             invalid.
+     * @throws InvalidArgument
+     *             If the file specified in @{link CreateSpec#filepath} is not a
+     *             valid json file.
+     * @throws InvalidArgument
+     *             If the URI specified in @{link CreateSpec#address} is
+     *             unreachable or not a vAPI compatible server.
+     * @throws NotFound
+     *             If the file specified in @{link CreateSpec#filepath} does not
+     *             exist.
+     */
+    void create(ID sourceId, CreateSpec spec) throws AlreadyExists, InvalidArgument, NotFound;
+
+    /**
+     * Delete a metadata source.
+     *
+     * @param sourceId
+     *             Metadata source identifier.
+     * @throws NotFound
+     *             If the metadata source identifier is not found.
+     */
+    void delete(ID sourceId) throws NotFound;
+
+    /**
+     * Get the details about a metadata source.
+     *
+     * @param sourceId
+     *             Metadata source identifier.
+     * @return Metadata source info.
+     * @throws NotFound
+     *             If the metadata source identifier is not found.
+     */
+    Info get(ID sourceId) throws NotFound;
+
+    /**
+     * List all the metadata sources.
+     *
+     * @return List of all metadata sources.
+     */
+    List<ID> list();
+
+    /**
+     * Reload metadata from all the sources or of a particular source.
+     *
+     * @param sourceId
+     *             Metadata source identifier.
+     * @param.optional sourceId
+     *             If unspecified, all the sources are reloaded
+     * @throws NotFound
+     *             If the metadata source identifier is not found.
+     */
+     void reload(Optional<ID> sourceId) throws NotFound;
+
+    /**
+     * Returns the fingerprint of all the sources or of a particular source.
+     *
+     * @param sourceId
+     *             Metadata source identifier.
+     * @param.optional sourceId
+     *             If unspecified, fingerprint of all the sources is returned
+     * @return fingerprint of all the sources or of a particular source.
+     * @throws NotFound
+     *             If the metadata source identifier is not found.
+     */
+     String fingerprint(Optional<ID> sourceId) throws NotFound;
+}

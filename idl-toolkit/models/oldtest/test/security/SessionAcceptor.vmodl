@@ -1,0 +1,35 @@
+/* **********************************************************
+ * Copyright 2012-2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.security;
+
+/**
+ * Provides an test service that echos back session ID from
+ * security context.
+ */
+interface SessionAcceptor {
+
+    /**
+     * Returns sessionId as found in request's SecurityContext.
+     *
+     * @return session ID from request's security context
+     */
+    String echoSessionId();
+
+    /** Login with SSO token; returns session identifier.
+     *
+     * @return new session ID
+     */
+    String login();
+
+    /**
+     * Login with NoAuthentication security scheme.
+     */
+    void noAuthn();
+
+    /**
+     * Logout and clear session.
+     */
+    String logout();
+}

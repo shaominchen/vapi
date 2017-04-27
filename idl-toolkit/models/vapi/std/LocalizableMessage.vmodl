@@ -1,0 +1,44 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std;
+
+import vmodl.lang.Export;
+import vmodl.lang.List;
+
+/**
+ * The {@name LocalizableMessage} {@term structure} represents a localizable
+ * string or message template.  {@term Services} include one or more localizable
+ * message templates in the {@term errors} they report so that clients can
+ * display diagnostic messages in the native language of the user.
+ * {@term Services} can include localizable strings in the data returned from
+ * {@term operations} to allow clients to display localized status information
+ * in the native language of the user.
+ */
+@Export
+public class LocalizableMessage {
+    /**
+     * Unique identifier of the localizable string or message template.
+     * <p>
+     * This identifier is typically used to retrieve a locale-specific
+     * string or message template from a message catalog.
+     */
+    String id;
+
+    /**
+     * The value of this localizable string or message template in the
+     * {@code en_US} (English) locale.  If {@link #id} refers to a message
+     * template, the default message will contain the substituted arguments.
+     * This value can be used by clients that do not need to display strings and
+     * messages in the native language of the user.  It could also be used as a
+     * fallback if a client is unable to access the appropriate message catalog.
+     */
+    String defaultMessage;
+
+    /**
+     * Arguments to be substituted into a message template.
+     */
+    List<String> args;
+}

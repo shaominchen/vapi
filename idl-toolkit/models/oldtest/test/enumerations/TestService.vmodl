@@ -1,0 +1,43 @@
+package com.vmware.vapi.test.enumerations;
+
+/**
+ * Service for testing.
+ */
+interface TestService {
+
+    /**
+     * Enum defined inside a service.
+     */
+    enum TestEnumNestedInService {
+        /** enum constant two */
+        TWO,
+        /** enum constant three */
+        THREE,
+        /** enum constant four */
+        FOUR,
+    }
+
+    /**
+     * Structure defined inside a service.
+     */
+    class TestStructNestedInService {
+
+        /**
+         * Enum defined inside a structure which is defined inside a service.
+         *
+         */
+        enum TestEnumNestedInStructNestedInService {
+            /** enum constant two */
+            TWO,
+            /** enum constant three */
+            THREE,
+            /** enum constant four */
+            FOUR,
+        }
+
+        /**
+         * Field of enum type.
+         */
+        TestEnumNestedInStructNestedInService fieldEnumNestedInStructNestedInService;
+    }
+}

@@ -1,0 +1,40 @@
+package com.vmware.vapi.test.cli;
+
+import vmodl.lang.*;
+
+/** Class to simulate for cli maps */
+interface Maps {
+
+    /** simple test structure */
+    class SimpleTestStructure {
+        /** long field */
+        Long longField;
+
+        /** string field */
+        String stringField;
+    }
+
+    /**
+     * Structure with with map of nested SimpleTestStructure
+     */
+    public class MapNestedStructure {
+        /** string field */
+        String stringField;
+
+        /** map of SimpleTestStructure structure */
+        Map<String, SimpleTestStructure> mapTestStruct;
+
+        /** another string field */
+        String anotherStringField;
+    }
+
+    /**
+     * From given SimpleTestStructure returns MapNestedStructure structure by
+     * making the mapTestStruct property of SimpleTestStructure to map with key string
+     * and value SimpleTestStructure
+     *
+     * @param input test input
+     * @return MapNestedStructure object constructed from {@code input}
+     */
+     MapNestedStructure returnMapNestedStructure(SimpleTestStructure input);
+}

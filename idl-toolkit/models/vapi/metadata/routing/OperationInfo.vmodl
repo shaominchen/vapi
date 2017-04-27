@@ -1,0 +1,22 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing;
+
+/**
+ * Information about a vAPI operation that contains routing information.
+ *
+ * For an explanation of containment within operations, see
+ * {@link com.vmware.vapi.metadata.routing.Operation}
+ */
+class OperationInfo {
+    /**
+     * The routing information assigned for this operation.
+     *
+     * For an explanation of routing information, see
+     * {@link com.vmware.vapi.metadata.routing.RoutingInfo}
+     */
+    RoutingInfo routingInfo;
+}

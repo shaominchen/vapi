@@ -1,0 +1,19 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for FOBD (Fields Optional By Default) annotations.
+ * <p>
+ * The FOBD annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @FieldsOptionalByDefault}
+ *   <dt> This marker declares a class to be a FOBD structure.
+ *   E.g., it effectively inverts the default semantic, where fields
+ *   are required by default.
+ *  <dd> {@literal @Required}
+ *   <dt> This marker declares a field to be required.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.fobd;
+

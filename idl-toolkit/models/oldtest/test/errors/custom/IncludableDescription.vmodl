@@ -1,0 +1,15 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.errors.custom;
+
+import vmodl.lang.Includable;
+
+/** Includable mixin which provides a description field */
+@Includable
+class IncludableDescription {
+
+    /** Description */
+    String description;
+}

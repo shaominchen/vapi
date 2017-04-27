@@ -1,0 +1,40 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.Map;
+
+/**
+ * The {@name FieldInfo} {@term structure} contains metamodel information
+ * of a field element contained in a structure element.
+ */
+class FieldInfo {
+    /**
+     * Name of the field element in a canonical format. The format is lower case
+     * with underscores. Each underscore represents a word boundary. If there
+     * are acronyms in the word, the capitalization is preserved. This format
+     * makes it easy to translate the segment into a different naming convention.
+     */
+    String name;
+
+    /** Type information. */
+    Type type;
+
+    /**
+     * Generic metadata elements for the field element. The key in the
+     * {@term map} is the name of the metadata element and the value is the data
+     * associated with that metadata element.
+     * <p>
+     * The {@link com.vmware.vapi.metadata.metamodel.MetadataIdentifier} contains
+     * possible string values for keys in the {@term map}.
+     **/
+    Map<String, ElementMap> metadata;
+
+    /**
+     * English language documentation for the service element. It can contain HTML
+     * markup and Javadoc tags.
+     */
+    String documentation;
+}

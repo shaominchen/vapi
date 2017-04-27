@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+  <head>
+      <base href="${idldoc.topDir(idlPackage)}" />
+    <title>Package: ${idlPackage.name.asCanonical}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript">
+        //before jsTree is loaded
+        window.apiHierarchyCurrentNodeId = '${idldoc.nodeId(idlPackage)}'
+    </script>
+     <!-- begin boilerplate -->
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="css/smoothness/jquery-ui-1.8.13.custom.css" />
+    <link rel="stylesheet" type="text/css" href="css/idldoc-lean.css" />
+
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script type="text/javascript"
+        src="./js/jstree-pre1.0_fix_1/jquery.jstree.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="searchdata.js"></script>
+    <script type="text/javascript" src="treedata.js"></script>
+    <script type="text/javascript" src="searchandtree.js"></script>
+     <!-- End boilerplate -->
+  </head>
+  <body>
+       <!-- begin boilerplate -->
+    <div class="container">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                  <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </a>
+                <span class="brand"> vAPI Documentation </span>
+                <ul class="nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active dropdown ">
+                        <a id="tree-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            ${idlPackage.name.asCanonical}
+                            <b class="caret"></b>
+                        </a>
+                        <ul id="tree-dropdown" class="dropdown-menu">
+                            <li>
+                                  <div id="apiHierarchy"></div>
+                             </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="nav-collapse">
+                <form class="navbar-form pull-right">
+                    <input class="search-query" placeholder="Search" id="searchInput"></input>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- End boilerplate -->
+      <h1>Package: ${idlPackage.name.asCanonical}</h1>
+      <p>${idlPackage.doc}</p>
+<% if (idlPackage.services && idlPackage.services.size() > 0) { %>
+    <h3>Services summary</h3>
+    <table id="services" class="table table-striped table-condensed">
+        <thead>
+            <tr>
+                <th>Service name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% idlPackage.services.each { s -> %>
+            <tr>
+                <td><a href="${idldoc.serviceHtml(s)}">${s.name}</a></td>
+                <td>${idldoc.multilineDoc(s)}</td>
+            </tr>
+<% } %>
+    </tbody>
+    </table>
+<% } %>
+
+<% if (idlPackage.structures && idlPackage.structures.size() > 0) { %>
+    <h3>Structures summary</h3>
+    <table id="structures" class="table table-striped table-condensed">
+        <thead>
+            <tr>
+                <th>Structure name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% idlPackage.structures.each { s -> %>
+            <tr>
+                <td><a href="${idldoc.structureHtml(s)}">${s.name}</a></td>
+                <td>${idldoc.multilineDoc(s)}</td>
+            </tr>
+<% } %>
+    </tbody>
+    </table>
+<% } %>
+
+<% if (idlPackage.enumerations && idlPackage.enumerations.size() > 0) { %>
+    <h3>Enumerations summary</h3>
+    <table id="enumerations" class="table table-stripped table-condensed">
+        <thead>
+            <tr>
+                <th>Enumeration name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+  <% idlPackage.enumerations.each { e -> %>
+            <tr>
+                <td><a href="${idldoc.enumerationHtml(e)}">${e.name}</a></td>
+                <td>${idldoc.multilineDoc(e)}</td>
+            </tr>
+  <% } %>
+        </tbody>
+    </table>
+<% } %>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.unions;
+
+import vmodl.lang.*;
+
+
+/**
+ * Top level Structure.
+ */
+class LocalUnionStruct {
+
+    /**
+     * Enum defined inside a top level structure; used for union tag type.
+     */
+    enum  TagEnum {
+        /** enum constant - LONG */
+        LONG,
+
+        /** enum constant - BOOLEAN */
+        BOOLEAN,
+
+        /** enum constant - STRING */
+        STRING,
+
+        /** enum constant - URI */
+        URI,
+
+        /** enum constant - NONE */
+        NONE
+    }
+
+    /**
+     * Field of enum type.
+     */
+    @UnionTag TagEnum tag;
+
+    /** long field, in the union */
+    @UnionCase(tag="tag", value="LONG") long longVal;
+
+    /** boolean field, in the union */
+    @UnionCase(tag="tag", value="BOOLEAN") boolean booleanVal;
+
+    /** string field, in the union */
+    @UnionCase(tag="tag", value="STRING") String stringVal;
+
+    /** uri field, in the union */
+    @UnionCase(tag="tag", value="URI") long numURIFields;
+
+    /** uri field, in the union */
+    @CanonicalName("URI_val")
+    @UnionCase(tag="tag", value="URI") URI uriVal;
+
+    /** double field - out of the union*/
+    double doubleVal;
+}

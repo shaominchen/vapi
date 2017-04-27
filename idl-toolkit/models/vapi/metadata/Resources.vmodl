@@ -1,0 +1,54 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata;
+
+import vmodl.lang.SymbolTableOnly;
+
+/**
+ * The {@name Resources} {@term service} provides constants for the resource
+ * types for all identifiers present in the {@term services} in the
+ * {@term com.vmware.vapi.metadata} {@term package}.
+ */
+@SymbolTableOnly
+interface Resources {
+    /** Resource type for component element. */
+    String COMPONENT = "com.vmware.vapi.component";
+
+    /** Resource type for package element. */
+    String PACKAGE = "com.vmware.vapi.package";
+
+    /** Resource type for service element. */
+    String SERVICE = "com.vmware.vapi.service";
+
+    /** Resource type for structure element. */
+    String STRUCTURE = "com.vmware.vapi.structure";
+
+    /** Resource type for enumeration element. */
+    String ENUMERATION = "com.vmware.vapi.enumeration";
+
+    /** Resource type for operation element. */
+    String OPERATION = "com.vmware.vapi.operation";
+
+    /** Resource type for resource element. */
+    String RESOURCE = "com.vmware.vapi.resource";
+
+    /** Resource type for metadata metamodel source. */
+    String METAMODEL_SOURCE = "com.vmware.vapi.metadata.metamodel.source";
+
+    /** Resource type for metadata authentication source. */
+    String AUTHENTICATION_SOURCE = "com.vmware.vapi.metadata.authentication.source";
+
+    /** Resource type for metadata privilege source. */
+    String PRIVILEGE_SOURCE = "com.vmware.vapi.metadata.privilege.source";
+
+    // TODO: Internal metadata services like Identifier, Union, Enumeration
+    // are still using the resource types below. When these services become
+    // public we need to fix these.
+    /** Resource type for product element. */
+    String PRODUCT = "com.vmware.vapi.product";
+
+    /** Resource type for metadata source. */
+    String SOURCE = "com.vmware.vapi.metadata.source";
+}

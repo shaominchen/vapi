@@ -1,0 +1,53 @@
+/* **********************************************************
+ * Copyright 2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+package vmodl.test.uber.security;
+
+import vmodl.lang.*;
+
+/**
+ * Provides an authorization service for test purposes.
+ */
+@Resource("com.vmware.vapi.authorization")
+interface Authorization {
+
+    /** Defines a nested structure with an ID field. */
+    @Resource("com.vmware.vapi.authorization.structure")
+    class Struct {
+        /** The structure ID. */
+        ID structureId;
+    }
+
+    /** Defines a nested structure with a Map field. */
+    class Structures {
+        /** The structure Map to {@link Struct} values. */
+        Map<String, Optional<Struct>> structMap;
+    }
+
+    /**
+     * Authorizes the user for the given resource.
+     * @param defaultResource an {@term ID} of a default resource
+     * @param namedId an {@term ID} of a named resource
+     */
+    void authorize(ID defaultResource,
+                   @Resource("com.vmware.vapi.named_resource") ID namedId);
+
+    /**
+     * Authorizes the user for an operation without any resource parameters.
+     */
+    void authorizeDefault();
+
+    /**
+     * Authorizes the user for the given resource specified in a nested
+     * structure.
+     * @param structs the {@link Structures}
+     */
+    void authorizeNested(Structures structs);
+
+    /**
+     * Authorizes the user for the given resource specified in the nested
+     * structure present in the map value.
+     * @param structMap a {@term map} of {@link Struct} values
+     */
+    void authorizeMap(Map<String, Struct> structMap);
+}

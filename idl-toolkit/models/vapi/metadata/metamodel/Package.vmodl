@@ -1,0 +1,49 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ *  The {@name Package} {@term service} provides {@term operations}
+ *  to retrieve metamodel information about a package element in the
+ *  interface definition language.
+ *  <p>
+ *  A package is a logical grouping of services, structures and
+ *  enumerations. A package element describes the package. It contains
+ *  the service elements, structure elements and enumeration elements
+ *  that are grouped together.
+ */
+@vmodl.lang.Resource(Resources.PACKAGE)
+interface Package {
+
+    /** Resource type for package. */
+    String RESOURCE_TYPE = Resources.PACKAGE;
+
+    /**
+     *  Returns the identifiers for the packages elements that are contained
+     *  in all the registered component elements.
+     *
+     *  @return The list of identifiers for the package elements that are
+     *          contained in all the registered component elements.
+     */
+    List<ID> list();
+
+    /**
+     *  Retrieves information about the package element corresponding to
+     *  {@param.name packageId}.
+     *
+     *  @param packageId Identifier of the package element.
+     *  @return The {@link PackageInfo} instance that corresponds to
+     *          {@param.name packageId}.
+     *  @throws NotFound if the package element associated with {@param.name packageId}
+     *          does not exist.
+     */
+    PackageInfo get(ID packageId) throws NotFound;
+}

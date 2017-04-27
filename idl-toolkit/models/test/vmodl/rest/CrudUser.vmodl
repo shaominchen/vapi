@@ -1,0 +1,98 @@
+package vmodl.test.uber.rest;
+
+import vmodl.lang.*;
+import vmodl.crud.*;
+import static vmodl.crud.Usage.REQUIRED;
+import static vmodl.crud.Usage.OPTIONAL;
+import static vmodl.crud.Usage.UNUSED;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/** User service */
+@Resource("com.vmware.vapi.test.user")
+interface CrudUser {
+
+    /** User Info */
+    @Crud
+    @Model
+    class UserModel {
+        /** id */
+        @ModelKey
+        @Read(REQUIRED) @Create(UNUSED) @Update(UNUSED)
+        ID id;
+
+        /** name */
+        @Read(REQUIRED) @Create(REQUIRED) @Update(OPTIONAL)
+        String name;
+
+        /** email */
+        @Read(REQUIRED) @Create(REQUIRED) @Update(OPTIONAL)
+        String email;
+    }
+
+    /** Filter spec for list */
+    class FilterSpec {
+        /**
+         * Filter active users
+         * @field.optional good reason
+         */
+        Optional<Boolean> isActive;
+    }
+
+    /**
+     * Create User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/crud-user}
+     *
+     * @param user user model param
+     * @return user model result
+     * @throws InvalidArgument when there is a problem with the input spec
+     */
+    UserModel create(UserModel user) throws InvalidArgument;
+
+    /**
+     * Get User.
+     * <p>
+     * {@code GET /com/vmware/vapi/test/rest/crud-user/<user_id>}
+     *
+     * @param userId user id param
+     * @return user model result
+     * @throws NotFound when the user id is unknown
+     */
+    UserModel get(ID userId) throws NotFound;
+
+    /**
+     * List User.
+     * <p>
+     * {@code GET /com/vmware/vapi/test/rest/crud-user}
+     * {@code GET /com/vmware/vapi/test/rest/crud-user?filter.is_active=True}
+     *
+     * @param filter filter param
+     * @param.optional filter good reason
+     * @return list of user model result
+     */
+    List<UserModel> list(Optional<FilterSpec> filter);
+
+    /**
+     * Update User.
+     * <p>
+     * {@code PATCH /com/vmware/vapi/test/rest/crud-user/<user_id>}
+     *
+     * @param userId user id param
+     * @param user user model param
+     * @return user model result
+     * @throws NotFound when the user id is unknown
+     */
+    UserModel update(ID userId, UserModel user) throws NotFound;
+
+    /**
+     * Delete User.
+     * <p>
+     * {@code DELETE /com/vmware/vapi/test/rest/crud-user/<user_id>}
+     *
+     * @param userId user id param
+     * @throws NotFound when the user id is unknown
+     */
+    void delete(ID userId) throws NotFound;
+}

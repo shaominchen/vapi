@@ -1,0 +1,45 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel.resource;
+
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+import vmodl.lang.Set;
+
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name Model} {@term service} provides {@term operations} to
+ * retrieve information about models.
+ * <p>
+ * A structure is used as a model if it is used for persisting data
+ * about an entity. Some of the fields in the model structure are also
+ * used for creating indexes for querying.
+ * <p>
+ * One or more services can operate on the same resource type. One
+ * or more services can provide the model structure for an entity of this
+ * resource type. Using {@name Model} {@term service} you can retrieve
+ * the list of all the structure elements that are model structures for
+ * a given resource type.
+ */
+interface Model {
+    /**
+     * Returns the set of identifiers for the structure elements that
+     * are models for the resource type corresponding to {@param.name resourceId}.
+     * <p>
+     * The {@link com.vmware.vapi.metadata.metamodel.Structure} {@term service}
+     * provides {@term operations} to retrieve more details about the structure
+     * elements corresponding to the identifiers returned by this {@term operation}.
+     *
+     * @param resourceId Identifier of the resource type.
+     * @return The set of identifiers for the models that are associated with the
+     *         resource type in {@param.name resourceId}.
+     * @throws NotFound if the resource type associated with {@param.name resourceId}
+     *                  does not exist.
+     */
+    @Resource(Resources.STRUCTURE)
+    Set<ID> list(@Resource(Resources.RESOURCE) ID resourceId) throws NotFound;
+}

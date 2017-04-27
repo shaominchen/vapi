@@ -1,0 +1,51 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.crud;
+
+import vmodl.crud.Crud;
+import vmodl.lang.Model;
+import vmodl.lang.Resource;
+import vmodl.lang.ModelKey;
+import vmodl.lang.ID;
+import vmodl.crud.Usage.REQUIRED;
+import vmodl.crud.Usage.UNUSED;
+import vmodl.crud.Usage.OPTIONAL;
+import vmodl.crud.Create;
+import vmodl.crud.Read;
+import vmodl.crud.Update;
+
+/**
+ * Test vmodl for CRUD annotations
+ */
+@Crud
+@Model
+@Resource("com.vmware.vapi.CrudObject")
+@Read(REQUIRED) @Create(REQUIRED) @Update(OPTIONAL)
+class CrudObject {
+
+    @ModelKey
+    /**
+     * ID of the CrudObject instance
+     */
+    @Create(UNUSED)
+    ID id;
+
+    /**
+     * The key to be created
+     */
+    String key;
+
+    /**
+     * The value corresponding to the key
+     */
+    @Create(OPTIONAL)
+    String value;
+
+    /**
+     * not used for updates
+     */
+    @Update(UNUSED)
+    boolean remove;
+}

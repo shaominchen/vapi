@@ -1,0 +1,13 @@
+package com.vmware.vapi.test.enumerations;
+
+/**
+ * Enum defined at top level scope.
+ */
+enum TestEnum {
+    /** enum constant two */
+    TWO,
+    /** enum constant three */
+    THREE,
+    /** enum constant four */
+    FOUR,
+}

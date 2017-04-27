@@ -1,0 +1,20 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.List;
+
+/**
+ * The {@name OperationInfo} {@term structure} contains authentication information
+ * of an operation element.
+ */
+class OperationInfo {
+    /**
+     * List of authentication schemes used by an operation element. The
+     * authentication scheme specified on the service element corresponding to this
+     * operation element is ignored.
+     */
+    List<AuthenticationInfo> schemes;
+}

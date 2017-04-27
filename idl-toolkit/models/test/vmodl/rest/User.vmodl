@@ -1,0 +1,142 @@
+package vmodl.test.uber.rest;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.NotFound;
+
+/** User service */
+@Resource("com.vmware.vapi.test.user")
+interface User {
+
+    /** User Info */
+    class Info {
+        /** name */
+        String name;
+
+        /** email */
+        String email;
+    }
+
+    /** User create spec */
+    class CreateSpec {
+        /** id */
+        /** name */
+        String name;
+
+        /** email */
+        String email;
+    }
+
+    /** User update spec */
+    class UpdateSpec {
+        /** id */
+        /**
+         * name
+         * @field.optional good reason
+         */
+        Optional<String> name;
+
+        /**
+         * email
+         * @field.optional good reason
+         */
+        Optional<String> email;
+    }
+
+    /** User set spec */
+    class SetSpec {
+        /** id */
+        /** name */
+        String name;
+
+        /** email */
+        String email;
+    }
+
+    /**
+     * Create User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest}
+     *
+     * @param spec create spec param
+     * @return ID
+     * @throws InvalidArgument when there is a problem with the input spec
+     */
+    ID create(CreateSpec spec) throws InvalidArgument;
+
+    /**
+     * Create User.
+     * <p>
+     * {@code GET /com/vmware/vapi/test/rest/<user_id>}
+     *
+     * @param userId user id param
+     * @return Info
+     * @throws NotFound when the user id is unknown
+     */
+    Info get(ID userId) throws NotFound;
+
+    /**
+     * List User.
+     * <p>
+     * {@code GET /com/vmware/vapi/test/rest}
+     *
+     * @return list of ID
+     */
+    List<ID> list();
+
+    /**
+     * Update User.
+     * <p>
+     * {@code PATCH /com/vmware/vapi/test/rest/<user_id>}
+     *
+     * @param userId user id param
+     * @param spec update spec param
+     * @throws NotFound when the user id is unknown
+     */
+    void update(ID userId, UpdateSpec spec) throws NotFound;
+
+    /**
+     * Set User.
+     * <p>
+     * {@code PUT /com/vmware/vapi/test/rest/<user_id>}
+     *
+     * @param userId user id param
+     * @param spec set spec param
+     * @throws NotFound when the user id is unknown
+     */
+    void set(ID userId, SetSpec spec) throws NotFound;
+
+    /**
+     * Delete User.
+     * <p>
+     * {@code DELETE /com/vmware/vapi/test/rest/<user_id>}
+     *
+     * @param userId user id param
+     * @throws NotFound when the user id is unknown
+     */
+    void delete(ID userId) throws NotFound;
+
+    /**
+     * Register User.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/<user_id>?~action=register}
+     *
+     * @param userId user id param
+     * @throws NotFound when the user id is unknown
+     */
+    void register(ID userId) throws NotFound;
+
+    /**
+     * Compares two Users and returns -1,0 or 1 based on whether the first user
+     * is better, equal or lower than the second user.
+     * <p>
+     * {@code POST /com/vmware/vapi/test/rest/<user_id>?~action=compare}
+     *
+     * @param userId user id of first user
+     * @param otherUserId user id of second user
+     * @return long value of -1,0 or 1
+     * @throws NotFound when either user id is unknown
+     */
+    long compare(ID userId, ID otherUserId) throws NotFound;
+}

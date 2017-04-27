@@ -1,0 +1,50 @@
+package com.vmware.vapi.test.structures.another;
+
+import com.vmware.vapi.test.structures.TopLevelStructInFile;
+
+/**
+ * Service3:
+ * <ul>
+ * <li> uses top-level structure from another package by importing it </li>
+ * <li> uses nested structure which refers other structures </li>
+ * <li> uses top-level structure which refers other structures </li>
+ * <ul>
+ */
+interface Service3 {
+
+    /** Nested structure that refers other structure(s) */
+    class ReferringNestedStruct {
+        /** refer a top-level struct from another package */
+        TopLevelStructInFile field1;
+    }
+
+    /**
+     * Simple name used for top-level structure from another
+     * package - OK since it is imported.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    TopLevelStructInFile echoTopLevelStructImported(TopLevelStructInFile param);
+
+
+    // Illegal: can't access nested structure out-side the its enclosing service
+    // NestedStruct echoNestedStructImported(NestedStruct param);
+
+    /**
+     * Use nested structure which refers other structure(s).
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    ReferringNestedStruct echoReferringNestedStruct(ReferringNestedStruct param);
+
+    /**
+     * Use top-level structure which refers other structure(s).
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    ReferringTopLevelStruct echoReferringTopLevelStruct(ReferringTopLevelStruct param);
+}
+

@@ -1,0 +1,62 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * The {@name GenericInstantiation} {@term structure} describes the type information
+ * of a typed element when the type is an instantiation of one of the generic
+ * types provided by the infrastructure.
+ */
+class GenericInstantiation {
+    /**
+     * The {@name GenericType} {@term enumerated type} provides
+     * {@term enumeration values} for each of the generic types provided by
+     * the infrastructure.
+     */
+    enum GenericType {
+        /** Indicates the generic type is a list. */
+        LIST,
+
+        /** Indicates the generic type is a map. */
+        MAP,
+
+        /** Indicates the generic type is an optional. */
+        OPTIONAL,
+
+        /** Indicates the generic type is a set. */
+        SET
+    }
+
+    /** The generic type that is being instantiated. */
+    @UnionTag
+    GenericType genericType;
+
+    /**
+     * Type of the element parameter if the generic type
+     * instantiation is a {@link GenericType#LIST},
+     * {@link GenericType#OPTIONAL} or {@link GenericType#SET}.
+     */
+    @UnionCase(tag="genericType", value={"LIST", "OPTIONAL", "SET"})
+    Type elementType;
+
+    /**
+     * Type of the key parameter of the map generic type instantiation.
+     * The map generic type has a key parameter and value parameter. The type
+     * of the value parameter is described by {@link GenericInstantiation#mapValueType}..
+     */
+    @UnionCase(tag="genericType", value="MAP")
+    Type mapKeyType;
+
+    /**
+     * Type of the value parameter of the map generic type instantiation.
+     * The map generic type has a key parameter and value parameter. The type
+     * of the key parameter is described by {@link GenericInstantiation#mapKeyType}..
+     */
+    @UnionCase(tag="genericType", value="MAP")
+    Type mapValueType;
+}

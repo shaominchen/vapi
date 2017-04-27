@@ -1,0 +1,25 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name Unsupported} {@term error} indicates that the {@term operation} is
+ * not supported by the {@term service}.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Trying to hot-plug a CPU when the current configuration of the VM does
+ *       not support hot-plugging of CPUs. </li>
+ *   <li>Trying to change the memory size to a value that is not within the
+ *       acceptable guest memory bounds supported by the virtual machine's
+ *       host. </li>
+ * </ul>
+ */
+@Export
+public class Unsupported extends Error {
+}

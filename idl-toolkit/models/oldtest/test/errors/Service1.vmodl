@@ -1,0 +1,199 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.errors;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+
+import vmodl.lang.*;
+
+/**
+ * Top-level error type
+ */
+class TopLevelError extends Exception {
+    /** doc dbl2 */
+    double dbl2;
+
+    /** doc str2 */
+    String str2;
+}
+
+/**
+ * Top-level error type extending an type-level error type in the same package
+ */
+class ExtendingTopLevelError extends TopLevelError {
+        /** doc strField */
+        String strField;
+}
+
+/**
+ * Top-level error type extending an type-level error type in the same package
+ * from another file
+ */
+class ExtendingTopLevelErrorInFile extends TopLevelErrorInFile {
+
+        /** doc strField */
+        String strField;
+}
+
+/**
+ * An error type whose (unqualified) name is the same as a standard error
+ * reported by the vAPI runtime.
+ */
+class OperationNotFound extends Exception {
+}
+
+/**
+ * Service1:
+ * <ul>
+ *     <li> declares a nested error type</li>
+ *     <li> uses top-level error type from same package</li>
+ *     <li> uses nested (in itself) error type</li>
+ * <ul>
+ */
+interface Service1 {
+
+    /**
+     * Nested error type that extends an top-level error type from another file
+     */
+    public class NestedError
+        extends com.vmware.vapi.test.errors.TopLevelErrorInFile {
+
+        /** doc strField */
+        String strField;
+    }
+
+    /**
+     * Nested error type that extends an top-level error type
+     */
+    public class AnotherNestedError
+        extends com.vmware.vapi.test.errors.TopLevelError {
+
+        /** doc strField */
+        String strField;
+    }
+
+    /**
+     * Nested error type that extends another (nested) error type in the same
+     * interface
+     */
+    public class ExtendingNestedError extends NestedError {
+
+        /** doc strField2 */
+        String strField2;
+    }
+
+    /**
+     * Refer to a top-level error defined the same file.
+     *
+     * @param error error to report
+     * @throws TopLevelError same as {@code error} parameter
+     */
+    void reportTopLevelError(TopLevelError error)
+        throws TopLevelError;
+
+    /**
+     * Refer to a top-level error defined the same file with a FQ name.
+     *
+     * @param error error to report
+     * @throws TopLevelError same as {@code error} parameter
+     */
+    void reportTopLevelErrorFQ( com.vmware.vapi.test.errors.TopLevelError error)
+        throws com.vmware.vapi.test.errors.TopLevelError;
+
+    /**
+     * Simple name used for top-level error type - OK, since it is
+     * in the same package.
+     *
+     * @param error error to report
+     * @throws TopLevelErrorInFile same as {@code error} parameter
+     */
+    void reportTopLevelErrorInFile(TopLevelErrorInFile error)
+        throws TopLevelErrorInFile;
+
+    /**
+     * FQ name used for error type in the same scope/package - OK.
+     *
+     * @param error error to report
+     * @throws TopLevelErrorInFile same as {@code error} parameter
+     */
+    void reportTopLevelErrorInFileFQ(
+        com.vmware.vapi.test.errors.TopLevelErrorInFile error)
+        throws com.vmware.vapi.test.errors.TopLevelErrorInFile;
+
+    /**
+     * Simple name used for error type nested in this same service - OK.
+     *
+     * @param error error to report
+     * @throws NestedError same as {@code error} parameter
+     */
+    void reportNestedError(NestedError error)
+        throws NestedError;
+
+    /**
+     * FQ name used for error type nested in this same service - OK.
+     *
+     * @param error error to report
+     * @throws NestedError same as {@code error} parameter
+     */
+    void reportNestedErrorFQ(
+        com.vmware.vapi.test.errors.Service1.NestedError error)
+        throws com.vmware.vapi.test.errors.Service1.NestedError;
+
+    /**
+     * Report an error (NestedError) that is derived from the declared
+     * error (TopLevelErrorInFile).
+     *
+     * @param error error to report
+     * @throws TopLevelErrorInFile same as {@code error} parameter
+     */
+    void reportDerivedError(TopLevelErrorInFile error)
+        throws TopLevelErrorInFile;
+
+    /**
+     * Refer to a top-level error defined the same file and a standard error
+     * reported by the vAPI runtime using an imported name.
+     *
+     * @param error error to report
+     * @param.optional error reason
+     * @throws TopLevelError same as {@code error} parameter
+     * @throws InvalidArgument just in the declaration; never reported
+     */
+    void reportStandardError(Optional<TopLevelError> error)
+        throws TopLevelError, InvalidArgument;
+
+    /**
+     * Refer to a top-level error defined the same file and a standard error
+     * reported by the vAPI runtime using a fully qualified name.
+     *
+     * @param error error to report
+     * @param.optional error reason
+     * @throws TopLevelError same as {@code error} parameter
+     * @throws InvalidArgument just in the declaration; never reported
+     */
+    void reportStandardErrorFQ(Optional<TopLevelError> error)
+        throws TopLevelError, com.vmware.vapi.std.errors.InvalidArgument;
+
+    /**
+     * Refer to a locally-define error that has the same (unqualified) name as
+     * a standard error reported by the vAPI runtime.
+     *
+     * @param error error to report
+     * @throws OperationNotFound same as {@code error} parameter
+     */
+    void reportAmbiguousNameError(OperationNotFound error)
+        throws OperationNotFound;
+
+    /**
+     * Use a fully-qualified name to refer to a locally-define error that has
+     * the same (unqualified) name as a standard error reported by the vAPI
+     * runtime.
+     *
+     * @param error error to report
+     * @throws OperationNotFound same as {@code error} parameter
+     */
+    void reportAmbiguousNameErrorFQ(
+        com.vmware.vapi.test.errors.OperationNotFound error)
+        throws com.vmware.vapi.test.errors.OperationNotFound;
+}

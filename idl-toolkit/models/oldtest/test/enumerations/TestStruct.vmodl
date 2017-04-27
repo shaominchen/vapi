@@ -1,0 +1,24 @@
+package com.vmware.vapi.test.enumerations;
+
+/**
+ * Top level structure for testing.
+ */
+class TestStruct {
+
+    /**
+     * Enum defined inside a top level structure.
+     */
+    enum TestEnumNestedInStruct {
+        /** enum constant two */
+        TWO,
+        /** enum constant three */
+        THREE,
+        /** enum constant four */
+        FOUR,
+    }
+
+    /**
+     * Field of enum type.
+     */
+    TestEnumNestedInStruct fieldEnumNestedInStruct;
+}

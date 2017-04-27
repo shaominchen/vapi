@@ -1,0 +1,24 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name FeatureInUse} {@term error} indicates that an action cannot be
+ * completed because a feature is in use.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Trying to disable snapshots on a virtual machine which has a
+ *       snapshot. </li>
+ *   <li>Trying to downgrade a license that has licensed features that are in
+ *       use. </li>
+ * </ul>
+ */
+@Export
+public class FeatureInUse extends Error {
+}

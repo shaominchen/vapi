@@ -1,0 +1,28 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.structures;
+
+import vmodl.lang.*;
+
+/** Specifies a test interface for VMODL2 dynamic structure types. */
+interface UberDynamic {
+
+    /** SampleStruct */
+    class SampleStruct {
+        /** long field */
+        long foo;
+
+        /** String field */
+        String bar;
+    }
+
+    /**
+     * Echo dynamic structure.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    DynamicStructure echoDynamicStructure(DynamicStructure input);
+}
+

@@ -1,0 +1,16 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 documentation.
+ * <p>
+ * The VMODL2 specification relies on Javadoc for our means of documenting
+ * the API.  However, VMODL2 constrains the markup and javadoc tags used,
+ * in order to control the abstract doc model produced, which is then
+ * transformed to concreate syntax for each target language.
+ * The examples herein are meant to drive the testing of documentation
+ * processing by language toolkits.
+ */
+package vmodl.test.uber.docs;
+

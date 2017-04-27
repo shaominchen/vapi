@@ -1,0 +1,44 @@
+/***************************************************
+ * Copyright 2016 VMware, Inc.  All rights reserved.
+ **************************************************/
+package vmodl.test.uber.annotations.rest;
+
+import vmodl.lang.*;
+import vmodl.rest.*;
+
+@Resource("com.vmware.test.User")
+interface CustomMappingsUser {
+
+    /** User Info */
+    class UserInfo {
+        /** id */
+        ID id;
+        /** name */
+        String name;
+        /** email */
+        String email;
+    }
+
+    @RequestMapping(value="/test/user", method=RequestMethod.POST)
+    ID create(UserInfo user);
+
+    @RequestMapping(value="/test/user/{user_id}",
+                    method=RequestMethod.GET)
+    UserInfo get(@PathVariable("user_id") ID userId);
+
+    @RequestMapping(value="/test/user",
+                    method=RequestMethod.GET)
+    List<UserInfo> list();
+
+    @RequestMapping(value="/test/user/{user_id}",
+                    method=RequestMethod.PUT)
+    void set(@PathVariable("user_id") ID userId, UserInfo userInfo);
+
+    @RequestMapping(value="/test/user/{user_id}",
+                    method=RequestMethod.DELETE)
+    void delete(@PathVariable("user_id") ID userId);
+
+    @RequestMapping(value="/test/user/{user_id}/name/{user_name}",
+                    method=RequestMethod.PATCH)
+    void updateName(@PathVariable("user_id") ID userId, @PathVariable("user_name") String userName);
+}

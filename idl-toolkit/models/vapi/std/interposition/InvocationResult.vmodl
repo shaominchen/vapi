@@ -1,0 +1,55 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.interposition;
+
+import vmodl.lang.DynamicStructure;
+import vmodl.lang.Export;
+import vmodl.lang.Opaque;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * Information about the result from an interposed operation invocation. All
+ * POST interposers will receive an instance of this structure.
+ */
+@Export
+public class InvocationResult {
+
+    /**
+     * Type of the invocation result.
+     */
+    public enum ResultType {
+
+        /**
+         * Normal invocation result.
+         */
+        NORMAL_RESULT,
+
+        /**
+         * Error invocation result.
+         */
+        ERROR_RESULT,
+    }
+
+    /**
+     * Type of the invocation result.
+     */
+    @UnionTag ResultType resultType;
+
+    /**
+     * Normal result value.
+     */
+    // TODO: Replace Opaque with a (not-yet-existing) standard discriminated
+    //       union type
+    @UnionCase(tag="resultType", value="NORMAL_RESULT") Opaque output;
+
+    /**
+     * Error result value.
+     */
+    // TODO: Replace DynamicStructure with a (not-yet-existing) standard error type
+    //       which matches both standard and custom errors
+    @UnionCase(tag="resultType", value="ERROR_RESULT") DynamicStructure error;
+}

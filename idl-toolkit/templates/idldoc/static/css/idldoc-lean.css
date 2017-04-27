@@ -1,0 +1,21 @@
+body {
+    padding: 50px 80px 40px 20px;
+}
+
+.structure:before {
+    content: url("http://icons.iconarchive.com/icons/iconarchive/red-orb-alphabet/16/Letter-D-icon.png");
+}
+
+.service:before {
+    content: url("http://icons.iconarchive.com/icons/iconexpo/speech-balloon-green/16/speech-balloon-green-s-icon.png");
+}
+
+.operation:before {
+    content: url("http://icons.iconarchive.com/icons/iconarchive/red-orb-alphabet/16/Letter-O-icon.png");
+}
+
+#tree-dropdown {
+    padding-right: 25px;
+    max-height: 500px;
+    overflow-y: scroll;
+}

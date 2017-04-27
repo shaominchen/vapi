@@ -1,0 +1,18 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata;
+
+/**
+ * The {@name SourceType} {@term enumerated type} defines the types of sources
+ * for API metadata. You specify the type of source when adding a metadata
+ * source to a metadata service.
+ */
+public enum SourceType {
+    /** Indicates the metadata source is a JSON file. */
+    FILE,
+
+    /** Indicates the metadata source is a remote server. */
+    REMOTE,
+}

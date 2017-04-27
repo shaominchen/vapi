@@ -1,0 +1,90 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.generics;
+
+import vmodl.test.uber.UberResources;
+import vmodl.test.uber.shared.SharedEmptyStruct;
+import vmodl.test.uber.shared.SharedSimpleStruct;
+import vmodl.test.uber.shared.SharedComplexStruct;
+
+import vmodl.lang.*;
+
+
+/**
+ * Specifies a test interface for VMODL2 {@literal List<T>} types,
+ * where the item ({@code T}) is a structure type.
+ */
+@Resource(UberResources.FOO)
+interface UberStructureLists {
+
+    /**
+     * echo List of SharedEmptyStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<SharedEmptyStruct> echoSharedEmptyStructList(
+            List<SharedEmptyStruct> input);
+
+    /**
+     * echo List of SharedSimpleStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<SharedSimpleStruct> echoSharedSimpleStructList(
+            List<SharedSimpleStruct> input);
+
+    /**
+     * echo List of SharedComplexStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<SharedComplexStruct> echoSharedComplexStructList(
+            List<SharedComplexStruct> input);
+
+    //TODO: cover more Shared*Struct types?
+
+
+    /**
+     * echo List of LocalSimpleStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<LocalSimpleStruct> echoLocalSimpleStructList(
+            List<LocalSimpleStruct> input);
+
+    /**
+     * echo List of LocalComplexStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<LocalComplexStruct> echoLocalComplexStructList(
+            List<LocalComplexStruct> input);
+
+    //TODO: cover more Local*Struct types?
+
+
+    /**
+     * echo List of NestedSimpleStruct
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<NestedSimpleStruct> echoNestedSimpleStructList(
+            List<NestedSimpleStruct> input);
+
+    //TODO: cover more Nested*Struct types?
+
+    /**
+     * Nested simple structure used to test generics.
+     */
+    class NestedSimpleStruct {
+        /** name property */
+        String name;
+    }
+}

@@ -1,0 +1,18 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.resources;
+
+import vmodl.lang.*;
+
+
+/** simple top level test structure for polymorphic resoruce ID support */
+class LocalStructWithDynamicId {
+    /** device type */
+    @IsOneOf(value=UberPolymorphicResource.REMOVABLE)
+    String deviceType;
+
+    /** device ID */
+    @Resource(value=UberPolymorphicResource.REMOVABLE, typeHolder="deviceType")
+    ID deviceId;
+}

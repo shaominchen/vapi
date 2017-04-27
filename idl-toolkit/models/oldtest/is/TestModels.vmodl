@@ -1,0 +1,106 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+/*
+ * TestModels.java --
+ *
+ *      Test models for the IS serializer code.
+ */
+
+package com.vmware.vapi.test.is;
+
+import vmodl.lang.*;
+
+/**
+ * Service which contains definitions of structures used to test the Inventory
+ * Service serializer.
+ */
+@Resource("com.vmware.test_models")
+interface TestModels {
+    /**
+     * Resource model.
+     */
+    @Model
+    class TestModel {
+        /**
+         * Primary key.
+         */
+        @ModelKey
+        ID id;
+
+        /** Optional ID
+	 * @field.optional reason */
+        Optional<ID> optionalId;
+
+        /** Test key */
+        Set<ID> setOfIds;
+
+        /** Test key */
+        Set<String> setOfStrings;
+
+        /** Test key */
+        List<ID> listOfIds;
+
+        /** Test key */
+        List<String> listOfStrings;
+
+        /** Test key */
+        Map<ID, String> mapWithIdKey;
+
+        /** Test key */
+        NestedModel nestedModel;
+    }
+
+    @Model
+    class NestedModel {
+        /** Test key */
+        @ModelKey
+        ID nestedId;
+    }
+
+    /**
+     * Resource model.
+     */
+    @Model
+    class TestModelWithPolymorphicResource {
+        /**
+         * Primary key.
+         */
+        @ModelKey
+        @Resource(typeHolder="resourceType")
+        ID id;
+
+        /**
+         * Primary key resource type
+         */
+        String resourceType;
+    }
+
+    /**
+     * Test structure with array of IDs
+     */
+    @Model
+    @Resource("com.vmware.foo")
+    class SimpleStructureWithArrayOfIds {
+        /**
+         * Id of the structure.
+         */
+        @ModelKey
+        ID id;
+
+        /**
+         * optional list of IDs
+         * @field.optional reason
+         */
+        Optional<List<ID>> optionalListOfIDs;
+
+        /** list of optional IDs */
+        List<Optional<ID>> listOfOptionalIDs;
+
+        /** list structure with ID */
+        List<NestedModel> listOfStructureWithId;
+
+        Map<ID, List<ID>> mapIdToListOfIds;
+    }
+}

@@ -1,0 +1,21 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 names (or identifiers).
+ * <p>
+ * The VMODL2 specification is based on Java syntax, so we rely on Java
+ * naming conventions for our type and member names.  However, a VMODL2
+ * model is only a metamodel and it is always transformed into a more
+ * concrete form, such as a language binding.  Each target language has
+ * its own naming convention, which is often not the same as Java/VMODL2.
+ * Therefore, every target language needs to be prepared to translate
+ * names to their naming convention and, further, to be ready to handle
+ * possible conflicts that might happen with their language keywords.
+ * <p>
+ * The examples here are meant to test the proper code generation and
+ * use for a target language.
+ */
+package vmodl.test.uber.names;
+

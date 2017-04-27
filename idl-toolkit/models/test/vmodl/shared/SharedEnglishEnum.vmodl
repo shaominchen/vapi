@@ -1,0 +1,16 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.shared;
+
+/** shared enumumeration */
+enum SharedEnglishEnum {
+    /** const one */
+    ONE,
+
+    /** const two */
+    TWO,
+
+    /** const three */
+    THREE,
+}

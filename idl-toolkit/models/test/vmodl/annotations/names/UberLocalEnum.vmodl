@@ -1,0 +1,18 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.names;
+
+import vmodl.lang.*;
+
+/** test canonicalizer on a enum name */
+@CanonicalName("local_enum")
+enum UberLocalEnum {
+
+    /** test canonicalizer on a constant name */
+    @CanonicalName("FOO")
+    UBER_FOO,
+
+    /** regular constant name */
+    BAR;
+}

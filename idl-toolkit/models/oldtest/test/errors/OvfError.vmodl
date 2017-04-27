@@ -1,0 +1,20 @@
+package com.vmware.vapi.test;
+
+import vmodl.lang.Includable;
+import vmodl.lang.Include;
+import com.vmware.vapi.std.errors.Error;
+
+/** OvfError (from vCD-e API) */
+@Includable
+class OvfError {
+    /** The error category. */
+     String category;
+}
+
+/**  OvfServerError (from vCD-e API) */
+@Include(OvfError.class)
+class OvfServerError {
+
+    /** The error. */
+    Error error;
+}

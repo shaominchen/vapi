@@ -1,0 +1,72 @@
+package com.vmware.vapi.test;
+
+import com.vmware.vapi.std.errors.Error;
+import com.vmware.vapi.std.errors.InvalidElementType;
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.std.errors.ResourceInUse;
+
+/** vAPI test interface for end-to-end error reporting */
+interface ErrorReporting {
+
+    /**
+     *  Test operation that does not report an error
+     */
+    void testNoError();
+
+    /**
+     * Test error reporting filter - ApiProvider decorator (like
+     * Authnentication filter which reports different errors)
+     *
+     * @param errorName the cannonical name of the error to be reported by
+     *                  the filter
+     */
+    void testFilterErrors(String errorName);
+
+    /**
+     *  Test operation that reports an operation-specific error (e.g.
+     *  NotFound)
+     *
+     *  @param input not used
+     *  @throws NotFound unconditioanlly reports this error
+     */
+    void testOperationSpecificError(String input) throws NotFound;
+
+    /**
+     *  Test operation that declares multiple errors and reports different
+     *  ones based on input
+     *
+     *  @param input determines reported error (1:NotFound,
+     *               2:ResourceInUse, 3:InvalidElementType)
+     *  @throws NotFound for 1
+     *  @throws ResourceInUse for 2
+     *  @throws InvalidElementType for 3
+     */
+    void testOperationMultipleErrors(long input)
+    throws NotFound, ResourceInUse, InvalidElementType;
+
+    /**
+     *  Test operation that reports an error that isn't specified in the
+     *  errors clause which should result in the runtime reporting an
+     *  InternalServerError
+     */
+    void testUndeclaredError();
+
+    /**
+     *  Test operation that throws a programming language specific error
+     *  which should result in the runtime reporting an
+     *  InternalServerError
+     */
+    void testBindingSpecificError();
+
+    /**
+     *  Test operation that reports the base Error type
+     *
+     *  @param reportDerivedError if true the operation will report
+     *                            {@link NotFound} which clients will see as
+     *                            InternalServerError because {@link NotFound}
+     *                            is not listed in the throws clause
+     *  @throws Error if {@code input} is {@code false}
+     */
+    void testBaseError(boolean reportDerivedError) throws Error;
+}
+

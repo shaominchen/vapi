@@ -1,0 +1,13 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.generics;
+
+/**
+ * Simple structure used to test generics.
+ */
+class LocalSimpleStruct {
+
+    /** name property */
+    String name;
+}

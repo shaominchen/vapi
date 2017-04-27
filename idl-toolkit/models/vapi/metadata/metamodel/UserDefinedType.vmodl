@@ -1,0 +1,30 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.IsOneOf;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name UserDefinedType} {@term structure} contains the metamodel
+ * type information of a typed element whose type is a user defined named
+ * type.
+ */
+class UserDefinedType {
+    /**
+     * Category of the user defined named type. The named type could be
+     * a structure element or an enumeration element.
+     */
+    @IsOneOf({Resources.STRUCTURE, Resources.ENUMERATION})
+    String resourceType;
+
+    /**
+     * Identifier of the user defined named type.
+     */
+    @vmodl.lang.Resource(value={Resources.STRUCTURE, Resources.ENUMERATION}, typeHolder="resourceType")
+    ID resourceId;
+}

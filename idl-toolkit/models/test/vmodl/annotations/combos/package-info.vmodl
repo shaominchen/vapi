@@ -1,0 +1,14 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for various annotation combinations in models.
+ * <p>
+ * The purpose of this category of tests is to use the other
+ * annotation categories together, in combination with one
+ * another.  This usage is more realistic for "real world" models
+ * and it is important to ensure they all play nice together.
+ */
+package vmodl.test.uber.annotations.combos;
+

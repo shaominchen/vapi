@@ -1,0 +1,31 @@
+package vmodl.test.uber.privileges_more;
+//FYI: we intentially use an underscore above to create a peer package, rather
+// than a sub-package.  This is to avoid the hierarchy style processing of the
+// authz metadata file when it comes to package defaults.
+
+import com.vmware.vapi.std.errors.NotFound;
+import vmodl.lang.*;
+
+/**
+ * Sample test service for testing automatic generation of privilege documentation.
+ * <p>
+ * This use case requires that there is no package default privilege for the
+ * operations, so we can test that everything works in this setup as well.
+ */
+@Resource("vmodl.test.uber.privilege.more")
+interface MorePrivileges {
+
+    /**
+     * Operation to verify privilege documentation for operations without
+     * ID parameters.
+     */
+    void simpleOperation();
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a single ID parameter that has defined privilege.
+     * @param id an ID
+     * @throws NotFound if id is not found or foreignId is not found.
+     */
+    void operationWithIdParameter(ID id) throws NotFound;
+}

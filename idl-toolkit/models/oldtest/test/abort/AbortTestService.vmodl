@@ -1,0 +1,18 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.test.abort;
+
+/** vAPI client abort test interface for integration tests */
+@Resource("com.vmware.vapi.abort_test")
+interface AbortTestService {
+    /**
+     * Test method that takes the specified amount of time (in seconds) to
+     * execut.
+     *
+     * @param delayTime specifies request execution time (in seconds)
+     */
+    void replayWithDelay(Long delayTime);
+}

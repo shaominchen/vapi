@@ -1,0 +1,13 @@
+package com.vmware.vapi.test.interposer;
+
+import vmodl.lang.Opaque;
+import com.vmware.vapi.std.errors.InvalidRequest;
+
+/** Test service for interposer tests. */
+interface InterposerService {
+
+    /**
+     * Sample Inteposer API.
+     */
+    public void interpose(String serviceName, String operationName, Opaque operationInput) throws InvalidRequest;
+}

@@ -1,0 +1,67 @@
+/* **********************************************************
+ * Copyright 2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test;
+
+import vmodl.lang.*;
+
+/**
+ * Specifies a test interface for VMODL2 @HasFieldsOf
+ * annotation.
+ */
+@Resource("com.vmware.resource_echo_has_fields_of")
+interface EchoHasFieldsOf {
+    /** Simple HasFieldsOf structure */
+    class HasFieldsOfStruct {
+        /** long field */
+        long longField;
+
+        /** String field */
+        String stringField;
+    }
+
+    /** Nested HasFieldsOf structure */
+    class NestedHasFieldsOfStruct {
+        /** long field */
+        long longField;
+
+        /** Nested struct field */
+        HasFieldsOfStruct nestedStructField;
+    }
+
+    /** Struct with HasFieldsOf field */
+    class SampleStruct {
+        /** long field */
+        long longField;
+
+        /** Nested struct field */
+        HasFieldsOfStruct nestedStructField;
+    }
+
+    /**
+     * echo HasFieldsOf structure
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    DynamicStructure testHasFieldsOfStruct(
+            @HasFieldsOf(HasFieldsOfStruct.class) DynamicStructure input);
+
+    /**
+     * echo NestedHasFieldsOf structure
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    DynamicStructure testNestedHasFieldsOfStruct(
+            @HasFieldsOf(NestedHasFieldsOfStruct.class) DynamicStructure input);
+
+    /**
+     * echo structure with HasFieldsOf field
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    SampleStruct testHasFieldsOfStructField(SampleStruct input);
+}

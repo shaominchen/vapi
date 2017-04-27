@@ -1,0 +1,109 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Example 1: Exercising various bits of markup.
+ * <br>
+ * <i>italic</i>
+ * <br>
+ * <b>bold</b>
+ * <br>
+ * <b>bold with ***stars***</b>
+ * <br>
+ * <b> bold with internal spaces </b>
+ * <br>
+ * <u>underline</u>
+ * <br>
+ * Exponential: e<sup>x</sup> (superscript)
+ * <br>
+ * Water: H<sub>2</sub>O (subscript)
+ * <br>
+ * Entry point for a C program: {@code int main(int argc, char *argv[]);}
+ * <br>
+ * HTML tags not supported by VMODL2: {@literal <em>, <strong>, <small>}
+ * <p>
+ * Example 2: Simple lists.
+ * <br>
+ * Grocery list:
+ * <ul>
+ *   <li>Apples</li>
+ *   <li>Oranges</li>
+ *   <li>Grapes</li>
+ * </ul>
+ * <br>
+ * First three elements:
+ * <ol>
+ *   <li>Hydrogen</li>
+ *   <li>Helium</li>
+ *   <li>Lithium</li>
+ * </ol>
+ * <br>
+ * Let's start at the very beginning -- a very good place to start:
+ * <dl>
+ *   <dt>DO</dt><dd>A deer, a female deer</dd>
+ *   <dt>RE</dt><dd>A drop of golden sun</dd>
+ *   <dt>MI</dt><dd>A name I call myself</dd>
+ *   <dt>FA</dt><dd>A long long way to run</dd>
+ * </dl>
+ * <p>
+ * Example 3: Nested lists.
+ * <br>
+ * Michael Phelps' medals in 2012:
+ * <ol>
+ *   <li>
+ *     Gold
+ *       <ul>
+ *         <li>100m Butterfly</li>
+ *         <li>200m Individual Medley</li>
+ *         <li>4x200m Freestyle Relay</li>
+ *         <li>4x100m Medley Relay</li>
+ *       </ul>
+ *   </li>
+ *   <li>
+ *     Silver
+ *       <ul>
+ *         <li>200m Butterfly</li>
+ *         <li>
+ *           4x100m Freestyle Relay
+ *           <dl>
+ *             <dt>Butterfly</dt><dd>Nathan Adrian</dd>
+ *             <dt>Backstroke</dt><dd>Michael Phelps</dd>
+ *             <dt>Breaststroke</dt><dd>Cullen Jones</dd>
+ *             <dt>Freestyle</dt><dd>Ryan Lochte</dd>
+ *           </dl>
+ *         </li>
+ *       </ul>
+ *   </li>
+ *   <li>
+ *     Bronze
+ *   </li>
+ * </ol>
+ * <p>
+ * Example 4: Tables and inline markup.
+ * <br>
+ * Mappings from HTML/Javadoc to Sphinx reST:
+ * <table>
+ *   <tr><td>{@literal <b>xxx</b>}</td><td>**xxx**</td></tr>
+ *   <tr><td>{@literal <i>xxx</i>}</td><td>*xxx*</td></tr>
+ *   <tr><td>{@literal <a href=xxx>yyy</a>}</td><td>{@literal `yyy <xxx>`_}</td></tr>
+ *   <tr><td>{@literal &#123;@code xxx&#125;}</td><td>``xxx``</td></tr>
+ * </table>
+ * <br>
+ * Meet the Mets, meet the Mets, step right up and greet the Mets:
+ * <table>
+ *   <caption>1969 National League East</caption>
+ *   <thead>
+ *     <tr><th>Team</th><th>W-L</th><th>GB</th></tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr><td>Mets</td><td>100-62</td><td>--</td></tr>
+ *     <tr><td>Cubs</td><td>92-70</td><td>8</td></tr>
+ *     <tr><td>Pirates</td><td>88-74</td><td>12</td></tr>
+ *     <tr><td>Cardinals</td><td>87-75</td><td>13</td></tr>
+ *     <tr><td>Phillies</td><td>63-99</td><td>37</td></tr>
+ *     <tr><td>Expos</td><td>52-110</td><td>48</td></tr>
+ *   </tbody>
+ * </table>
+ */
+package vmodl.test.uber.docs;

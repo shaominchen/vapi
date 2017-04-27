@@ -1,0 +1,108 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.resources;
+
+import vmodl.lang.*;
+
+/** vAPI test types for dynamic resource ID support */
+interface UberPolymorphicResource {
+
+    /** Test array of constants for polymorphic resource IDs */
+    String[] REMOVABLE = {"com.vmware.CDROM", "com.vmware.floppy", "com.vmware.USB"};
+
+    /** simple test model for polymorphic resoruce ID support */
+    @Model
+    @Resource("com.vmware.dynamic_resource_test")
+    class TestModelWithDynamicId {
+        /** model ID */
+        @ModelKey
+        ID modelId;
+
+        /** device type */
+        @IsOneOf(value=REMOVABLE)
+        String deviceType;
+
+        /** device ID */
+        @Resource(value=REMOVABLE, typeHolder="deviceType")
+        ID deviceId;
+    }
+
+    /** simple test structure for polymorphic resoruce ID support */
+    class TestStructureWithDynamicId {
+        /** device ID */
+        @Resource(value=REMOVABLE, typeHolder="deviceType")
+        ID deviceId;
+
+        /** device type */
+        @IsOneOf(REMOVABLE)
+        String deviceType;
+    }
+
+    /** test structure for any resource type support */
+    class TestAnyResourceSupport {
+        /** resource type */
+        String resourceType;
+
+        /** resource ID */
+        @Resource(typeHolder="resourceType")
+        ID resourceId;
+    }
+
+    /** test object for bug 1059199 */
+    class TestResource {
+        /** resource ID */
+        @Resource(value=REMOVABLE, typeHolder="resourceType")
+        ID resourceId;
+
+        /** resource type */
+        @IsOneOf(value=REMOVABLE)
+        String resourceType;
+    }
+
+    /**
+     * Test operation for polymorphic ID support.
+     *
+     * @param deviceType device type
+     * @param deviceId device ID
+     */
+    void testDynamicIdSupportWithoutTypeHolder(
+            @IsOneOf(REMOVABLE) String deviceType,
+            @Resource(value=REMOVABLE, typeHolder="deviceType") ID deviceId);
+    //TODO: this is an invalid/negative test case now
+
+    /**
+     * Test operation for polymorphic ID support.
+     *
+     * @param deviceType device type
+     * @param deviceId device ID
+     */
+    void testDynamicIdSupport(
+            @IsOneOf(REMOVABLE) String deviceType,
+            @Resource(value=REMOVABLE, typeHolder="deviceType") ID deviceId);
+    /**
+     * Test operation for polymorphic ID support.
+     *
+     * @param model test model with dynamic ID
+     */
+    void testModelWithDynamicIdSupport(TestModelWithDynamicId model);
+
+    /**
+     * test operation with optional model with polymorphic ID.
+     *
+     * @param model optional test model with dynamic ID
+     * @param.optional model reason
+     */
+    void testOptionalModelWithDynamicIdSupport(
+            Optional<TestModelWithDynamicId> model);
+
+    /**
+     * Test method for bug 1059199.
+     *
+     * @param vmId VM ID
+     * @param oldResource old resource
+     * @param.optional oldResource is not required when the VM is newly created
+     */
+    void applyVmPolicies(@Resource("some.resource") ID vmId,
+                         Optional<TestResource> oldResource);
+}

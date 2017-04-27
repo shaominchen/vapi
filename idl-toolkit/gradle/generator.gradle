@@ -1,0 +1,167 @@
+// Copyright 2012-2015 VMware, Inc.  All rights reserved.
+
+/**
+ * Provides common "generator" application build framework.
+ *
+ * TODO: one day, this should be factored into a Gradle plugin:
+ * http://gradle.org/docs/current/userguide/userguide_single.html#custom_plugins
+ */
+apply plugin: 'application'
+apply plugin: 'groovy'
+
+// build the class name by convention and variables set by concrete build scripts
+if (!project.ext.has('language')) {
+    project.ext['language'] = project.name.split('/')[1]
+    logger.debug "${project.name}: setting language to default value: ${project.language}"
+}
+if (project.ext.has('mainSimpleName')) {
+    def matcher = project.mainSimpleName =~ /([A-Z][a-z]+)([A-Z][a-z]+)App/
+
+    logger.debug "${project.name}: has mainSimpleName"
+    if (matcher.matches()) {
+        project.ext['mainLang'] = matcher[0][1].toLowerCase()
+        project.ext['mainType'] = matcher[0][2].toLowerCase()
+        logger.debug "${project.name}: matches regex: mainLang=${project.mainLang}, mainType=${project.mainType}"
+        if (!project.ext.has('language')) {
+            logger.debug "${project.name}: setting language to mainLang value"
+            project.ext['language'] = project.mainLang
+        }
+    } else {
+        logger.error('generator build convention has been violated')
+    }
+}
+if (!project.ext.has('mainLang')) {
+    // these are generally the same by convention
+    logger.debug "${project.name}: setting mainLang to language value"
+    project.ext['mainLang'] = project.language
+}
+if (!project.ext.has('mainType')) {
+    // default to the most common type by convention
+    logger.debug "${project.name}: setting mainType to default value"
+    project.ext['mainType'] = 'generator'
+}
+if (!project.ext.has('mainSimpleName')) {
+    project.ext['mainSimpleName'] = project.mainLang.capitalize() + project.mainType.capitalize() + 'App'
+    logger.debug "${project.name}: setting mainSimpleName to default value: ${project.mainSimpleName}"
+}
+
+project.ext['mainPackageName'] = 'com.vmware.vapi.idl.' + project.mainType + '.' + project.mainLang
+
+mainClassName = project.mainPackageName + '.' + project.mainSimpleName
+applicationName = project.mainLang + '-' + project.mainType
+archivesBaseName = applicationName
+
+// see: http://forums.gradle.org/gradle/topics/specifying_memory_settings_in_application_plugin_start_scripts
+startScripts {
+    ext.jvmOpts = "-Xms512m -Xmx1024m" // generators can use some memory
+    ext.jvmOpts += " -Dfile.encoding=UTF-8" // ensure output files are encoded correctly
+    ext.jvmOpts += " -noverify" // Groovy byte-code fails on some JVM version :(
+    ext.jvmOpts += " -XX:+UseSerialGC"
+
+    //TODO: Java 8 does not like PermSize options, so we should create a runtime conditional
+    // that can exclude those options when running 8 to avoid warnings, but until such time
+    // we still need them for Java 7.
+    ext.jvmOpts += " -XX:PermSize=128m -XX:MaxPermSize=512m"
+
+    inputs.property("jvmOpts", { ext.jvmOpts }) // for incremental build to work properly
+
+    doLast {
+        final String opts = 'DEFAULT_JVM_OPTS'
+
+        // we need APP_HOME in the env, so that we can locate the templates directory
+        unixScript.text = unixScript.text.replaceFirst('APP_HOME=', "export APP_HOME=")
+
+        // inject better default JVM opts
+        unixScript.text = unixScript.text.replace("$opts=${'""'}", "$opts=${'"'}$ext.jvmOpts${'"'}")
+        windowsScript.text = windowsScript.text.replace("set $opts=", "set $opts=$ext.jvmOpts")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+        }
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+    }
+}
+
+if (System.properties['coupled.generator.build']) {
+    test.dependsOn project(':vmodl-models').build
+    dependencies {
+        compile project(':idl-transformer')
+        testCompile project(":idl-core").sourceSets.test.output
+        testCompile project(":idl-transformer").sourceSets.test.output
+    }
+
+    assert project(':vmodl-models').buildDir
+    def vmodlModelsStage = new File(project(':vmodl-models').buildDir, 'stage')
+    System.properties['vmodl.models.stage'] = vmodlModelsStage.path
+
+    def buildRoot = System.properties['build.root'] ?: "../build"
+    assert buildRoot
+    project.ext['idlToolkitHome'] = new File(buildRoot, "publish")
+} else {
+    //TODO: this varies depending on env
+    // - dev is basically this form - go up and over to wherever the toolkit lives and grab it
+    // - gobuild will use BUILD_ROOT, etc, and we need to find the component directory
+    if (!project.ext.has('idlToolkitHome')) {
+        String idlToolkitHome = System.properties['idl.toolkit.home'] ?:
+            System.env['IDL_TOOLKIT_HOME'] ?:
+            System.env['GOBUILD_VAPI_CORE_IDL_ROOT']
+        if (!idlToolkitHome || System.properties['idl.toolkit.source']) {
+            def sourceDir = new File("../idl-toolkit/build/publish")
+
+            if (sourceDir.exists()) {
+                idlToolkitHome = sourceDir.absolutePath
+            }
+        }
+        assert idlToolkitHome
+        project.ext['idlToolkitHome'] = new File(idlToolkitHome).absoluteFile
+    }
+    assert project.idlToolkitHome.exists()
+    project.ext['idlToolkitLib'] = new File(project.idlToolkitHome, "lib")
+
+    dependencies {
+        compile fileTree(dir: idlToolkitLib, includes: ['*.jar'], excludes: ['*-tests.jar'])
+
+        testCompile fileTree(dir: idlToolkitLib, includes: ['*-tests.jar'])
+    }
+}
+
+// For both coupled and decoupled generator builds, we require this property to be setup
+// so that the TestData loader can find the published models.
+def ith = 'idl.toolkit.home'
+System.properties[ith] = project.idlToolkitHome.path
+println "idl-toolkit-home = ${idlToolkitHome}"
+tasks.withType(Test) { systemProperty ith, System.properties[ith] }
+
+// fyi - workaround a Gradle Copy task bug whereby it fails to overwrite read-only files
+// by using the Ant copy task with its "force" option
+// see: http://issues.gradle.org/browse/GRADLE-1264 and also http://issues.gradle.org/browse/GRADLE-971
+task templateDir {
+    description = 'Stages the templates to the build directory.'
+    def templatesSourceDir = new File("src/main", "templates")
+    def templatesBuildDir = new File(project.buildDir, "templates")
+    inputs.dir templatesSourceDir
+    outputs.dir templatesBuildDir
+
+    doLast {
+        ant.copy(todir:templatesBuildDir, force:true) {
+            fileset(dir:templatesSourceDir) {
+                include(name:"**/*")
+            }
+        }
+    }
+}
+
+test.dependsOn templateDir
+test.inputs.dir templateDir
+
+applicationDistribution.with {
+    into("templates") {
+        from templateDir
+    }
+}
+

@@ -1,0 +1,56 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * The {@name PrimitiveValue} {@term structure} contains
+ * value of the constant element.
+ */
+class PrimitiveValue {
+
+    /**
+     * The {@name Type} {@term enumerated type} defines the valid
+     * types for values in constant elements.
+     */
+    enum Type {
+        /** Indicates the value is a boolean (true or false). */
+        BOOLEAN,
+
+        /** Indicates the value is a double (64 bit floating number). */
+        DOUBLE,
+
+        /** Indicates the value is a long (64 bit signed integer). */
+        LONG,
+
+        /**
+         * Indicates the value is a string (a variable length sequence
+         * of characters). The encoding is UTF8.
+         */
+        STRING
+    }
+
+    /** Type of the constant value. */
+    @UnionTag
+    Type type;
+
+    /** Boolean value of the constant. */
+    @UnionCase(tag="type", value="BOOLEAN")
+    boolean booleanValue;
+
+    /** Double value of the constant. */
+    @UnionCase(tag="type", value="DOUBLE")
+    double doubleValue;
+
+    /** Long value of the constant. */
+    @UnionCase(tag="type", value="LONG")
+    long longValue;
+
+    /** String value of the constant. */
+    @UnionCase(tag="type", value="STRING")
+    String stringValue;
+}

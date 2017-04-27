@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+  <head>
+       <base href="${idldoc.topDir(enumeration)}" />
+
+    <title>Service: ${enumeration.name}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript">
+        //before jsTree is loaded
+        window.apiHierarchyCurrentNodeId = '${idldoc.nodeId(enumeration)}'
+    </script>
+         <!-- begin boilerplate -->
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap-responsive.min.css />
+    <link rel="stylesheet" type="text/css"
+        href="css/smoothness/jquery-ui-1.8.13.custom.css" />
+    <link rel="stylesheet" type="text/css" href="css/idldoc-lean.css" />
+
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script type="text/javascript"
+        src="./js/jstree-pre1.0_fix_1/jquery.jstree.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="searchdata.js"></script>
+    <script type="text/javascript" src="treedata.js"></script>
+    <script type="text/javascript" src="searchandtree.js"></script>
+     <!-- End boilerplate -->
+</head>
+<body>
+    <!-- begin boilerplate -->
+    <div class="container">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                  <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </a>
+                <span class="brand"> vAPI Documentation </span>
+                <ul class="nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active dropdown ">
+                        <a id="tree-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            ${enumeration.getQualifiedName('asCanonical')}
+                            <b class="caret"></b>
+                        </a>
+                        <ul id="tree-dropdown" class="dropdown-menu">
+                            <li>
+                                  <div id="apiHierarchy"></div>
+                             </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="nav-collapse">
+                <form class="navbar-form pull-right">
+                    <input class="search-query" placeholder="Search" id="searchInput"></input>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End boilerplate -->
+
+	<h4>Package <a href="${idldoc.packageSummaryHtml(enumeration.containingPackage)}">${enumeration.containingPackage}</a></h4>
+    <h2>Enumeration ${enumeration.getQualifiedName('asCanonical')}</h2>
+    ${enumeration.comment}
+
+    <h5>Enumeration constants summary</h5>
+    <table id="${enumeration.name}" class="table table-striped table-condensed table-bordered" >
+        <thead>
+            <tr>
+                <th>Constant</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% enumeration.constants.each { constant -> %>
+            <tr>
+                <td>${constant.name}</td>
+                <td>${idldoc.summaryDoc(constant)}</td>
+            </tr>
+<% } %>
+        </tbody>
+    </table>
+
+    <h5>Enumeration constants</h5>
+<% enumeration.constants.each { constant -> %>
+    <div class="section constant">
+        <h7><strong>${constant.name}</strong></h7>
+        <p>${idldoc.multilineDoc(constant)}</p>
+<% if (constant.metadata) { %>
+        <table><caption>Metadata</caption>
+            <tbody>
+<% constant.metadata.properties.each { k, v -> %>
+                <tr>
+                    <td>${k}</td>
+                    <td>${v}</td>
+                </tr>
+<% } %>
+            </tbody>
+        </table>
+<% } %>
+    </div>
+<% } %>
+</div>
+</body>
+</html>

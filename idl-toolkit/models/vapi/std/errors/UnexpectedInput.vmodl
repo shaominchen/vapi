@@ -1,0 +1,40 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name UnexpectedInput} {@term error} indicates that the request
+ * contained a {@term parameter} or {@term field} whose name is not known by
+ * the server.
+ * <p>
+ * Every {@term operation} expects {@term parameters} with known names.  Some of
+ * those {@term parameters} may be (or contain) {@term structures}, and the
+ * {@term operation} expects those {@term structures} to contain {@term fields}
+ * with known names. If the {@term operation} receives
+ * {@term parameters} or {@term fields} with names that is does not expect, this
+ * {@term error} may be reported.
+ *<p>
+ * This {@term error} can be reported by the API infrastructure for any
+ * {@term operation}, but it is specific to the API infrastructure, and should
+ * never be reported by the implementation of any {@term operation}.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>A client using stubs generated from the interface specification for
+ *       version2 of a {@term service} invokes the {@term operation} passing one
+ *       or more {@term parameters} that were added in version2, but they are
+ *       communicating with a server that only supports version1 of the
+ *       {@term service}. </li>
+ *   <li>A client provides an unexpected {@term parameter} or {@term field} name
+ *       when invoking the {@term operation} using a dynamic interface (for
+ *       example REST). </li>
+ * </ul>
+ */
+@Export
+public class UnexpectedInput extends Error {
+}

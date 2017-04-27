@@ -1,0 +1,51 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.interop;
+
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * Top level Structure.
+ */
+public class MetadataUnion {
+
+    /**
+     * Enum defined inside a top level structure; used for union tag type.
+     */
+    public enum  TestEnum {
+        /** enum constant - LONG */
+        LONG,
+
+        /** enum constant - BOOLEAN */
+        BOOLEAN,
+
+        /** enum constant - STRING */
+        STRING,
+
+        /** enum constant - NONE */
+        NONE
+    }
+
+    /**
+     * Field of enum type.
+     */
+    @UnionTag TestEnum testEnum;
+
+    /** long field, in the union */
+    @UnionCase("LONG") long longVal;
+
+    /** boolean field, in the union */
+    @UnionCase(tag="testEnum", value="BOOLEAN") boolean booleanVal;
+
+    /** boolean field 2, in the union */
+    @UnionCase(tag="testEnum", value="BOOLEAN") boolean boolVal;
+
+    /** string field, in the union */
+    @UnionCase(tag="testEnum", value={"STRING", "NONE"}) String stringVal;
+
+    /** double field - out of the union*/
+    double doubleVal;
+}

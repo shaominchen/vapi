@@ -1,0 +1,52 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.errors;
+
+import com.vmware.vapi.test.errors.custom.CustomError;
+
+import vmodl.lang.*;
+
+/**
+ * A test service that uses custom errors
+ *
+ * <ul>
+ *     <li>to be reported/thrown from method(s)</li>
+ *     <li>as method param and return values</li>
+ * <ul>
+ */
+interface CustomErrorService {
+
+    /**
+     * Test method which reports custom error.
+     *
+     * @throws CustomError always thrown
+     */
+    void method() throws CustomError;
+
+    /**
+     * Echoes a custom error.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    CustomError echoCustomError(CustomError input);
+
+    /** Echoes list of custom errors.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    List<CustomError> echoCustomErrorList(List<CustomError> input);
+
+    /** Echoes optional custim error.
+     *
+     * @param input test input
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<CustomError> testStandardErrorOptional(
+            Optional<CustomError> input);
+}

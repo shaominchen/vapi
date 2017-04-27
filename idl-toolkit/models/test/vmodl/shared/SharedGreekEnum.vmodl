@@ -1,0 +1,16 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.shared;
+
+/** shared enumumeration */
+enum SharedGreekEnum {
+    /** const alpha */
+    ALPHA,
+
+    /** const beta */
+    BETA,
+
+    /** const gamma */
+    GAMMA,
+}

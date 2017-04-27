@@ -1,0 +1,35 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std;
+
+import vmodl.lang.Export;
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+
+/**
+ * The {@name DynamicID} {@term structure} represents an identifier for a
+ * resource of an arbitrary type.
+ */
+@Export
+public class DynamicID {
+    /**
+     * The type of resource being identified (for example
+     * {@code com.acme.Person}).
+     * <p>
+     * {@term Services} that contain {@term operations} for creating and
+     * deleting resources typically contain a {@term constant} specifying the
+     * resource type for the resources being created and deleted.
+     * The API metamodel metadata {@term services} include a {@term service}
+     * that allows retrieving all the known resource types.
+     */
+    String type;
+
+    /**
+     * The identifier for a resource whose type is specified by {@link #type}.
+     */
+    @Resource(typeHolder="type")
+    ID id;
+}

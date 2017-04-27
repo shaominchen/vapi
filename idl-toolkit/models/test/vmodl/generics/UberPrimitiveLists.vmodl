@@ -1,0 +1,136 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.generics;
+
+import vmodl.test.uber.UberResources;
+
+import vmodl.lang.*;
+
+/**
+ * Specifies a test interface for VMODL2 {@literal List<T>} types,
+ * where the item ({@code T}) is a primitive type.
+ */
+@Resource(UberResources.FOO)
+interface UberPrimitiveLists {
+
+    /**
+     * echo List of Boolean
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Boolean> echoBooleanList(List<Boolean> input);
+
+    /**
+     * echo List of Double
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Double> echoDoubleList(List<Double> input);
+
+    /**
+     * echo List of Long
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Long> echoLongList(List<Long> input);
+
+    /**
+     * echo List of String
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<String> echoStringList(List<String> input);
+
+    /**
+     *  echo List of Binary
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Binary> echoBinaryList(List<Binary> input);
+
+    /**
+     * echo List of DateTime
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<DateTime> echoDateTimeList(List<DateTime> input);
+
+    /**
+     * echo List of ID
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<ID> echoIdList(List<ID> input);
+
+    /**
+     * echo List of Secret
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Secret> echoSecretList(List<Secret> input);
+
+    /**
+     * echo List of URI
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<URI> echoUriList(List<URI> input);
+
+    /**
+     * echo optional List of Long
+     *
+     * @param input test value
+     * @param.optional input reason
+     *
+     * @return same as {@param.name input}
+     * @return.optional reason
+     */
+    Optional<List<Long>> echoLongOptionalList(
+            Optional<List<Long>> input);
+
+    /**
+     * echo List of optional Long values
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Optional<Long>> echoLongListOptional(
+            List<Optional<Long>> input);
+
+    /**
+     * echo List of List of Long
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<List<Long>> echoLongListList(
+            List<List<Long>> input);
+
+    /**
+     * echo List of optional String values
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Optional<String>> echoStringListOptional(
+            List<Optional<String>> input);
+
+    /**
+     * echo List of optional List of Long
+     *
+     * @param input test value
+     * @return same as {@param.name input}
+     */
+    List<Optional<List<Long>>> echoLongListOptionalList(
+            List<Optional<List<Long>>> input);
+}

@@ -1,0 +1,14 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.metadata.routing;
+
+/** Routing information of the vAPI component along with its checksum */
+class ComponentData {
+    /** Routing information of the vAPI component */
+    ComponentInfo info;
+
+    /** Fingerprint of metadata of a vAPI component */
+    String fingerprint;
+}

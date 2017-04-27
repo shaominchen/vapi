@@ -1,0 +1,69 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.is.test;
+
+import vmodl.lang.*;
+
+/**
+ * Model used to validate IS Serializer handling of various field types.
+ */
+@Resource("com.vmware.vapi.is.integration.complex_model")
+@Model
+class ComplexModel {
+    /** doc */
+    enum TestEnum {
+        /** doc */
+        ONE,
+        /** doc */
+        TWO
+    }
+
+    /** doc */
+    @ModelKey
+    ID id;
+
+    /** doc */
+    ID foreignId;
+
+    /** doc */
+    long lgn;
+
+    /** doc */
+    double dbl;
+
+    /** doc */
+    boolean bln;
+
+    /** doc */
+    String str;
+
+    /** doc */
+    DateTime dt;
+
+    /** doc */
+    URI uri;
+
+    /** doc */
+    Binary bin;
+
+    /** doc */
+    Secret sec;
+
+    /** doc */
+    TestEnum enm;
+
+    /** doc */
+    List<String> strList;
+
+    /** doc */
+    Map<String, String> strMap;
+
+    /** doc */
+    Set<ID> idSet;
+
+    /** doc */
+    Optional<String> optStr;
+}

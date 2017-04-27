@@ -1,0 +1,53 @@
+/* **********************************************************
+ * Copyright 2012-2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.security;
+
+/**
+ * Provides an authenticaion service for test purposes
+ */
+interface Authentication {
+
+    /**
+     * Test operation for SAML authn.
+     *
+     * @return {@code true} if SAML security context is detected on the
+     *         provider side
+     */
+    boolean authenticate();
+
+    /**
+     * Test operation for OAuth2 authn.
+     *
+     * @return {@code true} if OAuth2 context is detected on the
+     *         provider side
+     */
+    boolean authenticateOauth();
+
+    /**
+     * Test operation for user/pass authn.
+     *
+     * @return {@code true} if user/pass security context is detected in the
+     *          service implementation and there is an authentication result
+     */
+    boolean authenticateUserPass();
+
+    /**
+     * Second test operation for user/pass authn
+     * meant to be used with session aware authentication.
+     *
+     * @return {@code true} if user/pass security context is detected in the
+     *          service implementation and there is an authentication result
+     */
+    boolean authenticateUserPassSessionAware();
+
+    /**
+     * Test operation marked both for no authentication and user/pass
+     * authentication.
+     *
+     * @return {@code true} if user/pass security context is detected in the
+     *          service implementation and there is an authentication result
+     */
+    boolean authenticateUserPassAndNoAuth();
+}

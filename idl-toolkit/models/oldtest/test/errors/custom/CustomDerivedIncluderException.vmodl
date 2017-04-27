@@ -1,0 +1,21 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.errors.custom;
+
+import vmodl.lang.Include;
+
+/**
+ * Custom Exception type which derives from another custom Exception type and
+ * includes third type
+ */
+@Include(IncludableDescription.class)
+class CustomDerivedIncluderException extends CustomException {
+
+    /** Major error code */
+    Long majorCode;
+
+    /** Minor error code */
+    Long minorCode;
+}

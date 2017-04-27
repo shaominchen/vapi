@@ -1,0 +1,16 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.javadoc(enumeration)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(enumeration)])}\
+enum ${enumeration.name.asDeclared} {
+<% def separator = enumeration.constants.collect { ',' }
+separator[-1] = ';'
+enumeration.constants.eachWithIndex { c, i -> %>\
+
+    ${vmodl.javadoc(c, 1)}
+    ${c.name.asDeclared}${separator[i]}
+<% } %>\
+}

@@ -1,0 +1,20 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.javadoc(structure, 0)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(structure)])}\
+class ${structure.name.asDeclared} {
+${vmodl.render('constants.vmodl', [type:structure, modifiers:true], 1)}
+<% structure.attributes.each { a -> %>\
+
+    ${vmodl.javadoc(a, 1)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(a)], 1)}\
+    ${vmodl.mapType(a.type)} ${a.name.asDeclared};
+<% } %>\
+<% structure.enumerations.each { e -> %>\
+
+${vmodl.render('enumeration.vmodl', [enumeration:e], 1)}
+<% } %>\
+}

@@ -1,0 +1,41 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Operations to retrieve information about routing information of a vAPI
+ * service
+ */
+@Resource(Resources.SERVICE)
+interface Service {
+
+    /** Resource type for vAPI Service. */
+    String RESOURCE_TYPE = Resources.SERVICE;
+
+    /**
+     * Get list of all vAPI services that have operations with routing
+     * information
+     *
+     * @return list of fully qualified service names
+     */
+    List<ID> list();
+
+    /**
+     * Get the routing information for a vAPI service
+     *
+     * @param serviceId fully qualified service name
+     * @return identifier information for the vAPI service
+     * @throws NotFound If the service name does not exist
+     */
+    ServiceInfo get(ID serviceId) throws NotFound;
+}

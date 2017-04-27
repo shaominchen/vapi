@@ -1,0 +1,36 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name ResourceInaccessible} {@term error} indicates that the
+ * {@term operation} could not be completed because an entity is not accessible.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Attempt to invoke some {@term operation} on a virtual machine when the
+ *       virtual machine's configuration file is not accessible (for example due
+ *       to a storage APD condition). </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>Attempt to invoke some {@term operation} when the server is too busy.
+ *       The {@link ServiceUnavailable} {@term error} would be used instead.
+ *       </li>
+ *   <li>Attempt to invoke some {@term operation} when the server is undergoing
+ *       maintenance. The {@link ServiceUnavailable} {@term error} would be used
+ *       instead. </li>
+ *   <li>Some {@term operation} fails to contact VMware Tools running inside the
+ *       virtual machine. The {@link ServiceUnavailable} {@term error} would be
+ *       used instead. </li>
+ * </ul>
+ */
+@Export
+public class ResourceInaccessible extends Error {
+}

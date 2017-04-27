@@ -1,0 +1,51 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Package} {@term service} provides {@term operations}
+ * to retrieve privilege information of a package element.
+ * <p>
+ * A package element is said to contain privilege information if there
+ * is a default privilege assigned to all service elements contained
+ * in the package element or if one of the operation elements contained
+ * in one of the service elements in this package element has privilege
+ * information.
+ */
+@Resource(Resources.PACKAGE)
+interface Package {
+
+    /** Resource type for package. */
+    String RESOURCE_TYPE = Resources.PACKAGE;
+
+
+    /**
+     * Returns the identifiers for the package elements that have
+     * privilege information.
+     *
+     * @return The list of identifiers for the package elements that
+     *         have privilege information.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves privilege information about the package element
+     * corresponding to {@param.name packageId}.
+     *
+     * @param packageId Identifier of the package element.
+     * @return The {@link PackageInfo} instance that corresponds to
+     *         {@param.name packageId}
+     * @throws NotFound if the package element associated with {@param.name packageId}
+     *                  does not have any privilege information.
+     */
+    PackageInfo get(ID packageId) throws NotFound;
+}

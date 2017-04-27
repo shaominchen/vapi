@@ -1,0 +1,562 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.interop;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.InvalidArgument;
+import com.vmware.vapi.std.errors.ResourceInUse;
+
+/** vAPI test interface for integration tests */
+@Resource("com.vmware.resource_echo")
+interface MetadataEcho {
+    /** String constant */
+    String constantString = "val";
+
+    /** Long constant */
+    long constantLong = 1000000000000;
+
+    /** Boolean constant */
+    boolean constantBoolean = true;
+
+    /** Double constant */
+    double constantDouble = 1.5D;
+
+    /** Double constant */
+    public static final double constantDouble2 = 1.5e-9;
+
+    /** String array constants */
+    public static final String[] constantStrings = {"a", "b"};
+
+    /** Long array constants */
+    public static final long[] constantLongs = {100, 200};
+
+    /** Double array constants */
+    public static final double[] constantDoubles = {1.5, 2.5};
+
+    /** Boolean array constants */
+    public static final boolean[] constantBooleans = {true, false};
+
+    /** test enumumeration */
+    enum TestEnum {
+        /** const one */
+        ONE,
+
+        /** const two */
+        TWO,
+
+        /** const three */
+        THREE,
+    }
+
+    /** simple test structure */
+    class TestStructureSimple {
+
+        /** string field */
+        String stringField;
+    }
+
+    /** more complex test structure */
+    class TestStructureComplex {
+        /** boolean field */
+        boolean booleanField;
+
+        /** String field */
+        String stringField;
+
+        /** long field */
+        long longField;
+
+        /** double field */
+        double doubleField;
+
+        /** DateTime field */
+        DateTime dateTimeField;
+
+        /** URI field */
+        URI uriField;
+
+        /** Secret field */
+        Secret secretField;
+
+        /** field using enum */
+        TestEnum enumField;
+
+        /** list field */
+        List<String> listPrimitiveField;
+
+        /**
+         * optional String field
+         * @field.optional test needs optional
+         */
+        Optional<String> optionalPrimitiveField;
+
+        /** field using other structure */
+        TestStructureSimple structureField;
+    }
+
+    /** Nested non-model structure with... */
+    class NestedStructureWithId {
+        /** ...ID field */
+        ID foreign1;
+    }
+
+    /** A test model structure */
+    @Model
+    class TestStructureWithId {
+        /** Primary ID - the model key */
+        @ModelKey
+        ID primary;
+
+        /** Other ID field */
+        ID foreign1;
+
+        /** Third ID field */
+        ID foreign2;
+
+        /** String field */
+        String stringField;
+
+        /** Reference to other structure */
+        NestedStructureWithId nested;
+    }
+
+    /** A test structure with constants */
+    class TestStructureWithConstants {
+        /** String constant in structure */
+        public static final String structConstantString = "val";
+
+        /** Long constant in structure */
+        public static final long structConstantLong = 100;
+    }
+
+    /** A test model with optional IDs */
+    @Model
+    class TestStructureWithOptionalId {
+        /**
+         * Primary ID - the model key
+         * @field.optional reason
+         */
+        @ModelKey
+        Optional<ID> primary;
+
+        /**
+         * Other ID field
+         * @field.optional reason
+         */
+        Optional<ID> foreign;
+    }
+
+    /** Empty structure (without fields) */
+    class EmptyStruct {
+    }
+
+    /** void operation */
+    void testVoid();
+
+    /**
+     * echo a Boolean value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    boolean testBoolean(boolean input);
+
+    /**
+     * echo a String value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    String testString(String input);
+
+    /**
+     * echo a Long value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    long testLong(long input);
+
+    /**
+     * echo a Double value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    double testDouble(double input);
+
+    /**
+     * echo a Binary value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    Binary testBinary(Binary input);
+
+    /**
+     * echo an Opaque value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    Opaque testOpaque(Opaque input);
+
+    /**
+     * echo a DateTime value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    DateTime testDateTime(DateTime input);
+
+    /**
+     * echo an URI value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    URI testUri(URI input);
+
+    /**
+     * echo a Secret value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    Secret testSecret(Secret input);
+
+    /**
+     * echo an enumeration value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    TestEnum testEnum(TestEnum input);
+
+    /**
+     * echo an ID value
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    ID testId(ID input);
+
+    /**
+     * echo List of Boolean
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Boolean> testBooleanList(List<Boolean> input);
+
+    /**
+     * echo List of String
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<String> testStringList(List<String> input);
+
+    /**
+     * echo List of Long
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Long> testLongList(List<Long> input);
+
+    /**
+     * echo List of Double
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Double> testDoubleList(List<Double> input);
+
+    /**
+     *  echo List of Binary
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Binary> testBinaryList(List<Binary> input);
+
+    /**
+     * echo List of URI
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<URI> testUriList(List<URI> input);
+
+    /**
+     * echo List of Secret
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Secret> testSecretList(List<Secret> input);
+
+    /**
+     * echo List of DateTime
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<DateTime> testDateTimeList(List<DateTime> input);
+
+    /**
+     * echo List of enum
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<TestEnum> testEnumList(List<TestEnum> input);
+
+    /**
+     * echo List of ID
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<ID> testIdList(List<ID> input);
+
+    /**
+     * echo List of structures
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<TestStructureSimple> testStructureList(List<TestStructureSimple> input);
+
+    /**
+     * echo List of List of Long
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<List<Long>> testLongListList(List<List<Long>> input);
+
+    /**
+     * echo optional Boolean
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Boolean> testBooleanOptional(
+            Optional<Boolean> input);
+
+    /**
+     * echo optional String
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<String> testStringOptional(
+            Optional<String> input);
+
+    /**
+     *  echo optional Long
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Long> testLongOptional(
+            Optional<Long> input);
+
+    /**
+     * echo optional Double
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Double> testDoubleOptional(
+            Optional<Double> input);
+
+    /**
+     * echo optional Binary
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Binary> testBinaryOptional(
+            Optional<Binary> input);
+
+    /**
+     * echo optional DateTime
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<DateTime> testDateTimeOptional(
+            Optional<DateTime> input);
+
+    /**
+     * echo optional enum value
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<TestEnum> testEnumOptional(
+            Optional<TestEnum> input);
+
+    /**
+     * echo optional URI
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<URI> testUriOptional(
+            Optional<URI> input);
+
+    /**
+     *  echo optional Secret
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Secret> testSecretOptional(
+            Optional<Secret> input);
+
+    /**
+     * echo optional ID
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<ID> testIdOptional(
+            Optional<ID> input);
+
+    /**
+     * echo optional structure
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<TestStructureSimple> testStructureOptional(
+            Optional<TestStructureSimple> input);
+
+    /**
+     * echo optional List of Long
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<List<Long>> testLongOptionalList(
+            Optional<List<Long>> input);
+
+    /**
+     * echo optional List of structures
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<List<TestStructureSimple>> testStructureOptionalList(
+            Optional<List<TestStructureSimple>> input);
+
+    /**
+     * echo List of optional Long values
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Optional<Long>> testOptionalLongList(List<Optional<Long>> input);
+
+    /**
+     * echo List of optional String values
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Optional<String>> testOptionalStringList(List<Optional<String>> input);
+
+    /**
+     * echo List of optional structures
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Optional<TestStructureSimple>> testOptionalStructureList(
+            List<Optional<TestStructureSimple>> input);
+
+    /**
+     * echo List of optional List of Long
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<Optional<List<Long>>> testOptionalLongListList(
+            List<Optional<List<Long>>> input);
+
+    /**
+     * echo structure
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    TestStructureComplex testStructure(TestStructureComplex input);
+
+    /**
+     * echo a standard vAPI error
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    InvalidArgument testStandardError(InvalidArgument input);
+
+    /**
+     * echo List of standard vAPI errors
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    List<InvalidArgument> testStandardErrorList(List<InvalidArgument> input);
+
+    /**
+     * echo optional std error
+     *
+     * @param input test value
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<ResourceInUse> testStandardErrorOptional(
+            Optional<ResourceInUse> input);
+
+    /**
+     * echo empty struct
+     *
+     * @param input test value
+     * @return same as {@code input}
+     */
+    EmptyStruct testEmptyStruct(EmptyStruct input);
+}

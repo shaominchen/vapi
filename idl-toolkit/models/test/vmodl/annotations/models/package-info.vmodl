@@ -1,0 +1,21 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for annotations relating to (data) models.
+ * <p>
+ * The <i>models</i> annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @Model}
+ *   <dt> This marker declares a class to be a model structure.
+ *  <dd> {@literal @ModelKey}
+ *   <dt> This marker declares a field to be a model key.
+ *   A model requires a least one key, with type {@code ID}.
+ *  <dd> {@literal @ModelIndex}
+ *   <dt> This marker declares a field to be a model index, which
+ *   simply implies it is a searchable field.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.models;
+

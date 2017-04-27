@@ -1,0 +1,201 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.async;
+
+import com.vmware.vapi.std.errors.ResourceInUse;
+
+import vmodl.lang.*;
+
+/** Test service for asynchronous support. */
+interface Asynchronous {
+
+    /**
+     * <p>Operation with void return type.
+     * <p>The operation is executed asynchronously outside the binding method.
+     */
+    void testVoid();
+
+    /**
+     * <p>Operation with void return type.
+     * <p>The operation is executed synchronously inside the binding method.
+     */
+    void testVoidInline();
+
+    /**
+     * <p>Operation with non-void return type. Echoes the input.
+     * <p>The operation is executed asynchronously outside the binding method.
+     *
+     * @param input  some text
+     * @return the same as the input
+     */
+    String testString(String input);
+
+    /**
+     * <p>Operation with non-void return type. Echoes the input.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @param input  some text
+     * @return the same as the input
+     */
+    String testStringInline(String input);
+
+    /**
+     * <p>Operation which declares and reports a standard error.
+     * <p>The operation is executed asynchronously outside the binding method.
+     *
+     * @throws ResourceInUse standard error
+     */
+    void testStandardError() throws ResourceInUse;
+
+    /**
+     * <p>Operation which declares and reports a standard error.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @throws ResourceInUse standard error
+     */
+    void testStandardErrorInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which declares and throws a standard error.
+     * <p>The operation is executed synchronously inside the binding method.
+     * <p>The operation does not set the exception via the async handle, but
+     * directly throws it.
+     *
+     * @throws ResourceInUse standard error
+     */
+    void testStandardErrorThrownInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which reports a runtime exception that does not represent a
+     * standard error.
+     * <p>The operation is executed asynchronously outside the binding method.
+     */
+    void testUnknownRuntimeException();
+
+    /**
+     * <p>Operation which reports a runtime exception that does not represent a
+     * standard error.
+     * <p>The operation is executed synchronously inside the binding method.
+     */
+    void testUnknownRuntimeExceptionInline();
+
+    /**
+     * <p>Operation which throws a runtime exception that does not represent a
+     * standard error.
+     * <p>The operation is executed synchronously inside the binding method.
+     * <p>The operation does not set the exception via the async handle, but
+     * directly throws it.
+     */
+    void testUnknownRuntimeExceptionThrownInline();
+
+    /**
+     * Operation which retrieves the activation id from the incoming execution
+     * context and returns it. Returns null if there is no activation id.
+     *
+     * @return the activation id or null
+     * @return.optional reason
+     */
+    Optional<String> testActivationId();
+
+    /**
+     * Operation which retrieves a property from the application data of the
+     * incoming execution context and returns it. Returns null if there is no
+     * application data property for the specified key.
+     *
+     * @param key key of application property
+     * @return the value of the property or null
+     * @return.optional reason
+     */
+    Optional<String> testApplicationData(String key);
+
+    /**
+     * <p>Operation which produces a few progress updates and finally it echoes
+     * the input in the operation result.
+     * <p>The operation is executed asynchronously outside the binding method.
+     *
+     * @param input  some text
+     * @return the same as the input
+     */
+    String testProgressUpdates(String input);
+
+    /**
+     * <p>Operation which completes the invocation twice - first with the
+     * string "first" and after that throws a ResourceInUse.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return the string "first"
+     * @throws ResourceInUse standard error
+     */
+    String testSetResultAndThrowInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which completes the invocation twice - first with the
+     * string "first" and after that with the string "second".
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return the string "first"
+     */
+    String testMultipleSetResultInline();
+
+    /**
+     * <p>Operation which completes the invocation twice - first with the
+     * string "first" and after that with ResourceInUse standard error.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return the string "first"
+     * @throws ResourceInUse standard error
+     */
+    String testSetResultAndSetErrorInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which completes the invocation twice - first sets a
+     * ResourceInUse error and then throws a RuntimeException.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return nothing
+     * @throws ResourceInUse standard error
+     */
+    String testSetErrorAndThrowInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which completes the invocation twice - first sets a
+     * ResourceInUse error and then sets a RuntimeException.
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return nothing
+     * @throws ResourceInUse standard error
+     */
+    String testMultipleSetErrorInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which completes the invocation twice - first sets a
+     * ResourceInUse standard error and after that sets the string "second".
+     * <p>The operation is executed synchronously inside the binding method.
+     *
+     * @return nothing
+     * @throws ResourceInUse standard error
+     */
+    String testSetErrorAndSetResultInline() throws ResourceInUse;
+
+    /**
+     * <p>Operation which sets <code>null</code> result.
+     * <p>The operation is executed asynchronously outside the binding method.
+     *
+     * @param input
+     * @return nothing
+     * @throws InternalServerError
+     */
+    String testNullResult(String input);
+
+    /**
+     * <p>Operation which sets <code>null</code> error.
+     * <p>The operation is executed asynchronously outside the binding method.
+     *
+     * @param input
+     * @return nothing
+     * @throws InternalServerError
+     */
+    String testNullException(String input);
+}

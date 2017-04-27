@@ -1,0 +1,9 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.metamodel.resource} {@term package} provides
+ * {@term services} to retrieve metamodel information for resource types.
+ */
+package com.vmware.vapi.metadata.metamodel.resource;

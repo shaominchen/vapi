@@ -1,0 +1,13 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 constants.
+ * <p>
+ * The VMODL2 specification allows for the declaration of certain constants
+ * within an interface or class.  The examples here are meant to test the
+ * proper code generation and use for a target language.
+ */
+package vmodl.test.uber.constants;
+

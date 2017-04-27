@@ -1,0 +1,42 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.names;
+
+import vmodl.lang.*;
+
+/**
+ * Service that has names which clash with python keywords.
+ */
+interface UberPythonKeywords {
+
+    /**
+     * Structure that has names which clash with python keywords
+     */
+    class Struct {
+        /** from */
+        long from;
+    }
+
+    /**
+     * Structure that has names which clash with python keywords
+     */
+    class Pass {
+        /** struct */
+        Struct struct;
+
+        /** struct1
+         * @field.optional reason
+         */
+        Optional<Struct> struct1;
+    }
+
+    /**
+     * Method name and parameters clash with python keyword
+     * @param yield doc
+     * @param from doc
+     * @param struct doc
+     * @return doc
+     */
+    Pass lambda(long yield, long from, Struct struct);
+}

@@ -1,0 +1,19 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.names;
+
+import vmodl.lang.*;
+
+/** test canonicalizer on a service name */
+@CanonicalName("canonical_names")
+interface UberCanonicalNames {
+
+    /** test canonicalizer on a method name and param name
+     * @param uberParam test param
+     * @return test result
+     */
+    @CanonicalName("test_local_struct")
+    UberLocalStruct uberMethod(
+            @CanonicalName("input") UberLocalStruct uberParam);
+}

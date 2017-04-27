@@ -1,0 +1,10 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.metamodel.service} {@term package} provides
+ * {@term services} to retrieve metamodel information about the elements contained in a
+ * service element.
+ */
+package com.vmware.vapi.metadata.metamodel.service;

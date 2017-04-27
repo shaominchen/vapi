@@ -1,0 +1,21 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for union annotations.
+ * <p>
+ * The union annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @UnionTag}
+ *   <dt> This marker declares a field or parameter to be a union tag,
+ *   which is the discriminant of a union.  The type of a union tag
+ *   must be an enumeration.
+ *  <dd> {@literal @UnionCase(tag="myTag", value="FOO"}
+ *   <dt> This marker declares a field or parameter to be a union case,
+ *   whose value is expected to be set only when the tag contains the
+ *   value of this case.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.unions;
+

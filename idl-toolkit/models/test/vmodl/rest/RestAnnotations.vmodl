@@ -1,0 +1,67 @@
+/***************************************************
+ * Copyright 2016 VMware, Inc.  All rights reserved.
+ **************************************************/
+package vmodl.test.uber.annotations.rest;
+
+import vmodl.lang.*;
+import vmodl.rest.*;
+
+@Resource("com.vmware.test.User")
+interface RestAnnotations {
+
+    class Model {
+
+        Optional<ID> id;
+
+        @SerializationName("user_name")
+        String userName;
+
+        @SerializationName(value="company_id")
+        Optional<String> companyId;
+
+    }
+
+    @RequestMapping(value="/test/Users",
+                    method=RequestMethod.POST,
+                    headers={"contentType=application/json", "contentType=application/xml"},
+                    params={"action1=id1", "action2=id2", "action3=id3"},
+                    contentType="application/json;version=5.7;class=com.vmware.vchs.iam.api.schema.v2.classes.user.User",
+                    accept="application/json;version=5.7;class=com.vmware.vchs.iam.api.schema.v2.classes.user.User")
+    @ResponseStatus(201)
+    Model create(@RequestBody Model createSpec);
+
+    @RequestMapping(value="/test/Users",
+                    method=RequestMethod.GET,
+                    headers="content-type=application/json",
+                    params="action=id")
+    String getIt(ID id);
+
+
+    @RequestMapping(value="/test/Users",
+                    method=RequestMethod.POST,
+                    headers={"content-type=application/json","accept"},
+                    params={"action1=id1", "id2"} )
+    String get1(ID id1, ID id2);
+
+    @RequestMapping(value="/test/Users/{user_id}",
+                    method=RequestMethod.GET)
+    @ResponseStatus(200)
+    Model get(
+        @PathVariable("user_id") ID userId);
+
+
+    @RequestMapping(value="/test/Users/{user_id}",
+                    method=RequestMethod.PUT,
+                    contentType="application/json",
+                    accept="application/json;")
+    @ResponseStatus(204)
+    void set(
+        @PathVariable("user_id") Long userId,
+        @RequestBody Model updateSpec);
+
+
+    @RequestMapping(value="/test/Users/{user_id}/other/{action_id}",
+                    method=RequestMethod.POST)
+    @ResponseStatus(200)
+    void delete(@PathVariable("user_id") Boolean userId, @PathVariable("action_id") String actionId);
+}

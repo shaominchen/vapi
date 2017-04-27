@@ -1,0 +1,76 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.cli;
+
+import vmodl.lang.List;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Namespace} {@term service} provides {@term operations}
+ * to get information about command line interface (CLI) namespaces.
+ */
+interface Namespace {
+
+    /**
+     * The {@name Identity} {@term structure} uniquely identifies a
+     * namespace in the CLI namespace tree.
+     */
+    class Identity {
+        /**
+         * The dot-separated path of the namespace containing the namespace in
+         * the CLI node tree. For top-level namespace this will be empty.
+         */
+        String path;
+
+        /** The name displayed to the user for this namespace. */
+        String name;
+    }
+
+    /**
+     * The {@name Info} {@term structure} contains information about a namespace.
+     * It includes the identity of the namespace, a description, information
+     * children namespaces.
+     */
+    class Info {
+        /** Basic namespace identity. */
+        Identity identity;
+
+        /** The text description displayed to the user in help output. */
+        String description;
+
+        /** The children of this namespace in the tree of CLI namespaces. */
+        List<Identity> children;
+    }
+
+    /**
+     * Returns the identifiers of all namespaces registered with the infrastructure.
+     *
+     * @return Identifiers of all the namespaces.
+     */
+    List<Identity> list();
+
+    /**
+     * Retreives information about a namespace including information about children of
+     * that namespace.
+     *
+     * @param identity Identifier of the namespace for which to retreive information.
+     * @return Information about the namespace including information about child of that namespace.
+     * @throws NotFound if a namespace corresponding to {@param.name identity} doesn't exist.
+     */
+    Info get(Identity identity) throws NotFound;
+
+    /**
+     * Returns the aggregate fingerprint of all the namespace metadata from all
+     * the metadata sources.
+     * <p>
+     * The fingerprint provides clients an efficient way to check if the metadata
+     * for namespaces has been modified on the server.
+     *
+     * @return Fingerprint of all the namespace metadata present on the server.
+     */
+    String fingerprint();
+}
+

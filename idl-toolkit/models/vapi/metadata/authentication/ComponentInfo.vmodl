@@ -1,0 +1,31 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.ID;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ComponentInfo} {@term structure} contains authentication
+ * information of a component element.
+ * <p>
+ * For an explanation of authentication information contained within
+ * component elements, see {@link com.vmware.vapi.metadata.authentication.Component}.
+ */
+class ComponentInfo {
+    /**
+     * Authentication information of all the package elements. The key in the
+     * {@term map} is the identifier of the package element and the value in the {@term map}
+     * is the authentication information for the package element.
+     * <p>
+     * For an explanation of authentication information containment within
+     * package elements, see {@link com.vmware.vapi.metadata.authentication.Package}.
+     */
+    @Resource(Resources.PACKAGE)
+    Map<ID, PackageInfo> packages;
+}

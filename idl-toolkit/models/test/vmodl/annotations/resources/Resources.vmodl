@@ -1,0 +1,22 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.resources;
+
+import vmodl.lang.*;
+
+/** some resource type constants */
+@SymbolTableOnly
+interface Resources {
+    /** doc uber */
+    String UBER = "vmodl.test.uber";
+
+    /** doc foo */
+    String FOO = "vmodl.test.uber.foo";
+
+    /** doc bar */
+    String BAR = "vmodl.test.uber.bar";
+
+    /** doc vm */
+    String VM = "vmodl.test.uber.vm";
+}

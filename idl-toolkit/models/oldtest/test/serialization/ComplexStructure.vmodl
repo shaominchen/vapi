@@ -1,0 +1,75 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.serialization;
+
+import vmodl.lang.*;
+
+/** Test complex structure */
+@Resource("foo")
+class ComplexStructure {
+    /** String constant */
+    public static final String constantString = "val";
+
+    /** String array constants */
+    public static final String[] constantStrings = {"a", "b"};
+
+    /** doc */
+    enum TestEnum {
+        /** doc */
+        ONE,
+        /** doc */
+        TWO
+    }
+
+    /** doc */
+    Opaque opq;
+
+    /** doc */
+    DynamicStructure struct;
+
+    /** doc */
+    long lgn;
+
+    /** doc */
+    double dbl;
+
+    /** doc */
+    boolean bool;
+
+    /** doc */
+    String str;
+
+    /** doc */
+    DateTime dt;
+
+    /** doc */
+    URI uri;
+
+    /** doc */
+    Binary bin;
+
+    /** doc */
+    Secret sec;
+
+    /** doc */
+    TestEnum enm;
+
+    /** doc */
+    ID id;
+
+    /** doc */
+    List<String> strList;
+
+    /** doc */
+    Map<String, String> strMap;
+
+    /** doc */
+    Set<ID> idSet;
+
+    /** doc
+     * @field.optional reason
+     */
+    Optional<String> optStr;
+}

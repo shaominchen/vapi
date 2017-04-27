@@ -1,0 +1,27 @@
+package com.vmware.vapi.test.dynamic_structures;
+
+import vmodl.lang.DynamicStructure;
+
+/**
+ * Service1
+ */
+interface Service1 {
+
+    /** SampleStruct */
+    class SampleStruct {
+        /** long field */
+        long foo;
+
+        /** String field */
+        String bar;
+    }
+
+    /**
+     * Echo dynamic structure.
+     *
+     * @param structValueParam test input
+     * @return same as {@code structValueParam}
+     */
+    DynamicStructure echo(DynamicStructure structValueParam);
+}
+

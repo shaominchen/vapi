@@ -1,0 +1,38 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * Information about a vAPI service that has routing information
+ *
+ * A service is said to contain routing information if any of its operations
+ * have routing information
+ */
+class ServiceInfo {
+    /**
+     * The routing information to be used for all the operations present in this
+     * service. If a particular operation has no explicit routing information
+     * defined in the routing definition file, this routing info will be used
+     * for enforcing routing.
+     */
+    RoutingInfo routingInfo;
+
+    /**
+     * Information about all operations in this service that contain routing
+     * Information. The key in the map is the ID of the operation and the value
+     * in the map is the routing information for this operation.
+     * <p>
+     * For an explanation of routing information within operations, see
+     * {@link com.vmware.vapi.metadata.routing.Operation}
+     */
+    @Resource(Resources.OPERATION)
+    Map<ID, OperationInfo> operations;
+}

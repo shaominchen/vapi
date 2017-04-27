@@ -1,0 +1,12 @@
+package com.vmware.vapi.test.errors.another;
+
+import com.vmware.vapi.test.errors.TopLevelError;
+
+/**
+ * Top-level structure which extends error type from another package.
+ */
+class TopLevelExtendingError extends TopLevelError {
+
+        /** doc strField */
+        String strField;
+}

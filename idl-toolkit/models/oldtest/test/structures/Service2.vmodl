@@ -1,0 +1,38 @@
+package com.vmware.vapi.test.structures;
+
+// TODO: tollkit can't parse this
+// import test.structures.TopLevelStructInFile;
+
+// import com.vmware.vapi.test.structures.Service1.NestedStruct;
+
+/**
+ * Service2:
+ * <ul>
+ * <li> uses top-level structures from same package  </li>
+ * <li> uses structure nested in another service (Service1) from same package </li>
+ * <ul>
+ */
+interface Service2 {
+
+    /**
+     * Simple name used for top-level struct - OK, since it is
+     * in the same package.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    TopLevelStructInFile echoTopLevelStructInFile(TopLevelStructInFile param);
+
+    /**
+     * FQ named used Echo top-level structure from the same package - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.TopLevelStructInFile
+        echoTopLevelStructInFileFQ(com.vmware.vapi.test.structures.TopLevelStructInFile param);
+
+//    Illegal: can't access nested structure out-side the its enclosing service
+//    NestedStruct echoNestedStructImported(NestedStruct param);
+}
+

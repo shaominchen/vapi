@@ -1,0 +1,37 @@
+/* **********************************************************
+ * Copyright 2016 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.cli;
+
+import vmodl.lang.*;
+
+/** vAPI test interface for CLI input type tests */
+interface InputTypes {
+
+    /** simple test structure */
+    class TestStructureSimpleList {
+        /** long field */
+        Long longField;
+
+        /** list of string field */
+        List<String> stringField;
+    }
+
+    /** structure with nested structure with list field **/
+    class TestNestedStructureWithList {
+        /** field using another structure **/
+        TestStructureSimpleList structureField1;
+
+        /** string field */
+        String stringField;
+    }
+
+    /**
+     * echo nested structure with list
+     *
+     * @param input test value
+     * @return list of struct
+     */
+    List<TestNestedStructureWithList> testNestedStructureWithList(TestNestedStructureWithList input);
+}

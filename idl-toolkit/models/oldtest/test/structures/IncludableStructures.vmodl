@@ -1,0 +1,170 @@
+package com.vmware.vapi.test.structures;
+
+import vmodl.lang.DynamicStructure;
+import vmodl.lang.HasFieldsOf;
+import vmodl.lang.Includable;
+import vmodl.lang.Include;
+import vmodl.lang.List;
+
+import com.vmware.vapi.test.structures.diff.AnotherTopLevelStruct;
+
+/** Test service for includable structures */
+interface IncludableStructures {
+
+    /** {@literal @HasFieldsOf} refers Shape, before Shape declaration */
+    public class PerimeterBeforeShape {
+        /** doc */
+        @HasFieldsOf(Shape.class) DynamicStructure shape;
+    }
+
+    /** Shape includable struct */
+    @Includable
+    public class Shape {
+        /** doc */
+        String color;
+    }
+
+    /** Rectangle includes Shape */
+    @Include(Shape.class)
+    public class Rectangle {
+        /** doc */
+        long width;
+
+        /** doc */
+        long height;
+    }
+
+    /** Nested structure without fields that includes another structure */
+    @Include(Shape.class)
+    public class IncludesShapeInnerClass {
+        // this structure is meant to be without fields. keep it this way.
+    }
+
+    /** Dog (doesn't includes Shape) */
+    public class Dog {
+        /** doc */
+        String name;
+    }
+
+    /** Perimeter */
+    public class Perimeter {
+        /** doc */
+        @HasFieldsOf(Shape.class) DynamicStructure shape;
+    }
+
+    /** OuterPerimiter */
+    public class OuterPerimeter {
+        /** doc */
+        @HasFieldsOf(Perimeter.class) DynamicStructure perimeter;
+    }
+
+    /** Another spec */
+    public class AnotherSpec {
+        /** doc */
+        @HasFieldsOf(AnotherTopLevelStruct.class) DynamicStructure field;
+    }
+
+    /**
+     * An operation that takes 2 dynamic structures as input one of which
+     * requires certain fields to be present
+     *
+     * @param anyValue unrestricted dynamic structure
+     * @param shapeValue dynamic structure which has-fields-of Shape
+     */
+    void method(DynamicStructure anyValue, @HasFieldsOf(Shape.class) DynamicStructure shapeValue);
+
+    /**
+     * An operation that takes as input a structure with a nested field that
+     * contains fields of a certain type
+     *
+     * @param outerPerimeterValue outer perimeter
+     */
+    void nested(@HasFieldsOf(OuterPerimeter.class) DynamicStructure outerPerimeterValue);
+
+    /**
+     * This operation takes a list of dynamic structures that require certain
+     * fields to be present
+     *
+     * @param shapeList dynamic list of structures which has-fields-of Shape
+     */
+    void list(@HasFieldsOf(Shape.class) List<DynamicStructure> shapeList);
+
+    /**
+     * This operation takes as input a dynamic structure that requires
+     * fields of a type from another package to be present
+     *
+     * @param TopLevelStruct struct from another package
+     */
+    void another(@HasFieldsOf(AnotherTopLevelStruct.class) DynamicStructure input);
+
+    /**
+     * This operation takes as input a type that has a field of type dynamic structure
+     * that requires fields of a type from another package to be present
+     *
+     * @param referringTopLevelStruct struct from another package
+     */
+    void anotherNested(AnotherSpec spec);
+
+    /**
+     * @param shapeList dynamic list of structures which has-fields-of Shape
+     * @param shapeValue dynamic structure which has-fields-of Shape
+     */
+    void multipleRestrictions(@HasFieldsOf(Shape.class) List<DynamicStructure> shapeList, @HasFieldsOf(Shape.class) DynamicStructure shapeValue);
+
+    /**
+     * This operation takes echoes the input dynamic structure but needs the output
+     * structure to have certain fields
+     *
+     * @param anyValue unrestricted dynamic structure
+     * @return dynamic structure which has-fields-of Shape
+     */
+    @HasFieldsOf(Shape.class) DynamicStructure echo(DynamicStructure anyValue);
+
+    /**
+     * This operation takes echoes the input dynamic structure but needs the optional output
+     * structure to have certain fields
+     *
+     * @param anyValue unrestricted dynamic structure
+     * @param If true, input is echo'ed else, return null
+     * @return dynamic structure which has-fields-of Shape
+     */
+    @HasFieldsOf(Shape.class) Optional<DynamicStructure> echoOptional(DynamicStructure anyValue, boolean returnOutput);
+
+    /**
+     * This operation takes a shape and echoes the static structure to the output
+     *
+     * @param shape a static shape
+     * @return the shape
+     */
+    Shape echoShape(Shape shape);
+
+    /**
+     * This operation takes a reference to a structure that contains a dynamic
+     * structure as one of its fields
+     *
+     * @param periValue Instance of Perimeter class
+     */
+    void inputRefStructure(Perimeter periValue);
+
+    /**
+     * This operation returns a reference to a structure that contains a dynamic
+     * structure as one of its fields
+     *
+     * @param periValue Instance of Perimeter class
+     * @return Instance of Perimeter class
+     */
+    Perimeter getRefStructure();
+
+    /**
+     * This operation will fail and return an InternalServerError since it tries to
+     * return a structure without certain fields required to be present
+     *
+     * @param periValue Instance of Perimeter class
+     * @return Instance of Perimeter class
+     */
+    Perimeter getRefStructureBuggy();
+
+    void inputStaticShape(Shape input);
+
+    Shape outputStaticShape();
+}

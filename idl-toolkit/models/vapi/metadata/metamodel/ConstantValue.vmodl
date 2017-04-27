@@ -1,0 +1,41 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.List;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * The {@name ConstantValue} {@term structure} contains the metamodel
+ * information of the constant element.
+ */
+class ConstantValue {
+
+    /**
+     * The {@name Category} {@term enumerated type} defines
+     * {@term enumeration values} for the valid kinds of values.
+     */
+    enum Category {
+
+        /** Indicates the type of constant value is primitive. */
+        PRIMITIVE,
+
+        /** Indicates the type of constant value is a list. */
+        LIST
+    }
+
+    /** Category of the type of constant value. */
+    @UnionTag
+    Category category;
+
+    /** Primitive value of the constant element. */
+    @UnionCase(tag="category", value="PRIMITIVE")
+    PrimitiveValue primitiveValue;
+
+    /** List value of the constant element. */
+    @UnionCase(tag="category", value="LIST")
+    List<PrimitiveValue> listValue;
+}

@@ -1,0 +1,49 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.introspection;
+
+import vmodl.lang.Export;
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+import vmodl.lang.Set;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@link Service} service provides operations to retrieve information about the
+ * services exposed by a vAPI provider. A provider is a container that exposes one or
+ * more vAPI services.
+ */
+@Export
+@Resource(Resources.SERVICE)
+public interface Service {
+   /**
+    * Information about a vAPI service
+    */
+   class Info {
+      /**
+       * Set of identifiers of operations present in the service
+       */
+      @Resource(Resources.OPERATION)
+      Set<ID> operations;
+   }
+
+   /**
+    * Returns the set of service identifiers.
+    *
+    * @return set of service identifiers
+    */
+   Set<ID> list();
+
+   /**
+    * Returns the {@link Info} for the specified service
+    *
+    * @param id service identifier
+    * @return {@link Info} for the specified service
+    * @throws NotFound If the service identifier does not exist
+    */
+   Info get(ID id) throws NotFound;
+}

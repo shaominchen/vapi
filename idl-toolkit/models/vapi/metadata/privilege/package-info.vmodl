@@ -1,0 +1,21 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.privilege} {@term package} provides
+ * {@term services} that expose privilege information for operation
+ * elements across all the service elements.
+ * <p>
+ * An entity has a unique identifier and a resource type. An entity
+ * can either be present in one of the parameter elements or if a
+ * parameter is a structure element, it could also be present in one
+ * of the field elements.
+ * <p>
+ * Privileges can be assigned to either operation elements or entities
+ * used in the operation element. A list of privileges can also be applied
+ * on a package element. This list of privileges would be used as a default
+ * for all the operation elements and the entities that do not have any
+ * defined privileges.
+ */
+package com.vmware.vapi.metadata.privilege;

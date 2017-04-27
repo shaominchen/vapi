@@ -1,0 +1,54 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test;
+
+import vmodl.lang.*;
+
+/** vAPI test interface for integration tests */
+@Resource("com.vmware.resource_echo")
+interface EchoRecursive {
+    /**
+     * Structure which contains a circular type reference (to itself).
+     */
+    class TestStructureSelfRecursive {
+        /** long field */
+        long data;
+
+        /**
+         * reference to itself
+         * @field.optional reason
+         */
+        Optional<TestStructureSelfRecursive> next;
+    }
+
+    /**
+     * Echo structure.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    TestStructureSelfRecursive testStructureSelfRecursive(
+            TestStructureSelfRecursive input);
+
+    /**
+     * Echo optional structure.
+     *
+     * @param input test input
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<TestStructureSelfRecursive> testStructureSelfRecursiveOptional(
+            Optional<TestStructureSelfRecursive> input);
+
+    /**
+     * Echo list of structures.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    List<TestStructureSelfRecursive> testStructureSelfRecursiveList(
+            List<TestStructureSelfRecursive> input);
+}

@@ -1,0 +1,32 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name InvalidElementType} {@term error} indicates that the server was
+ * unable to fulfil the request because an element of a specific type cannot be
+ * a member of particular group.
+ * <p>
+ * This {@term error} could be reported, for example, if an attempt is made to
+ * put an element into the wrong type of container.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Attempt to put a virtual machine into a folder that can only contain
+ *       hosts. </li>
+ *   <li>Attempt to attach a SCSI virtual disk to an IDE port. </li>
+ * </ul>
+ * Counterexamples:
+ * <ul>
+ *   <li>A {@term parameter} has a value that is not of the expected type. The
+ *       {@link InvalidArgument} {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class InvalidElementType extends Error {
+}

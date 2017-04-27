@@ -1,0 +1,48 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Service} {@term service} provides {@term operations}
+ * to retrieve privilege information of a service element.
+ * <p>
+ * A service element is said to contain privilege information if one of the
+ * operation elements contained in this service element has privilege
+ * information.
+ */
+@Resource(Resources.SERVICE)
+interface Service {
+
+    /** Resource type for service. */
+    String RESOURCE_TYPE = Resources.SERVICE;
+
+    /**
+     * Returns the identifiers for the service elements that have
+     * privilege information.
+     *
+     * @return The list of identifiers for the service elements that
+     *         have privilege information.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves privilege information about the service element
+     * corresponding to {@param.name serviceId}.
+     *
+     * @param serviceId Identifier of the service element.
+     * @return The {@link ServiceInfo} instance that corresponds to
+     *         {@param.name serviceId}
+     * @throws NotFound if the service element associated with {@param.name serviceId}
+     *                  does not have any privilege information.
+     */
+    ServiceInfo get(ID serviceId) throws NotFound;
+}

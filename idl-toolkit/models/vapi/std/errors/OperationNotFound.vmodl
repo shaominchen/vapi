@@ -1,0 +1,42 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name OperationNotFound} {@term error} indicates that the
+ * {@term operation} specified in the request could not be found.
+ * <p>
+ * Every API request specifies a service identifier and an operation identifier
+ * along with the {@term parameters}. If the API infrastructure is unable to
+ * find the requested {@term service} or {@term operation} it reports this
+ * {@term error}.
+ * <p>
+ * This {@term error} can be reported by the API infrastructure for any
+ * {@term operation}, but it is specific to the API infrastructure, and should
+ * never be reported by the implementation of any {@term operation}.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>A client provides an invalid service or operation identifier when
+ *      invoking the {@term operation} using a dynamic interface (for example
+ *      REST).
+ *      </li>
+ *   <li>A client invokes the {@term operation} from a {@term service}, but that
+ *       {@term service} has not been installed. </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>A client invokes a task scheduling {@term operation}, but provides an
+ *       invalid service identifier or operation identifier. The
+ *       {@link NotFound} {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class OperationNotFound extends Error {
+}

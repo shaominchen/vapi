@@ -1,0 +1,12 @@
+package com.vmware.vapi.test.is;
+
+import vmodl.lang.*;
+
+/** doc */
+@Model
+@Resource("com.vmware.test.TestResource")
+class TopLevelModel {
+    /** doc */
+    @ModelKey
+    ID primary;
+}

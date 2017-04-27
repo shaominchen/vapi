@@ -1,0 +1,71 @@
+package com.vmware.vapi.test.errors.another;
+
+import com.vmware.vapi.test.errors.TopLevelError;
+
+/**
+ * Service2:
+ * <ul>
+ * <li> uses top-level error type from another package by importing it </li>
+ * <li> uses error type nested in service (Service1) from another package
+ *      by importing it </li>
+ * <ul>
+ */
+interface Service2 {
+
+    /**
+     * Extend a top-level error type from another
+     * package - OK since it is imported
+     */
+    class NestedExtendingError extends TopLevelError {
+
+        /** doc strField */
+        String strField;
+    }
+
+    /**
+     * Report a top-level error type from another
+     * package - OK since it is imported.
+     *
+     * @param error error to report
+     * @throws TopLevelError same as {@code error} parameter
+     *
+     */
+    void reportTopLevelErrorImported(TopLevelError error)
+        throws TopLevelError;
+
+    /**
+     * Illegal: can't access structure nested in a service from outside the
+     * service.
+     */
+    // void reportNestedErrorImported(NestedError error) throws NestedError;
+
+    /**
+     * Simple name used for a top-level error type from another
+     * package - OK since it is imported.
+     *
+     * @param error error to report
+     * @throws TopLevelExtendingError same as {@code error} parameter
+     */
+    void reportTopLevelExtendingError(TopLevelExtendingError error)
+        throws TopLevelExtendingError;
+
+    /**
+     * Report a nested error defined in this service that extends a top-level
+     * error defined in another package.
+     *
+     * @param error error to report
+     * @throws NestedExtendingError same as {@code error} parameter
+     */
+    void reportNestedExtendingError(NestedExtendingError error)
+        throws NestedExtendingError;
+
+     /**
+      * Illegal: can't access structure nested in a service from outside the
+      * service.
+      */
+    // void reportNestedError(
+    //     com.vmware.vapi.test.errors.Service1.NestedError error)
+    //     throws com.vmware.vapi.test.errors.Service1.NestedError;
+
+}
+

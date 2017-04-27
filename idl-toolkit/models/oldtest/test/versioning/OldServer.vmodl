@@ -1,0 +1,43 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.versioning;
+
+import com.vmware.vapi.test.versioning.NewServer.StructWithListStruct;
+import com.vmware.vapi.test.versioning.NewServer.StructWithNestedStructs;
+import com.vmware.vapi.test.versioning.NewServer.StructWithOptionalStruct;
+
+/**
+ * Represents older version of API (NewServer is the newer one)
+ */
+interface OldServer {
+
+    /**
+     * Test operation.
+     *
+     * @param param1 param 1
+     */
+    void method(String param1);
+
+    /**
+     * Test operation with struct with an optional struct.
+     *
+     * @param struct The input struct
+     */
+    void acceptStructWithOptionalStruct(StructWithOptionalStruct struct);
+
+    /**
+     * Test operation with struct with a list of structs.
+     *
+     * @param struct The input struct
+     */
+    void acceptStructWithListStruct(StructWithListStruct struct);
+
+    /**
+     * Test operation with struct with nested struct types.
+     *
+     * @param struct The input struct
+     */
+    void acceptStructWithNestedStructs(StructWithNestedStructs struct);
+}

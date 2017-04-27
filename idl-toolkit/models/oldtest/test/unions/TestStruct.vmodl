@@ -1,0 +1,53 @@
+package com.vmware.vapi.test.unions;
+
+import vmodl.lang.*;
+
+/**
+ * Top level Structure.
+ */
+public class TestStruct {
+
+    /**
+     * Enum defined inside a top level structure; used for union tag type.
+     */
+    public enum  TestEnum {
+        /** enum constant - LONG */
+        LONG,
+
+        /** enum constant - BOOLEAN */
+        BOOLEAN,
+
+        /** enum constant - STRING */
+        STRING,
+
+        /** enum constant - URI */
+        URI,
+
+        /** enum constant - NONE */
+        NONE
+    }
+
+    /**
+     * Field of enum type.
+     */
+    @UnionTag TestEnum testEnum;
+
+    /** long field, in the union */
+    @UnionCase(tag="testEnum", value="LONG") long longVal;
+
+    /** boolean field, in the union */
+    @UnionCase(tag="testEnum", value="BOOLEAN") boolean booleanVal;
+
+    /** string field, in the union */
+    @UnionCase(tag="testEnum", value="STRING") String stringVal;
+
+    /** uri field, in the union */
+    @UnionCase(tag="testEnum", value="URI") long numURIFields;
+
+    /** uri field, in the union */
+    @CanonicalName("URI_val")
+    @UnionCase(tag="testEnum", value="URI") URI uriVal;
+
+    /** double field - out of the union*/
+    double doubleVal;
+}

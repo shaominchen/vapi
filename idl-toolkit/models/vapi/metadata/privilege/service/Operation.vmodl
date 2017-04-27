@@ -1,0 +1,61 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege.service;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.privilege.OperationInfo;
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Operation} {@term service} provides {@term operations}
+ * to retrieve privilege information of an operation element.
+ * <p>
+ * An operation element is said to contain privilege information if
+ * there are any privileges assigned to the operation element or if
+ * one of the parameter elements contained in it has privileges
+ * assigned in privilege definition file.
+ */
+@Resource(Resources.OPERATION)
+interface Operation {
+
+    /** Resource type for operation. */
+    String RESOURCE_TYPE = Resources.OPERATION;
+
+    /**
+     * Returns the identifiers for the operation elements contained in the service
+     * element corresponding to {@param.name serviceId} that have privilege
+     * information.
+     *
+     * @param serviceId Identifier of the service element.
+     * @return List of identifiers for the operation elements contained in the
+     *         service element that have privilege information.
+     * @throws NotFound if the service element associated with {@param.name serviceId}
+     *                  does not have any operation elements that have privilege
+     *                  information.
+     */
+    List<ID> list(@Resource(Resources.SERVICE) ID serviceId) throws NotFound;
+
+    /**
+     * Retrieves the privilege information about an operation element
+     * corresponding to {@param.name operationId} contained in the service element
+     * corresponding to {@param.name serviceId}.
+     *
+     * @param serviceId Identifier of the service element.
+     * @param operationId Identifier of the operation element.
+     * @return The {@link com.vmware.vapi.metadata.privilege.OperationInfo} instance
+     *         that corresponds to {@param.name operationId}.
+     * @throws NotFound if the service element associated with {@param.name serviceId} does not
+     *                  exist.
+     * @throws NotFound if the operation element associated with {@param.name operationId} does not
+     *                  exist.
+     * @throws NotFound if the operation element associated with {@param.name operationId} does not have
+     *                  any privilege information.
+     */
+    OperationInfo get(@Resource(Resources.SERVICE) ID serviceId, ID operationId) throws NotFound;
+}

@@ -1,0 +1,18 @@
+package com.vmware.vapi.metadata;
+
+import vmodl.lang.*;
+
+/** Metadata source info */
+public class SourceInfo {
+    /** Type of the metadata source */
+    @UnionTag SourceType type;
+
+    /** Name of the metadata source file */
+    @UnionCase(tag="type", value="FILE") String fileName;
+
+    /** Address of the remote metadata source */
+    @UnionCase(tag="type", value="REMOTE") String remoteAddr;
+
+    /** Message protocol to be used */
+    @UnionCase(tag="type", value="REMOTE") String msgProtocol;
+}

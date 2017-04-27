@@ -1,0 +1,28 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege;
+
+import vmodl.lang.List;
+
+/**
+ * The {@name OperationInfo} {@term structure} contains privilege information
+ * of an operation element.
+ * <p>
+ * For an explanation of containment within operation elements,
+ * see {@link com.vmware.vapi.metadata.privilege.service.Operation}.
+ */
+class OperationInfo {
+    /** List of all privileges assigned to the operation element. */
+    List<String> privileges;
+
+    /**
+     * Privilege information of all the parameter elements of the operation element.
+     *
+     * For an explanation of containment of privilege information within parameter
+     * elements, see {@link com.vmware.vapi.metadata.privilege.PrivilegeInfo}.
+     */
+    List<PrivilegeInfo> privilegeInfo;
+}
+

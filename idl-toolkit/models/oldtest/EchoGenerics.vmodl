@@ -1,0 +1,269 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test;
+
+import vmodl.lang.*;
+
+/** vAPI test interface for integration tests */
+@Resource("com.vmware.resource_echo_generics")
+interface EchoGenerics {
+
+    /**
+     * Test enumeration type.
+     */
+    enum EchoEnum { ONE, TWO, THREE }
+
+    /**
+     * Test structure with map and set field.
+     */
+    class MapAndSetTestStructure {
+        /**
+         * Set field used for testing.
+         */
+        Set<String> setField;
+
+        /**
+         * Set field used for testing.
+         */
+        @Resource("test_resource_id")
+        Set<ID> setFieldWithId;
+
+        /**
+         * Set field used for testing.
+         */
+        Set<Long> setFieldWithLong;
+
+        /**
+         * Map field used for testing.
+         */
+        Map<String, SimpleStructureWithId> mapField;
+
+        /**
+         * Map field used for testing.
+         */
+        Map<ID, SimpleStructureWithId> mapFieldWithId;
+
+        /**
+         * Map field used for testing.
+         */
+        @Resource("test_resource_long_id")
+        Map<Long, ID> mapFieldWithLong;
+    }
+
+    /**
+     * Test structure with only set field.
+     */
+    class SetTestStructure {
+        /**
+         * Set field used for testing.
+         */
+        Set<String> setField;
+    }
+
+    /**
+     * Test structure with only map field.
+     */
+    class MapTestStructure {
+        /**
+         * Map field used for testing.
+         */
+        Map<String, SimpleStructureWithId> mapField;
+    }
+
+    /**
+     * Simple structure used to test more complex map and set.
+     */
+    @Model
+    class SimpleStructureWithId {
+        /**
+         * Id of the structure.
+         */
+        @ModelKey
+        ID id;
+    }
+
+    /**
+     * Test structure with complex Id
+     */
+    @Model
+    class SimpleStructureWithComplexId {
+        /**
+         * Id of the structure.
+         */
+        @ModelKey
+        ID id;
+
+        /**
+         * Id of the structure.
+         */
+        @ModelKey(order=2)
+        ID id2;
+    }
+
+    /**
+     * Test structure with array of IDs
+     */
+    @Model
+    @Resource("com.vmware.foo")
+    class SimpleStructureWithArrayOfIds {
+        /**
+         * Id of the structure.
+         */
+        @ModelKey
+        ID id;
+
+        /** list of IDs */
+        List<ID> listOfIDs;
+
+        /**
+         * optional list of IDs
+         * @field.optional reason
+         */
+        Optional<List<ID>> optionalListOfIDs;
+
+        /** list of optional IDs */
+        List<Optional<ID>> listOfOptionalIDs;
+
+        /** list structure with ID */
+        List<SimpleStructureWithId> listOfStructureWithId;
+    }
+
+    /**
+     * Test structure with generics of IDs
+     */
+    @Model
+    @Resource("com.vmware.foo")
+    class SimpleStructureWithGenericsOfIds {
+        /**
+         * Id of the structure.
+         */
+        @ModelKey
+        ID id;
+
+        /**
+         * optional set of Ids
+         * @field.optional reason
+         */
+        Optional<Set<ID>> optionalSetOfIds;
+
+        /**
+         * optional map with ID keys
+         * @field.optional reason
+         */
+        Optional<Map<ID, SimpleStructureWithId>> optionalMapFieldWithId;
+    }
+
+    /** Simple structure for testing list of secrets functionality. */
+    class StructureWithSecretList {
+        /** List of Secret field */
+        List<Secret> secretList;
+    }
+
+    /**
+     * Simple structure for testing map of string to secrets functionality.
+     */
+    class StructureWithSecretMap {
+        /** Map of String to Secret field */
+        Map<String, Secret> secretMap;
+    }
+
+    /**
+     * Test for simple map as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<String, String> testMap(Map<String, String> input);
+
+    /**
+     * Test for map with Enum key as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<EchoEnum, String> testEnumMap(Map<EchoEnum, String> input);
+
+    /**
+     * Test for map with URI key as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<URI, String> testUriMap(Map<URI, String> input);
+
+    /**
+     * Test for complex map as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<String, SimpleStructureWithId> testComplexMap(
+            Map<String, SimpleStructureWithId> input);
+
+    /**
+     * Test for complex map as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<ID, SimpleStructureWithId> testComplexIdMap(
+            Map<ID, SimpleStructureWithId> input);
+
+    /**
+     * Test for complex map as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Map<Long, ID> testComplexLongMap(Map<Long, ID> input);
+
+    /**
+     * Test for simple set as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Set<String> testSet(Set<String> input);
+
+    /**
+     * Test for simple set as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Set<ID> testSetWithId(Set<ID> input);
+
+    /**
+     * Test for simple set as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Set<Long> testSetWithLong(Set<Long> input);
+
+    /**
+     * Test for set of enum as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Set<EchoEnum> testSetWithEnum(Set<EchoEnum> input);
+
+    /**
+     * Test for set of URI as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Set<URI> testSetWithUri(Set<URI> input);
+
+    /**
+     * Test optional map of string to string as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    Optional<Map<String, String>> testOptionalMap(Optional<Map<String, String>> input);
+}

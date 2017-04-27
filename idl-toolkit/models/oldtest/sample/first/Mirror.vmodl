@@ -1,0 +1,23 @@
+package com.vmware.vapi.sample.first;
+
+import vmodl.lang.List;
+
+/** A first example of the vAPI framework: simple string echo services. */
+interface Mirror {
+    /**
+     *  Echo the string from the server back to the caller.
+     *
+     *  @param message Message to echo.
+     *  @return The same message.
+     */
+    String echo(String message);
+
+    /**
+     *  Sort strings.
+     *
+     *  @param string Strings to sort.
+     *  @return Sorted strings.
+     */
+    List<String> sort(List<String> string);
+}
+

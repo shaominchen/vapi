@@ -1,0 +1,45 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.shared;
+
+import vmodl.lang.*;
+
+/** shared complex structure */
+class SharedComplexStruct {
+
+    /** boolean field */
+    boolean booleanField;
+
+    /** double field */
+    double doubleField;
+
+    /** long field */
+    long longField;
+
+    /** String field */
+    String stringField;
+
+    /** DateTime field */
+    DateTime dateTimeField;
+
+    /** Secret field */
+    Secret secretField;
+
+    /** URI field */
+    URI uriField;
+
+    /** field using enum */
+    SharedGreekEnum enumField;
+
+    /** list field */
+    List<String> listPrimitiveField;
+
+    /** optional String field
+     * @field.optional reason
+     */
+    Optional<String> optionalPrimitiveField;
+
+    /** field using other structure */
+    SharedSimpleStruct structureField;
+}

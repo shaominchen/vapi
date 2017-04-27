@@ -1,0 +1,31 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.privilege;
+
+import vmodl.lang.ID;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ComponentInfo} {@term structure} contains the privilege
+ * information of a component element.
+ * <p>
+ * For an explanation of privilege information contained within
+ * component elements, see {@link com.vmware.vapi.metadata.privilege.Component}.
+ */
+class ComponentInfo {
+    /**
+     * Privilege information of all the package elements. The key in the
+     * {@term map} is the identifier of the package element and the value in the {@term map}
+     * is the privilege information for the package element.
+     * <p>
+     * For an explanation of privilege information containment within
+     * package elements, see {@link com.vmware.vapi.metadata.privilege.Package}.
+     */
+    @Resource(Resources.PACKAGE)
+    Map<ID, PackageInfo> packages;
+}

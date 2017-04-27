@@ -1,0 +1,49 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Package} {@term service} provides {@term operations}
+ * to retrieve authentication information of a package element.
+ * <p>
+ * A package element is said to contain authentication information if there
+ * is a default authentication assigned to all service elements contained
+ * in the package element or if one of the service element contained in this package
+ * element has authentication information.
+ */
+@Resource(Resources.PACKAGE)
+interface Package {
+
+    /** Resource type for package. */
+    String RESOURCE_TYPE = Resources.PACKAGE;
+
+    /**
+     * Returns the identifiers for the package elements that have
+     * authentication information.
+     *
+     * @return The list of identifiers for the package elements that
+     *         have authentication information.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves authentication information about the package element
+     * corresponding to {@param.name packageId}.
+     *
+     * @param packageId Identifier of the package element.
+     * @return The {@link PackageInfo} instance that corresponds to
+     *         {@param.name packageId}
+     * @throws NotFound if the package element associated with {@param.name packageId}
+     *                  does not have any authentication information.
+     */
+    PackageInfo get(ID packageId) throws NotFound;
+}

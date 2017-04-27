@@ -1,0 +1,31 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for CRUD annotations.
+ * <p>
+ * The CRUD annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @Crud}
+ *   <dt> This marker declares a class to be a CRUD resource.
+ *   This marker takes an optional value, which may be one of:
+ *    <ul>
+ *     <li> {@code vmodl.crud.Style.FULL_UPDATE}
+ *     <li> {@code vmodl.crud.Style.INCREMENTAL_UPDATE}
+ *     <li> {@code vmodl.crud.Style.UNSPECIFIED}
+ *    </ul>
+ *  <dd> {@literal @Create}, {@literal @Read}, {@literal @Update}
+ *   <dt> This trio marks the access usage for a field as one of:
+ *    <ul>
+ *     <li> {@code vmodl.crud.Usage.REQUIRED}
+ *     <li> {@code vmodl.crud.Usage.OPTIONAL}
+ *     <li> {@code vmodl.crud.Usage.UNUSED}
+ *    </ul>
+ *    These annotations may also appear on the class, in which case
+ *    the value is used as a default when there is not an explicit
+ *    indication on a field.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.crud;
+

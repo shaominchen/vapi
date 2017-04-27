@@ -1,0 +1,30 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.structures;
+
+import vmodl.lang.*;
+
+/**
+ * Top-level structure
+ */
+@Model
+@Resource("foo")
+class TopLevelStructInFile {
+    /** doc dbl1
+     * @field.optional reason
+     */
+    Optional<Double> dbl1;
+
+    /** doc str1
+     * @field.optional reason
+     */
+    Optional<String> str1;
+
+    /** doc id
+     * @field.optional reason
+     */
+    @ModelKey
+    Optional<ID> id;
+}

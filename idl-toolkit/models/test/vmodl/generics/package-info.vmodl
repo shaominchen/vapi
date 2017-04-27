@@ -1,0 +1,20 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 generic types.
+ * <p>
+ * The VMODL2 specification allows for the use of certain generic types.
+ * In particular, the focus is on the collection types, including:
+ * <ul>
+ *  <li> {@code vmodl.lang.List}
+ *  <li> {@code vmodl.lang.Set}
+ *  <li> {@code vmodl.lang.Map}
+ * </ul>
+ * <p>
+ * The examples here are meant to test the proper code generation and
+ * use for a target language.
+ */
+package vmodl.test.uber.generics;
+

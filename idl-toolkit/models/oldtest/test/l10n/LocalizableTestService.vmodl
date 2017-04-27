@@ -1,0 +1,61 @@
+/* **********************************************************
+ * Copyright 2012 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.l10n;
+
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.std.LocalizableMessage;
+
+/**
+ * Test service which supports L10N.
+ */
+interface LocalizableTestService {
+    /** Test struct with localizable field */
+    class LocalizableStruct {
+        /** string field */
+        String stringField;
+
+        /** localizable field */
+        LocalizableMessage localizableField;
+    }
+
+    /**
+     * Returns a localizable value.
+     *
+     * @return description as localizable message
+     */
+    LocalizableMessage getDesciption();
+
+    /**
+     * Returns a struct with localizable field.
+     *
+     * @return a fixed localizable message
+     * @throws NotFound never thrown
+     */
+    LocalizableStruct getLocStruct() throws NotFound;
+
+    /**
+     * Accepts a localizable parameter.
+     *
+     * @param locMsg a localizable message
+     * @return the id of {@code locMsg}
+     */
+    String receiveLocMessage(LocalizableMessage locMsg);
+
+    /**
+     * Accepts a struct with localizable field.
+     *
+     * @param locStr a struct with localizable field
+     * @return the id of the localizable message
+     */
+    String receiveLocStruct(LocalizableStruct locStr);
+
+    /**
+     * Echoes a LocalizableMessage.
+     *
+     * @param locMsg a localizable message
+     * @return same as {@code locMsg}
+     */
+    LocalizableMessage echoLocMessage(LocalizableMessage locMsg);
+}

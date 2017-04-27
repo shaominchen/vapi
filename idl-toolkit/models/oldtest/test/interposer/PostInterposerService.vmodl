@@ -1,0 +1,26 @@
+package com.vmware.vapi.test.interposer;
+
+import com.vmware.vapi.std.errors.NotAllowedInCurrentState;
+import com.vmware.vapi.std.interposition.InvocationRequest;
+import com.vmware.vapi.std.interposition.InvocationResult;
+
+import vmodl.lang.DynamicStructure;
+import vmodl.lang.HasFieldsOf;
+
+/**
+ * POST interposer service.
+ */
+interface PostInterposerService {
+
+    /**
+     * Interposer which could throw.
+     *
+     * @param invocationRequest interposed invocation request
+     * @param invocationResult result of the interposed invocation
+     * @throws NotAllowedInCurrentState interposer error
+     */
+    void interpose(@HasFieldsOf(InvocationRequest.class) DynamicStructure invocationRequest,
+                   @HasFieldsOf(InvocationResult.class) DynamicStructure invocationResult)
+            throws NotAllowedInCurrentState;
+
+}

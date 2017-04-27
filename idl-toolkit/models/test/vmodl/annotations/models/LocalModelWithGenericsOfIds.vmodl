@@ -1,0 +1,30 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.models;
+
+import vmodl.test.uber.UberResources;
+import vmodl.lang.*;
+
+/**
+ * Test structure with generics of IDs
+ */
+@Model
+@Resource(UberResources.FOO)
+class LocalModelWithGenericsOfIds {
+    /**
+     * Id of the structure.
+     */
+    @ModelKey
+    ID id;
+
+    /** optional set of Ids
+     * @field.optional reason
+     */
+    Optional<Set<ID>> optionalSetOfIds;
+
+    /** optional map with ID keys
+     * @field.optional reason
+     */
+    Optional<Map<ID, LocalSimpleModel>> optionalMapFieldWithId;
+}

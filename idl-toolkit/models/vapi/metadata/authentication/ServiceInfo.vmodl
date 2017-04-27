@@ -1,0 +1,40 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ServiceInfo} {@term structure} contains authentication information
+ * of a service element.
+ * <p>
+ * For an explanation of authentication information contained within service
+ * elements, see {@link com.vmware.vapi.metadata.authentication.Service}.
+ */
+class ServiceInfo {
+    /**
+     * List of authentication schemes to be used for all the operation elements
+     * contained in this service element. The authentication scheme specified
+     * on the package element corresponding to this service element is ignored.
+     */
+    List<AuthenticationInfo> schemes;
+
+    /**
+     * Information about all operation elements contained in this service element
+     * that contain authentication information. The key in the {@term map} is the identifier
+     * of the operation element and the value in the {@term map} is the authentication
+     * information for the operation element.
+     * <p>
+     * For an explanation of containment of authentication information within operation
+     * elements, see {@link com.vmware.vapi.metadata.authentication.service.Operation}.
+     */
+    @Resource(Resources.OPERATION)
+    Map<ID, OperationInfo> operations;
+}

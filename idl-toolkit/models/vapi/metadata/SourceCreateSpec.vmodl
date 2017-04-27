@@ -1,0 +1,42 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata;
+
+import vmodl.lang.Includable;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+import vmodl.lang.URI;
+
+/**
+ * The {@name SourceCreateSpec} {@term structure} contains
+ * the registration information for a metadata source.
+ */
+@Includable
+public class SourceCreateSpec {
+    /** English language human readable description of the source. */
+    String description;
+
+    /** Type of the metadata source. */
+    @UnionTag
+    SourceType type;
+
+    /**
+     * Absolute file path of the metamodel metadata file that has
+     * the metamodel information about one component element.
+     */
+    @UnionCase(tag="type", value="FILE")
+    String filepath;
+
+    /**
+     * Connection information of the remote server. This should be
+     * of the format http(s)://IP:port/namespace.
+     * <p>
+     * The remote server should contain the {@term services} in
+     * {@link com.vmware.vapi.metadata.metamodel} {@term package}.
+     * It could expose metamodel information of one or more
+     * components.
+     */
+    @UnionCase(tag="type", value="REMOTE") URI address;
+}

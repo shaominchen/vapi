@@ -1,0 +1,27 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ErrorInfo} {@term structure} contains the metadata information
+ * about the error elements contained in an operation element.
+ */
+class ErrorInfo {
+    /**
+     * Identifier for the structure element corresponding to the error that is
+     * being reported by the operation.
+     */
+    @vmodl.lang.Resource(Resources.STRUCTURE) ID structureId;
+
+    /**
+     * The English language documentation for the service element. It can contain HTML
+     * markup and Javadoc tags.
+     */
+    String documentation;
+}

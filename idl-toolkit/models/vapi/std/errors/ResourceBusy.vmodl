@@ -1,0 +1,29 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name ResourceBusy} {@term error} indicates that the {@term operation}
+ * could not be completed because a resource it needs is busy.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Trying to power off a virtual machine that is in the process of being
+ *       powered on. </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>Trying to remove a VMFS datastore when there is a virtual machine
+ *       registered on any host attached to the datastore. The
+ *       {@link ResourceInUse} {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class ResourceBusy extends Error {
+}

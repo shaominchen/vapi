@@ -1,0 +1,10 @@
+package com.vmware.vapi.test.structures;
+
+import vmodl.lang.Includable;
+
+/** Top level includable structure */
+@Includable
+public class IncludableTopLevel {
+    /** sample field */
+    String sampleField;
+}

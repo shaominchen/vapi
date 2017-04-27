@@ -1,0 +1,31 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * Information about a vAPI component that contains routing information
+ *
+ * For an explanation of routing information within components, see
+ * {@link com.vmware.vapi.metadata.routing.Component}
+ */
+class ComponentInfo {
+    /**
+     * Routing information of all the vAPI packages. The key in the map is the
+     * ID of the package and the value in the map is the routing information for
+     * the package
+     *
+     * For an explanation of routing information within packages, see
+     * {@link com.vmware.vapi.metadata.routing.Package}
+     */
+    @Resource(Resources.PACKAGE)
+    Map<ID, PackageInfo> packages;
+}

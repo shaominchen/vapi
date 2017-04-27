@@ -1,0 +1,18 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.test.structures.diff;
+
+
+/**
+ * Top-level structure
+ */
+class AnotherTopLevelStruct {
+    /** doc dbl1 */
+    Double dbl1;
+
+    /** doc str1 */
+    String str1;
+}

@@ -1,0 +1,81 @@
+package com.vmware.vapi.test.cli;
+
+import vmodl.lang.*;
+
+/** Class to simulate for cli option collisions */
+interface Collision {
+
+    /** nested */
+    class Nested {
+        /** field */
+        String field;
+    }
+
+    /**
+     * one collision
+     *
+     * @param field field
+     * @param nested nested
+     */
+    String one_collision(String field, Nested nested);
+
+    /**
+     * one collision different order
+     *
+     * @param nested nested
+     * @param field field
+     */
+    String one_collision_reverse(Nested nested, String field);
+
+    /**
+     * two collisions
+     *
+     * @param field field
+     * @param nested nested
+     * @param nestedField nested filed
+     */
+    List<String> two_collisions(String field, Nested nested, String nestedField);
+
+    /**
+     * two collisions different order
+     *
+     * @param field field
+     * @param nestedField nested filed
+     * @param nested nested
+     */
+    List<String> two_collisions_reverse(String field, String nestedField, Nested nested);
+
+    /** deep */
+    class Deep {
+        /** field */
+        String field;
+    }
+
+    /**
+     * two collisions
+     *
+     * @param field field
+     * @param deepNested deep nested
+     * @param deep deep
+     */
+    List<String> two_collisions_2(String field,
+                                  Deep deepNested,
+                                  Deep deep);
+
+    /** deep nested */
+    class DeepNested {
+        /** deep field */
+        Deep deep;
+    }
+
+    /**
+     * two collisions nested
+     *
+     * @param field field
+     * @param deep deep
+     * @param deepNested deep nested
+     */
+    String two_collisions_nested(String field,
+                                 Deep deep,
+                                 DeepNested deepNested);
+}

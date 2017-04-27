@@ -1,0 +1,41 @@
+/* **********************************************************
+ * Copyright 2012-2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.test;
+
+import com.vmware.vapi.std.errors.Error;
+
+/** vAPI test interface for integration tests */
+interface EchoConstants {
+    /** string constant */
+    String CDROM = "com.vmware.CDROM";
+
+    /** string constant */
+    String FLOPPY = "com.vmware.floppy";
+
+    /** string constant */
+    String USB = "com.vmware.USB";
+
+    /** string array constant of constants */
+    String[] REMOVABLE = {CDROM, FLOPPY, USB};
+
+    /** Class to test constants inside Structures*/
+    class EchoStructConstant {
+        /** Struct string constant */
+        static final String constantString = "Hello";
+
+        /** String field */
+        String strField;
+    }
+
+    /** Class to test constants inside Errors */
+    class EchoErrorConstant extends Error {
+        /** Error string constant */
+        static final String constantString = "Error";
+
+        /** String field */
+        String strField;
+    }
+}

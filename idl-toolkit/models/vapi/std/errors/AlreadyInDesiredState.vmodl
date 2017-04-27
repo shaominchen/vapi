@@ -1,0 +1,22 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name AlreadyInDesiredState} {@term error} indicates that an attempt to
+ * change the state of a resource or service had no effect because the resource
+ * or service is already in the desired state.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Trying to power on a virtual machine that is already powered on.</li>
+ * </ul>
+ */
+@Export
+public class AlreadyInDesiredState extends Error {
+}

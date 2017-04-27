@@ -1,0 +1,74 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name ElementValue} {@term structure} describes the value of the
+ * metadata element.
+ */
+class ElementValue {
+    /**
+     * The {@name Type} {@term enumerated type} defines the valid types
+     * for values in metadata elements.
+     */
+    enum Type {
+        /** Indicates the type of the value is a long (64 bit signed integer). */
+        LONG,
+
+        /**
+         * Indicates the type of the value is a string (a variable length
+         * sequence of characters). The encoding is UTF-8.
+         */
+        STRING,
+
+        /** Indicates the type of the value is a list of strings. */
+        STRING_LIST,
+
+        /**
+         * Indicates the type of the value is an identifier for a
+         * structure element.
+         */
+        STRUCTURE_REFERENCE,
+
+        /**
+         * Indicates the type of the value is a list of identifiers for a
+         * structure element.
+         */
+        STRUCTURE_REFERENCE_LIST
+    }
+
+    /** Type of the value. */
+    @UnionTag
+    Type type;
+
+    /** Long value of the metadata element. */
+    @UnionCase(tag="type", value="LONG")
+    long longValue;
+
+    /** String value of the metadata element. */
+    @UnionCase(tag="type", value="STRING")
+    String stringValue;
+
+    /** List of strings value of the metadata element. */
+    @UnionCase(tag="type", value="STRING_LIST")
+    List<String> listValue;
+
+    /** Identifier of the structure element. */
+    @UnionCase(tag="type", value="STRUCTURE_REFERENCE")
+    @vmodl.lang.Resource(Resources.STRUCTURE)
+    ID structureId;
+
+    /** List of identifiers of the structure elements. */
+    @UnionCase(tag="type", value="STRUCTURE_REFERENCE_LIST")
+    @vmodl.lang.Resource(Resources.STRUCTURE)
+    List<ID> structureIds;
+}

@@ -1,0 +1,12 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.errors.custom;
+
+/**
+ * Custom Exception type with no fields which derives from another custom
+ * Exception type with no fields
+ */
+class EmptyCustomDerivedException extends EmptyCustomException {
+}

@@ -1,0 +1,15 @@
+<%
+/*
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ */
+%>\
+${vmodl.javadoc(error, 0)}
+${vmodl.render('lines.partial', [lines:vmodl.annotations(error)])}\
+class ${error.name.asDeclared}
+extends ${error.extendsType ? error.extendsType.name : 'Exception'} {
+<% error.attributes.each { a -> %>\
+
+    ${vmodl.javadoc(a, 1)}
+    ${vmodl.mapType(a.type)} ${a.name.asDeclared};
+<% } %>\
+}

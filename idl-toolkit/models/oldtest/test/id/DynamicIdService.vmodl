@@ -1,0 +1,29 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.test.id;
+
+import vmodl.lang.List;
+import vmodl.lang.DynamicStructure;
+import com.vmware.vapi.std.DynamicID;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Test the DynamicID handling in the metadata service/client
+ */
+interface DynamicIdService {
+
+    /**
+     * @return list of dynamic ids
+     */
+    List<DynamicID> list();
+
+    /**
+     * @param id
+     * @return DynamicStructure
+     * @throws NotFound
+     */
+    DynamicStructure get(DynamicID id) throws NotFound;
+}

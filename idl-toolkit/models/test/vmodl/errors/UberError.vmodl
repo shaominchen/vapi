@@ -1,0 +1,12 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.errors;
+
+import vmodl.lang.*;
+
+/** a base custom error type */
+class UberError extends Exception {
+    /** holds a list of error messages */
+    List<String> messages;
+}

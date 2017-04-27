@@ -1,0 +1,106 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.generics;
+
+import vmodl.test.uber.UberResources;
+//import vmodl.test.uber.shared.SharedEmptyStruct;
+//import vmodl.test.uber.shared.SharedSimpleStruct;
+//import vmodl.test.uber.shared.SharedComplexStruct;
+
+import vmodl.lang.*;
+
+/**
+ * Specifies a test interface for VMODL2 generic types.
+ * <p>
+ * This interface defines more complex usages, where combinations
+ * of generic types are used and the generic types are nested within
+ * structures, etc.
+ * <p>
+ * The simple usages are separated and covered by the other files in
+ * this package, which can be classifed as follows:
+ * <dl>
+ *  <dt>{@link UberPrimitiveLists}
+ *  <dd> covers lists of all the primitive types
+ *  <dt>{@link UberPrimitiveMaps}
+ *  <dd> covers maps of all the primitive types
+ *  <dt>{@link UberPrimitiveSets}
+ *  <dd> covers sets of all the primitive types
+ *  <dt>{@link UberStructureLists}
+ *  <dd> covers lists of various structure types
+ *  <dt>{@link UberStructureMaps}
+ *  <dd> covers maps of various structure types
+ * </dl>
+ */
+@Resource(UberResources.FOO)
+interface UberGenerics {
+
+    /**
+     * Test for complex list as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@param.name input}
+     */
+    List<NestedComboStruct> echoNestedComboStructList(
+            List<NestedComboStruct> input);
+
+    /**
+     * Test for complex map as argument and as return value.
+     *
+     * @param input test input
+     * @return same as {@param.name input}
+     */
+    Map<ID, NestedComboStruct> echoIdToNestedComboStructMap(
+            Map<ID, NestedComboStruct> input);
+
+    //TODO: consider extensive coverage of K/V combos:
+    // Map<String, Nested*Struct>
+    // Map<Long, Nested*Struct>
+
+    /**
+     * Test structure with map and set field.
+     */
+    class NestedComboStruct {
+        /**
+         * Set field used for testing.
+         */
+        Set<String> setField;
+
+        /**
+         * Set field used for testing.
+         */
+        @Resource("test_resource_id")
+        Set<ID> setFieldWithId;
+
+        /**
+         * Set field used for testing.
+         */
+        Set<Long> setFieldWithLong;
+
+        /**
+         * Map field used for testing.
+         */
+        Map<String, String> mapFieldWithString;
+
+        /**
+         * Map field used for testing.
+         */
+        Map<ID, String> mapFieldWithId;
+
+        /**
+         * Map field used for testing.
+         */
+        @Resource("test_resource_long_id")
+        Map<Long, ID> mapFieldWithLong;
+    }
+
+    /**
+     * Test structure with only map field.
+     */
+    class MapTestStruct {
+        /**
+         * Map field used for testing.
+         */
+        Map<String, NestedComboStruct> mapField;
+    }
+}

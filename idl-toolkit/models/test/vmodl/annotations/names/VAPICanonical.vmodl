@@ -1,0 +1,48 @@
+/*
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.names;
+
+import vmodl.lang.*;
+
+/**
+ * Interface to test @CanonicalNames
+ */
+@CanonicalName("vAPI_1_2_canonical")
+interface VAPI12Canonical {
+
+    /** doc */
+    @CanonicalName("sample_1_2")
+    class Sample12 {
+        /** doc */
+        @CanonicalName("vDS_port_1_2")
+        boolean vDSPort12;
+
+        /** doc
+         * @field.optional reason
+         */
+        @CanonicalName("VMware")
+        Optional<Boolean> vmware;
+
+        /** doc
+         * @field.optional reason
+         */
+        @CanonicalName("ICH_7m_present")
+        Optional<Boolean> ich7mPresent;
+    }
+
+    /**
+     * Echo - params and result structure with interesting canonical names.
+     *
+     * @param isCDRom is it a CD-ROM
+     * @param vDSPort12 vDS port 12?
+     * @param.optional vDSPort12 reason
+     * @return structure with result
+     */
+    @CanonicalName("echo_3_D")
+    Sample12 echo3D(
+            @CanonicalName("is_CD_rom")
+            boolean isCDRom,
+            @CanonicalName("vDS_port_1_2")
+            Optional<Boolean> vDSPort12);
+}

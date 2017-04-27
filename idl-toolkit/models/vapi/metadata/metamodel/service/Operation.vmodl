@@ -1,0 +1,54 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel.service;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.metamodel.OperationInfo;
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@name Operation} {@term service} provides {@term operations}
+ * to retrieve metamodel information of an operation element in the
+ * interface definition language.
+ */
+@Resource(Resources.OPERATION)
+interface Operation {
+
+    /** Resource type for operation element. */
+    String RESOURCE_TYPE = Resources.OPERATION;
+
+    /**
+     * Returns the identifiers for the operation elements that are defined
+     * in the scope of {@param.name serviceId}.
+     *
+     * @param serviceId Identifier of the service element.
+     * @return The list of identifiers for the operation elements that are
+     *         defined in the scope of {@param.name serviceId}.
+     * @throws NotFound if the service element associated with {@param.name serviceId}
+     *                  does not exist in any of the package elements.
+     */
+    List<ID> list(@Resource(Resources.SERVICE) ID serviceId) throws NotFound;
+
+    /**
+     * Retrieves the metamodel information about an operation element corresponding
+     * to {@param.name operationId} contained in the service element corresponding
+     * to {@param.name serviceId}.
+     *
+     * @param serviceId Identifier of the service element.
+     * @param operationId Identifier of the operation element.
+     * @return The {@link com.vmware.vapi.metadata.metamodel.OperationInfo} instance
+     *         that corresponds to {@param.name operationId} defined in scope
+     *         {@param.name serviceId}.
+     * @throws NotFound if the service element associated with {@param.name serviceId} does
+     *                  not exist in any of the package elements.
+     * @throws NotFound if the operation element associated with {@param.name operationId}
+     *                  does not exist in the service element.
+     */
+    OperationInfo get(@Resource(Resources.SERVICE) ID serviceId, ID operationId) throws NotFound;
+}

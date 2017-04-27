@@ -1,0 +1,124 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.structures;
+
+import vmodl.lang.*;
+
+/**
+ * Top-level structure with all optional fields
+ */
+class TopLevelOptionalFieldStruct {
+    /** doc dbl1 */
+    Optional<Double> dbl1;
+
+    /** doc dbl2 */
+    Optional<String> str1;
+
+    /**
+     * refer a top-level struct (defined in its own file)
+     * @field.optional reason
+     */
+    Optional<com.vmware.vapi.test.structures.TopLevelStructInFile> struct1;
+}
+
+/**
+ * Top-level structure
+ */
+class TopLevelStruct {
+    /** doc dbl1 */
+    double dbl1;
+
+    /** doc dbl2 */
+    String str1;
+
+    /**
+     * refer a top-level struct (defined in its own file)
+     * @field.optional reason
+     */
+    Optional<com.vmware.vapi.test.structures.TopLevelStructInFile> struct1;
+}
+
+/**
+ * Service1:
+ * <ul>
+ *  <li> declares a nested structure </li>
+ *  <li> uses top-level from same package </li>
+ *  <li> uses nested (in itself) structure </li>
+ * <ul>
+ */
+interface Service1 {
+
+    /**
+     * Nested structure
+     */
+    public class NestedStruct {
+        /** doc strField */
+        String strField;
+
+        /** refer a top-level struct (defined in the same file) */
+        com.vmware.vapi.test.structures.TopLevelStructInFile field1;
+
+        /**
+         * refer a top-level struct (defined in its own file)
+         * @field.optional reason
+         */
+        Optional<com.vmware.vapi.test.structures.TopLevelStruct> field2;
+    }
+
+    /**
+     * FQ name used for structure in the same scope/package - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.TopLevelStruct
+        echoTopLevelStruct(com.vmware.vapi.test.structures.TopLevelStruct param);
+
+    /**
+     * FQ name used for structure in the same scope/package - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.TopLevelOptionalFieldStruct
+        echoTopLevelOptionalFieldStruct(com.vmware.vapi.test.structures.TopLevelOptionalFieldStruct param);
+
+    /**
+     * Simple name used for top-level struct - OK, since it is
+     * in the same package.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    TopLevelStructInFile echoTopLevelStructInFile(TopLevelStructInFile param);
+
+    /**
+     * FQ name used for structure in the same scope/package - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.TopLevelStructInFile echoTopLevelStructInFileFQ(
+            com.vmware.vapi.test.structures.TopLevelStructInFile param);
+
+    /**
+     * Simple name used for structure nested in this same service - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    NestedStruct echoNestedStruct(NestedStruct param);
+
+
+    /**
+     * FQ name used for structure nested in this same service - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.Service1.NestedStruct echoNestedStructFQ(
+            com.vmware.vapi.test.structures.Service1.NestedStruct param);
+}
+

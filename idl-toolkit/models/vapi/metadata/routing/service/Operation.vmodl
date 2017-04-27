@@ -1,0 +1,47 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing.service;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.routing.OperationInfo;
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Operations to retrieve information about routing in a vAPI operation
+ *
+ */
+@Resource(Resources.OPERATION)
+interface Operation {
+
+    /** Resource type for vAPI operation. */
+    String RESOURCE_TYPE = Resources.OPERATION;
+
+    /**
+     * Get the IDs of all the vAPI operations in the given service that contain
+     * routing information
+     *
+     * @param serviceId Identifier of the service
+     * @return list of operation identifiers
+     * @throws NotFound If the service identifier does not exist.
+     */
+    List<ID> list(@Resource(Resources.SERVICE) ID serviceId) throws NotFound;
+
+    /**
+     * Get information about a vAPI operation that contains routing information
+     *
+     * @param serviceId Identifier of the service
+     * @param operationId Identifier of the operation
+     * @return Operation info for the vAPI operation that contains routing
+     *         information.
+     * @throws NotFound If the service identifier does not exist or if the specified
+     *             operation identifier does not exist in the service.
+     */
+    OperationInfo get(@Resource(Resources.SERVICE) ID serviceId, ID operationId) throws NotFound;
+}

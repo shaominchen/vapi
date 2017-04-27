@@ -1,0 +1,44 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Resource;
+
+import com.vmware.vapi.metadata.Resources;
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Operations to retrieve information about routing information in a vAPI
+ * package
+ *
+ * A Package is said to contain routing information if there is a default
+ * RoutingInfo assigned to all operations within a package or if one of the
+ * operations within this package has explicit routing information
+ */
+@Resource(Resources.PACKAGE)
+interface Package {
+
+    /** Resource type for vAPI package. */
+    String RESOURCE_TYPE = Resources.PACKAGE;
+
+    /**
+     * List of all vAPI packages that have routing information
+     *
+     * @return list of fully qualified package names
+     */
+    List<ID> list();
+
+    /**
+     * Get the routing information for a vAPI package
+     *
+     * @param packageId fully qualified package name
+     * @return routing information for the vAPI package
+     * @throws NotFound If the package name does not exist
+     */
+    PackageInfo get(ID packageId) throws NotFound;
+}

@@ -1,0 +1,137 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.unions;
+
+import vmodl.lang.*;
+
+/**
+ * Service for testing discriminated unions support in language bindings.
+ */
+interface UberUnions {
+
+    /**
+     * Enum used for type of discriminated union tag
+     */
+    enum  NestedTestEnum {
+        /** constant - LONG */
+        LONG,
+
+        /** constant - STRING */
+        STRING,
+
+        /** constant - NONE */
+        NONE
+    }
+
+    /** Test local structure with union */
+    class NestedTestStruct {
+        /** enum field - union tag */
+        @UnionTag NestedTestEnum tag;
+
+        /** long field */
+        @UnionCase("LONG") long longVal;
+
+        /** string field */
+        @UnionCase("STRING") String stringVal;
+    }
+
+    /**
+     * Enum used for type of discriminated union tag
+     */
+    enum  NestedTestEnum2 {
+        /** constant - LOCAL */
+        LOCAL,
+
+        /** constant - REMOTE */
+        REMOTE,
+
+        /** constant - NONE */
+        NONE
+    }
+
+    /** Test local struct */
+    class NestedTestStruct2 {
+        /** enum field - union tag */
+        @UnionTag NestedTestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** remote port */
+        @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port;
+
+        /** JTB: test */
+        @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE", "NONE"}) long all;
+    }
+
+    /**
+     * Echoes a local/nested structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@param.name input}
+     */
+    NestedTestStruct echoNestedTestStruct(NestedTestStruct input);
+
+    /**
+     * Echoes a local/nested structure value which contains a
+     * multi-value case discriminated union.
+     *
+     * @param input test input
+     * @return same as {@param.name input}
+     */
+    NestedTestStruct2 echoNestedTestStruct2(NestedTestStruct2 input);
+
+    /**
+     * Echoes a top-level structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@param.name input}
+     */
+    LocalUnionStruct echoTestStruct(LocalUnionStruct input);
+
+    /**
+     * Test method for the validity of the union in method parameters.
+     *
+     * @param testEnum test enum
+     * @param longVal union case long value
+     * @param stringVal union case long value
+     * @param booleanVal boolean value (not in union)
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateUnionParams(
+            @UnionTag NestedTestEnum testEnum,
+            @UnionCase(tag="testEnum", value="LONG") long longVal,
+            @UnionCase(tag="testEnum", value="STRING") String stringVal,
+            boolean booleanVal);
+
+    /**
+     * Test method for the validity of a multi-value case union in
+     * method parameters.
+     *
+     * @param testEnum test enum
+     * @param remoteHost union case remote host address
+     * @param port union case port
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateUnionParams2(
+            @UnionTag NestedTestEnum2 testEnum,
+            @UnionCase(tag="testEnum", value="REMOTE") String remoteHost,
+            @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port);
+
+    /**
+     * Test method for the validity of a multi-value case union in
+     * method parameters.
+     *
+     * @param testEnum test enum
+     * @param remoteHost union case remote host address
+     * @param port union case port
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateUnionParams3(
+            @UnionTag NestedTestEnum2 testEnum,
+            @UnionCase(tag="testEnum", value="REMOTE") String remoteHost,
+            @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port);
+}

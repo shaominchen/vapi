@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>${model.name} API documentation</title>
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="css/smoothness/jquery-ui-1.8.13.custom.css" />
+    <link rel="stylesheet" type="text/css" href="css/idldoc-lean.css" />
+
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script type="text/javascript"
+        src="./js/jstree-pre1.0_fix_1/jquery.jstree.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="searchdata.js"></script>
+    <script type="text/javascript" src="treedata.js"></script>
+    <script type="text/javascript" src="searchandtree.js"></script>
+</head>
+<body>
+       <!-- begin boilerplate -->
+    <div class="container">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                  <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </a>
+
+                <span class="brand"> vAPI Documentation </span>
+                <ul class="nav">
+                    <li class="active"><a>Home</a></li>
+                    <li class="dropdown ">
+                        <a id="tree-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Hierarchy tree
+                            <b class="caret"></b>
+                        </a>
+                        <ul id="tree-dropdown" class="dropdown-menu">
+                            <li>
+                                  <div id="apiHierarchy"></div>
+                             </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="nav-collapse">
+                <form class="navbar-form pull-right">
+                    <input class="search-query" placeholder="Search" id="searchInput"></input>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- End boilerplate -->
+	<h1>${model.name} API documentation</h1>
+	<p>${idldoc.multilineDoc(model)}</p>
+
+</div>
+</body>
+</html>

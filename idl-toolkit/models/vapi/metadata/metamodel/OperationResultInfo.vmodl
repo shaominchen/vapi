@@ -1,0 +1,37 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.Map;
+
+/**
+ * The {@name OperationResultInfo} {@term structure} contains the
+ * metamodel information of an operation result element.
+ * <p>
+ * An operation accepts a list of parameters and returns a result or an
+ * error. The {@name OperationResultInfo} describes the result element
+ * of an operation.
+ */
+class OperationResultInfo {
+
+    /** Type information of the operation result element. */
+    Type type;
+
+    /**
+     * Generic metadata elements for the service element. The key in the
+     * {@term map} is the name of the metadata element and the value is the data associated
+     * with that metadata element.
+     * <p>
+     * The {@link com.vmware.vapi.metadata.metamodel.MetadataIdentifier} contains
+     * possible string values for keys in the {@term map}.
+     **/
+    Map<String, ElementMap> metadata;
+
+    /**
+     * English language documentation for the operation result element. It can
+     * contain HTML markup and Javadoc tags.
+     */
+    String documentation;
+}

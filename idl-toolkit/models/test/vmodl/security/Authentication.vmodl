@@ -1,0 +1,49 @@
+/* **********************************************************
+ * Copyright 2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+package vmodl.test.uber.security;
+
+import com.vmware.vapi.std.errors.Unauthenticated;
+
+/**
+ * Provides an authenticaion service for test purposes
+ */
+interface Authentication {
+
+    /**
+     * Test operation for SAML authn (Bearer or Holder of Key token)
+     *
+     * @return {@code true} if SAML security context is detected on the
+     *         provider side
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    boolean authenticateUsingSamlToken() throws Unauthenticated;
+
+    /**
+     * Test operation for OAuth2 authn.
+     *
+     * @return {@code true} if OAuth2 context is detected on the
+     *         provider side
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    boolean authenticateUsingOauth() throws Unauthenticated;
+
+    /**
+     * Test operation for user/pass authn.
+     *
+     * @return {@code true} if user/pass security context is detected in the
+     *          service implementation and there is an authentication result
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    boolean authenticateUsingUserPass() throws Unauthenticated;
+
+    /**
+     * Test operation marked both for no authentication (or) user/pass
+     * authentication.
+     *
+     * @return {@code true} if user/pass security context is detected in the
+     *          service implementation and there is an authentication result
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    boolean authenticateUsingUserPassOrNoAuth() throws Unauthenticated;
+}

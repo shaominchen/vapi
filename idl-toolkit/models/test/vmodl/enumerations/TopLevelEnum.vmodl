@@ -1,0 +1,13 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.enumerations;
+
+/** test top-level enumumeration */
+enum TopLevelEnum {
+    /** const foo */
+    FOO,
+
+    /** const bar */
+    BAR,
+}

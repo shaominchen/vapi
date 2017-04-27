@@ -1,0 +1,9 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.privilege.service} {@term package} provides
+ * {@term services} to retrieve privilege information for operation elements.
+ */
+package com.vmware.vapi.metadata.privilege.service;

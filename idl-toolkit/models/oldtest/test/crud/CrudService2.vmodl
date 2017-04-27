@@ -1,0 +1,23 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+package com.vmware.vapi.test.crud;
+
+import vmodl.lang.*;
+
+/**
+ * Service for testing the CRUD templates used with HasFieldsOf
+ */
+interface CrudService2 {
+
+    /**
+     * @param input
+     */
+    void create(@HasFieldsOf(CrudObject.class) DynamicStructure input);
+
+    /**
+     * @param input
+     */
+    void update(CrudObjectIncludable input);
+}

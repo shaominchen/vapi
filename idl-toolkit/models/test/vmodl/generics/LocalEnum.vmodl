@@ -1,0 +1,13 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.generics;
+
+/** local enum */
+enum LocalEnum {
+    /** what doc */
+    WHAT,
+
+    /** ever doc */
+    EVER
+}

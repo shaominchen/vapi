@@ -1,0 +1,75 @@
+package vmodl.test.uber.rest;
+
+import vmodl.lang.*;
+
+/** Service to test query parameters functionality */
+interface Filter {
+    /** simple struct  */
+    class SimpleStruct {
+        /** string field */
+        String stringField;
+
+        /** long field */
+        long longField;
+    }
+
+    /** complex struct */
+    class ComplexStruct {
+        /** string field */
+        String stringField;
+
+        /** boolean field */
+        boolean booleanField;
+
+        /** long field */
+        long longField;
+
+        /** struct field */
+        SimpleStruct structField;
+
+        /**
+         * optional string field
+         * @field.optional good reason
+         */
+        Optional<String> optionalString;
+
+        /** list string field */
+        List<String> listString;
+
+        /** list of list string field */
+        List<List<Long>> listListLong;
+
+        /** map of string string field */
+        Map<String, String> mapSimple;
+
+        /** map of string struct field */
+        Map<String, SimpleStruct> mapStruct;
+    }
+
+    /**
+     * List.
+     * <p>
+     * {@code /rest/vmodl/test/uber/rest/filter?
+     *      struct.string_field=string&
+     *      struct.boolean_field=True&
+     *      struct.long_field=10&
+     *      struct.optional_string=string&
+     *      struct.struct_field.string_field=string&
+     *      struct.struct_field.long_field=10&
+     *      struct.list_string.1=string1&
+     *      struct.list_string.2=string2&
+     *      struct.list_list_long.1.1=string11&
+     *      struct.list_list_long.1.2=string12&
+     *      struct.list_list_long.2.1=string21&
+     *      struct.list_list_long.2.2=string22&
+     *      struct.map_simple.1.key=stringkey&
+     *      struct.map_simple.1.value=stringvalue&
+     *      struct.map_struct.1.key=stringkey&
+     *      struct.map_struct.1.value.string_field=string&
+     *      struct.map_struct.1.value.long_field=10}
+     *
+     * @param struct struct input
+     * @return output
+     */
+    List<ComplexStruct> list(ComplexStruct struct);
+}

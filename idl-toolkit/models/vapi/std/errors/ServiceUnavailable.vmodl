@@ -1,0 +1,37 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name ServiceUnavailable} {@term error} indicates that the
+ * {@term service} is unavailable.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>Attempt to invoke a {@term operation} when the server is too busy.
+ *       </li>
+ *   <li>Attempt to invoke a {@term operation} when the server is undergoing
+ *       maintenance. </li>
+ *   <li>An {@term operation} fails to contact VMware Tools running inside the
+ *       virtual machine. </li>
+ * </ul>
+ * <p>
+ Counterexamples:
+ * <ul>
+ *   <li>A client provides an invalid service or operation identifier when
+ *      invoking the {@term operation} using a dynamic interface (for example
+ *      REST). The {@link OperationNotFound} {@term error} would be used
+ *      instead. </li>
+ *   <li>A client invokes the {@term operation} from the {@term service}, but
+ *       that {@term service} has not been installed. The
+ *       {@link OperationNotFound} {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class ServiceUnavailable extends Error {
+}

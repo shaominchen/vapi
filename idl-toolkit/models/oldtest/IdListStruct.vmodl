@@ -1,0 +1,30 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test;
+
+import vmodl.lang.*;
+
+/** doc */
+@Model
+@Resource("com.vmware.test.TestResource")
+class IdListStructure {
+    /** doc */
+    @ModelKey
+    ID primary;
+
+    /** doc */
+    @Resource("com.vmware.test.TestOtherResource")
+    ID ref;
+
+    /**
+     * doc
+     * @field.optional reason
+     */
+    @Resource("com.vmware.test.TestOtherResource")
+    Optional<List<ID>> listOfRefs;
+
+    /** doc */
+    String stringField;
+}

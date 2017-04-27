@@ -1,0 +1,20 @@
+package com.vmware.vapi.test.naming;
+
+/**
+ * Tests name clashes.
+ */
+public interface NameClashService {
+
+    /**
+     * Get.
+     *
+     * @param id identifier
+     */
+    void get(String id);
+
+    /** GetInput - same name as the input structure for get() above */
+    class GetInput {
+        /** input */
+        String input;
+    }
+}

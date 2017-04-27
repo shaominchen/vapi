@@ -1,0 +1,31 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Defines an <i>uber</i> test model in VMODL2.
+ * <p>
+ * The purpose of this model is to provide exhaustive coverage of the types and
+ * constructs available in VMODL2.  This model is purely a positive test case,
+ * which is primarily used by language toolkits for the following purposes:
+ * <ul>
+ *  <li> unit testing templates for code generation
+ *  <li> integration testing client bindings against a provider implementation
+ * </ul>
+ *
+ * Contains tests for model components.
+ * <p>
+ * Model components are declared with the following annotations:
+ * <ul>
+ *  <li> {@literal @Component} (implicitly uses the current package name)
+ *  <li> {@literal @Component("com.acme.foo.bar")}
+ * </ul>
+ */
+@Component
+@Copyright({
+    "Copyright 2013-2014 VMware Inc.",
+    "All rights reserved.",
+})
+package vmodl.test.uber;
+
+import vmodl.lang.*;

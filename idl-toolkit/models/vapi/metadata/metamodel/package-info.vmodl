@@ -1,0 +1,46 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.metamodel} {@term package} provides
+ * {@term services} that expose all the information present in the interface
+ * definition language (IDL) specification.
+ * <p>
+ * Metamodel metadata is organized into an hierarchy of elements. The main elements
+ * are:
+ * <ul>
+ *   <li>Enumeration: An enumeration element that has a list of enumeration value
+ *       elements.</li>
+ *   <li>Constant: A constant element has a name and a value.</li>
+ *   <li>Structure: A structure element can have field elements, constant elements and
+ *       enumeration elements. </li>
+ *   <li>Operation: An operation has a list of parameter elements, result element
+ *       and error elements.</li>
+ *   <li>Service: A service is a collection of operation elements, structure elements,
+ *       enumerated elements and constant elements.</li>
+ *   <li>Package: A package is a collection of service elements, structure elements and
+ *       enumeration elements.</li>
+ *   <li>Component: A component is a collection of package elements.</li>
+ * </ul>
+ * The {@name com.vmware.vapi.metadata.metamodel} {@term package} has {@term services} that
+ * enables two styles of client applications:
+ * <ul>
+ *   <li>A client can retrieve the exact pieces of information it requires
+ *       using the various granularities the API supports (that is
+ *       {@link com.vmware.vapi.metadata.metamodel.Component},
+ *       {@link com.vmware.vapi.metadata.metamodel.Package},
+ *       {@link com.vmware.vapi.metadata.metamodel.Service},
+ *       {@link com.vmware.vapi.metadata.metamodel.Structure},
+ *       {@link com.vmware.vapi.metadata.metamodel.Enumeration} and
+ *       {@link com.vmware.vapi.metadata.metamodel.service.Operation}). In this case, it doesn't
+ *       cache any information locally and always invokes {@term operations} to get the
+ *       metamodel information it requires.</li>
+ *   <li>A client can retrieve all the metamodel information in fewer {@term operation} invocations
+ *       using the {@link com.vmware.vapi.metadata.metamodel.Component} {@term service} and cache
+ *       the output locally. It can then poll on the fingerprint information exposed by
+ *       the {@link com.vmware.vapi.metadata.metamodel.Component} {@term service} to monitor
+ *       changes in API definition.</li>
+ * </ul>
+ */
+package com.vmware.vapi.metadata.metamodel;

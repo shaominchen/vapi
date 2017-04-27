@@ -1,0 +1,52 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.introspection;
+
+import vmodl.lang.Export;
+import vmodl.lang.ID;
+import vmodl.lang.Resource;
+
+/**
+ * The {@link Provider} service provides operations to retrieve information about a
+ * vAPI Provider. A provider is a container that exposes one or more vAPI services.
+ */
+@Export
+@Resource(Resources.PROVIDER)
+public interface Provider {
+
+   /**
+    * Information about a vAPI provider
+    */
+   class Info {
+      /** Identifier of the provider */
+      ID id;
+
+      /**
+       * Checksum of the information present in the provider.
+       * <p>
+       * Clients can use this information to check if the service information has changed.
+       * When a new service is added or removed (or) one of the existing service information
+       * is modified, the value of the checksum changes.
+       * <p>
+       * The information used to calculate the checksum includes:
+       * <ul>
+       *   <li>service identifiers</li>
+       *   <li>operation identifiers inside the service</li>
+       *   <li>input, output and error definitions of an operation</li>
+       * </ul>
+       */
+      String checksum;
+   }
+
+   /**
+    * Returns a {@link Info} describing the vAPI provider on which
+    * the operation is invoked
+    *
+    * @return {@link Info} describing the vAPI provider on which the
+    *   operation is invoked
+    */
+   Info get();
+}

@@ -1,0 +1,146 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.annotations.crud;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+import vmodl.crud.*;
+import vmodl.lang.*;
+
+/**
+ * Specifies a test interface for VMODL2 structure types
+ * that utilize the <i>CRUD</i> semantics.
+ */
+@Resource("vmodl.test.uber")
+@CanonicalName("uber_CRUD")
+interface UberCrud {
+
+    /**
+     * list method
+     * @return a list of things
+     */
+    List<Thing> list();
+
+    /**
+     * get method
+     * @param id the identifier of the thing
+     * @return a thing
+     * @throws NotFound when a thing with the given id cannot be found
+     */
+    Thing get(ID id) throws NotFound;
+
+    /**
+     * create method
+     * @param thing the thing
+     * @return id of the thing created
+     */
+    ID create(Thing thing);
+
+    /**
+     * update method
+     * @param id the identifier of the thing
+     * @param thing the thing
+     * @throws NotFound when a thing with the given id cannot be found
+     */
+    void update(ID id, Thing thing) throws NotFound;
+
+    /**
+     * delete method
+     * @param id the identifier of the thing
+     * @throws NotFound when a thing with the given id cannot be found
+     */
+    void delete(ID id) throws NotFound;
+
+
+    /**
+     * defines the thing
+     */
+    @Crud(Style.INCREMENTAL_UPDATE)
+    class Thing {
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        String string_CR_RR_UR;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        String string_CR_RR_UO;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.REQUIRED) @Update(Usage.UNUSED)
+        String string_CR_RR_UU;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.OPTIONAL) @Update(Usage.REQUIRED)
+        String string_CO_RR_UR;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.UNUSED) @Update(Usage.REQUIRED)
+        String string_CU_RR_UR;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        String string_CR_RO_UR;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.REQUIRED) @Update(Usage.REQUIRED)
+        String string_CR_RU_UR;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.OPTIONAL) @Update(Usage.OPTIONAL)
+        String string_CO_RO_UO;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.OPTIONAL) @Update(Usage.REQUIRED)
+        String string_CO_RO_UR;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.OPTIONAL) @Update(Usage.UNUSED)
+        String string_CO_RO_UU;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.REQUIRED) @Update(Usage.OPTIONAL)
+        String string_CR_RO_UO;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.UNUSED) @Update(Usage.OPTIONAL)
+        String string_CU_RO_UO;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.OPTIONAL) @Update(Usage.OPTIONAL)
+        String string_CO_RR_UO;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.OPTIONAL) @Update(Usage.OPTIONAL)
+        String string_CO_RU_UO;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.UNUSED) @Update(Usage.UNUSED)
+        String string_CU_RU_UU;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.UNUSED) @Update(Usage.REQUIRED)
+        String string_CU_RU_UR;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.UNUSED) @Update(Usage.OPTIONAL)
+        String string_CU_RU_UO;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.REQUIRED) @Update(Usage.UNUSED)
+        String string_CR_RU_UU;
+
+        /** string field */
+        @Read(Usage.UNUSED) @Create(Usage.OPTIONAL) @Update(Usage.UNUSED)
+        String string_CO_RU_UU;
+
+        /** string field */
+        @Read(Usage.REQUIRED) @Create(Usage.UNUSED) @Update(Usage.UNUSED)
+        String string_CU_RR_UU;
+
+        /** string field */
+        @Read(Usage.OPTIONAL) @Create(Usage.UNUSED) @Update(Usage.UNUSED)
+        String string_CU_RO_UU;
+    }
+}

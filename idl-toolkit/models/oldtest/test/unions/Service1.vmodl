@@ -1,0 +1,397 @@
+package com.vmware.vapi.test.unions;
+
+import vmodl.lang.FieldsOptionalByDefault;
+import vmodl.lang.Optional;
+import vmodl.lang.Required;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * Service for testing discriminated unions support in language bindings.
+ */
+interface Service1 {
+
+    /** Simple structure with no union tags */
+    public class SimpleStruct {
+        /** long field */
+        long longVal;
+
+        /** string field */
+        String stringVal;
+    }
+
+    /**
+     * Enum used for type of discriminated union tag
+     */
+    public enum  TestEnum {
+        /** constant - LONG */
+        LONG,
+
+        /** constant - STRING */
+        STRING,
+
+        /** constant - NONE */
+        NONE
+    }
+
+    /** Test local structure with union */
+    public class LocalTestStruct {
+        /** enum field - union tag */
+        @UnionTag TestEnum testEnum;
+
+        /** long field */
+        @UnionCase(tag="testEnum", value="LONG") long longVal;
+
+        /** string field */
+        @UnionCase(tag="testEnum", value="STRING") String stringVal;
+    }
+
+    /**
+     * Structure with UnionTag and nested structure with UnionTag and fields with same name
+     * in different struct levels
+     */
+    public class StructureWithTwoUnionTags {
+        /** enum field - union tag */
+        @UnionTag TestEnum testEnum1;
+
+        /** enum field - union tag */
+        @UnionTag TestEnum testEnum2;
+
+        /** long field */
+        @UnionCase(tag="testEnum1", value="LONG") long longVal1;
+
+        /** string field */
+        @UnionCase(tag="testEnum1", value="STRING") String stringVal1;
+
+        /** long field */
+        @UnionCase(tag="testEnum2", value="LONG") long longVal2;
+
+        /** string field */
+        @UnionCase(tag="testEnum2", value="STRING") String stringVal2;
+    }
+
+    /** Test local structure with union case of structure */
+    public class StructWithUnionCaseOfStruct {
+        /** enum field - union tag */
+        @UnionTag TestEnum testEnum;
+
+        /** long field */
+        @UnionCase(tag="testEnum", value="LONG") long longVal;
+
+        /** string field */
+        @UnionCase(tag="testEnum", value="STRING") SimpleStruct simpleStruct;
+    }
+
+    /**
+     * Enum used for type of discriminated union tag
+     */
+    public enum  TestEnum2 {
+        /** constant - LOCAL */
+        LOCAL,
+
+        /** constant - REMOTE */
+        REMOTE,
+
+        /** constant - NONE */
+        NONE
+    }
+
+    /** Test local struct */
+    public class LocalTestStruct2 {
+        /** enum field - union tag */
+        @UnionTag TestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** remote port */
+        @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port;
+    }
+
+    /**
+     * Structure with UnionTag and nested structure with another UnionTag
+     */
+    public class LocalTestStruct3 {
+        /** enum field - union tag */
+        @UnionTag TestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** remote port */
+        @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port;
+
+        /** nested structure with UnionTag */
+        TestStruct testStruct;
+    }
+
+    /**
+     * Structure with UnionTag and nested structure with UnionTag and fields with same name
+     * in different struct levels
+     */
+    public class LocalTestStruct4 {
+        /** enum field - union tag */
+        @UnionTag TestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** remote port */
+        @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port;
+
+        /** nested structure with UnionTag and same field names as current structure */
+        LocalTestStruct2 testStruct;
+    }
+
+    /**
+     * Structure with UnionTag and nested structure with UnionTag which is a UnionCase
+     */
+    public class LocalTestStruct5 {
+        /** enum field - union tag */
+        @UnionTag TestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** nested structure with UnionTag and same field names as current structure */
+        @UnionCase(tag="testEnum", value={"LOCAL"}) LocalTestStruct2 testStruct;
+    }
+
+    /**
+     * Structure with UnionTag and nested structure with UnionTag which is a UnionCase and of type list
+     */
+    public class LocalTestStruct6 {
+        /** enum field - union tag */
+        @UnionTag TestEnum2 testEnum;
+
+        /** remote host */
+        @UnionCase(tag="testEnum", value="REMOTE") String remoteHost;
+
+        /** nested structure with UnionTag and same field names as current structure */
+        @UnionCase(tag="testEnum", value={"LOCAL"}) List<LocalTestStruct2> testStruct;
+    }
+
+    /** optional union case struct */
+    public class OptionalCaseStruct {
+        @UnionTag TestEnum tag;
+
+        @UnionCase(tag="tag", value="LONG") long longCase;
+
+        @UnionCase(tag="tag", value="STRING") Optional<String> optionalString;
+
+        @UnionCase(tag="tag", value="STRING") String requiredString;
+    }
+
+    /** optional union tag struct */
+    public class OptionalTagStruct {
+        @UnionTag Optional<TestEnum> tag;
+
+        @UnionCase(tag="tag", value="LONG") long longCase;
+
+        @UnionCase(tag="tag", value="STRING") Optional<String> optionalString;
+
+        @UnionCase(tag="tag", value="STRING") String requiredString;
+    }
+
+    @FieldsOptionalByDefault
+    public class UnionWithOptionalByDefaultStruct {
+        @UnionTag TestEnum tag;
+
+        @UnionCase(tag="tag", value="LONG") long longCase;
+
+        @UnionCase(tag="tag", value="STRING") Optional<String> optionalString;
+
+        @UnionCase(tag="tag", value="STRING") String requiredString;
+    }
+
+    @FieldsOptionalByDefault
+    public class OptionalByDefaultStruct {
+        @UnionTag TestEnum tag;
+
+        @UnionCase(tag="tag", value="LONG") long longCase;
+
+        @UnionCase(tag="tag", value="STRING") String optionalString;
+
+        @Required
+        @UnionCase(tag="tag", value="STRING") String requiredString;
+    }
+
+    /**
+     * Echoes a local/nested structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    LocalTestStruct echoLocalTestStruct(LocalTestStruct input);
+
+    /**
+     * Echoes a local/nested structure value which contains a
+     * multi-value case discriminated union.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    LocalTestStruct2 echoLocalTestStruct2(LocalTestStruct2 input);
+
+    /**
+     * Echoes a top-level structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@code input}TestStruct
+     */
+    TestStruct echoTestStruct(TestStruct input);
+
+    /**
+     * Echoes a top-level structure value which contains a
+     * union and another test structure with union.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    LocalTestStruct3 echoLocalTestStruct3(LocalTestStruct3 input);
+
+    /**
+     * Echoes a top-level structure value which contains a
+     * union and another test structure with union tag and repeated field names.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    LocalTestStruct4 echoLocalTestStruct4(LocalTestStruct4 input);
+
+    /**
+     * Echoes a top-level structure value which contains a
+     * union and another test structure with union tag which is a union case.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    LocalTestStruct5 echoLocalTestStruct5(LocalTestStruct5 input);
+
+    /**
+     * From given LocalTestStruct5 returns LocalTestStruct6 structure by
+     * making the testStruct property of LocalTestStruct5 to List
+     *
+     * @param input test input
+     * @return LocalTestStruct6 object constructed from {@code input}
+     */
+    LocalTestStruct6 returnLocalTestStruct6(LocalTestStruct5 input);
+
+    /**
+     * Echoes a top-level structure value which contains
+     * two union tags
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    StructureWithTwoUnionTags echoStructWithTwoUnionTags(StructureWithTwoUnionTags input);
+
+    /**
+     * Echoes a top-level structure value which contains
+     * two union tags
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    StructWithUnionCaseOfStruct echoStructWithUnionCaseOfStruct(StructWithUnionCaseOfStruct input);
+
+    /**
+     * Test method for the validity of the union in method parameters.
+     *
+     * @param testEnum test enum
+     * @param longVal union case long value
+     * @param stringVal union case string value
+     * @param booleanVal boolean value (not in union)
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateUnionParams(@UnionTag TestEnum testEnum,
+                                @UnionCase(tag="testEnum", value="LONG") long longVal,
+                                @UnionCase(tag="testEnum", value="STRING") String stringVal,
+                                boolean booleanVal);
+
+    /**
+     * Test method for the validity of a multi-value case union in
+     * method parameters.
+     *
+     * @param testEnum test enum
+     * @param remoteHost union case remote host address
+     * @param port union case port
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateUnionParams2(@UnionTag TestEnum2 testEnum,
+                                 @UnionCase(tag="testEnum", value="REMOTE") String remoteHost,
+                                 @UnionCase(tag="testEnum", value={"LOCAL", "REMOTE"}) long port);
+
+    /**
+     * Echoes a local structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    OptionalCaseStruct echoOptionalCaseStruct(OptionalCaseStruct input);
+
+    /**
+     * Test method for the validity of the union in method parameters.
+     *
+     * @param testEnum test enum
+     * @param longVal union case long value
+     * @param stringVal union case string value
+     * @param optionalStringVal union case string value
+     * @param booleanVal boolean value (not in union)
+     * @return {@code true} if input union was in valid state
+     */
+    boolean validateOptionalUnionParams(@UnionTag Optional<TestEnum> testEnum,
+                                        @UnionCase(tag="testEnum", value="LONG") long longVal,
+                                        @UnionCase(tag="testEnum", value="STRING") String stringVal,
+                                        @UnionCase(tag="testEnum", value="STRING") Optional<String> optionalStringVal,
+                                        boolean booleanVal);
+
+    /**
+     * Echoes a local structure value which contains a
+     * discriminated union.
+     *
+     * @param input test input
+     * @return same as {@code input}
+     */
+    OptionalTagStruct echoOptionalTagStruct(OptionalTagStruct input);
+
+    /**
+     * Echoes a structure with Union and @FieldsOptionalByDefault.
+     *
+     * @param input the value to echo back
+     * @return <code>input</code>
+     */
+    UnionWithOptionalByDefaultStruct echoOptionalByDefault(UnionWithOptionalByDefaultStruct input);
+
+    /**
+     * Echoes a structure with Union and @FieldsOptionalByDefault.
+     *
+     * @param input the value to echo back
+     * @return <code>input</code>
+     */
+    OptionalByDefaultStruct echoOptionalByDefaultStruct(OptionalByDefaultStruct input);
+
+    /**
+     * Returns an invalid structure with Union and @FieldsOptionalByDefault.
+     * This should result in an error
+     *
+     * @return OptionalByDefaultStruct
+     */
+    OptionalByDefaultStruct echoInvalidOptionalByDefaultStruct();
+
+    /**
+     * @param createSpec the create specification
+     */
+    void create(UnionWithCrudStruct createSpec);
+
+    /**
+     * Returns an invalid structure with Union and @Crud.
+     * This should result in an error
+     *
+     * @return UnionWithCrudStruct
+     */
+    UnionWithCrudStruct echoInvalidUnionWithCrudStruct();
+}

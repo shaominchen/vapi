@@ -1,0 +1,72 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc. All rights reserved. -- VMware Confidential
+ * *********************************************************
+ */
+
+package com.vmware.vapi.metadata.routing;
+
+import vmodl.lang.List;
+import vmodl.lang.Map;
+
+/**
+ * Routing information
+ */
+class RoutingInfo {
+    /**
+     * The initial version of the routing info allowed routing by single
+     * parameter. Clients requested allowing them to place more than one
+     * parameters so that the routing is performed by the first non-null
+     * argument in the list. To achieve that we have added method
+     * com.vmware.vapi.metadata.RoutingInfo#getRoutingPaths() which should be
+     * preferred over com.vmware.vapi.metadata.RoutingInfo#getRoutingPath()
+     * which is deprecated. The deprecated method will return string
+     * representation of the comma-separated list of ids, while the
+     * com.vmware.vapi.metadata.RoutingInfo#getRoutingPaths() will return
+     * instance of {@code java.util.List<String>} containing the ids.
+     *
+     * @deprecated. Use com.vmware.vapi.metadata.RoutingInfo#getRoutingPaths()
+     */
+    String routingPath;
+
+    /**
+     * The routingStrategy is the actual strategy, based on which will be
+     * performed the routing. If the routingStrategy is IDROUTE, in
+     * {@link RoutingInfo#routingPath} must be assigned the id for the routing.
+     * There are also default strategies like IDFIRSTROUTE, LOCAL for which
+     * there is no need to specify routingPath. The name of these strategies is
+     * clear about where we should look for an ID to route, or if we need ID at
+     * all.
+     */
+    String routingStrategy;
+    /**
+     * This is comma-separated list of hints from the input ini file. Here the user
+     * must mention the type of the invoked method, e.g. HINTS(create) or HINTS(delete).
+     * In the future we expect this field to contain other hints also
+     * e.g. HINTS(create,lazy).
+     */
+    List<String> operationHints;
+
+    /**
+     * This is map of specifically predefined resource types
+     * in the routing metadata.
+     * For example id types that do not require storage in the Inventory Service.
+     * Those type of objects are called 'positioned' - it is well
+     * known in advance where those objects will be routed, because their ids contain
+     * VC server guid.
+     *
+     * Example: Content Library Sessions are considered transient objects that do not
+     * need to be persisted in the IS.
+     *
+     * Routing ini file must contain section:
+     * [types]
+     * com.vmware.content.DownloadSession=positioned
+     *
+     * The map therefore will contain:
+     * {{"com.vmware.content.DownloadSession", "positioned"}}
+     * Note: This should not be final solution. To avoid duplication, currently this
+     * map will be stored only in one RoutingInfo object across the whole
+     * ProductModel. In the future, it might be moved to a common place as
+     * ComponentInfo, for example.
+     */
+    Map<String, String> idTypes;
+}

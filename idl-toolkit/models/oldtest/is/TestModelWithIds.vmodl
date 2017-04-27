@@ -1,0 +1,56 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+/*
+ * TestModels.java --
+ *
+ *      Test models for the IS serializer code.
+ */
+
+package com.vmware.vapi.is.test;
+
+import vmodl.lang.*;
+
+/**
+ * Model used to validate IS Serializer ID handling.
+ */
+@Resource("com.vmware.vapi.is.integration.model_with_ids")
+@Model
+class TestModelWithIds {
+    /**
+     * Primary key.
+     */
+    @ModelKey
+    ID id;
+
+    /** Optional ID*/
+    Optional<ID> optionalId;
+
+    /** Test key */
+    Set<ID> setOfIds;
+
+    /** Test key */
+    Set<String> setOfStrings;
+
+    /** Test key */
+    List<ID> listOfIds;
+
+    /** Test key */
+    List<String> listOfStrings;
+
+    /** Test key */
+    Map<ID, String> mapWithIdKey;
+
+    /** Test key */
+    NestedModel nestedModel;
+}
+
+@Resource("com.vmware.vapi.is.integration.nested_model")
+@Model
+class NestedModel {
+    /** Test key */
+    @ModelKey
+    ID nestedId;
+}

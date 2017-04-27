@@ -1,0 +1,175 @@
+/* **********************************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. VMware Confidential
+ * **********************************************************************/
+package com.vmware.vapi.test.unions;
+
+import vmodl.crud.Create;
+import vmodl.crud.Crud;
+import vmodl.crud.Read;
+import vmodl.crud.Update;
+
+import vmodl.lang.UnionTag;
+import vmodl.lang.UnionCase;
+
+import static vmodl.crud.Usage.OPTIONAL;
+import static vmodl.crud.Usage.REQUIRED;
+import static vmodl.crud.Usage.UNUSED;
+
+/**
+ * Specification for VMDK disk.
+ *
+ * The resourceType is "VMDK" for this type of disk.
+ */
+// @Include(DiskSpec.class)
+// @Includable
+@Crud
+@Read(REQUIRED) @Create(OPTIONAL) @Update(OPTIONAL)
+public class UnionWithCrudStruct {   // VmdkDiskSpec from VDCS API
+                                     // http://acr.eng.vmware.com/acr/show/90
+
+    enum DiskFormat {
+        /**
+         * Flat file format. Disk space is allocated when created.
+         *
+         * Only the following virtual machine disk persistence modes are supported
+         * by this format:
+         *  PERSISTENT
+         *  NONPERSISTENT
+         *  INDEPENDENT_PERSISTENT
+         *  INDEPENDENT_NONPERSISTENT
+         *  UNDOABLE
+         *  APPEND
+         */
+        FLAT,
+
+        /**
+         * Space efficient sparse file format. Disk space is allocated as it grows.
+         *
+         * Only the following virtual machine disk persistence modes are supported
+         * by this format:
+         *  PERSISTENT
+         *  NONPERSISTENT
+         *  INDEPENDENT_PERSISTENT
+         *  INDEPENDENT_NONPERSISTENT
+         *  UNDOABLE
+         *  APPEND
+         */
+        SE_SPARSE;
+    }
+
+    /**
+     * The format of disk. Cannot be changed in update once disk is created.
+     */
+    @Create(REQUIRED) @Update(UNUSED)
+    @UnionTag
+    DiskFormat format;
+
+    /**
+     *  General disk UUID.
+     */
+    @Create(UNUSED) @Update(UNUSED)
+    String uuid;
+
+    /**
+     * The change ID of the virtual disk for the corresponding snapshot or virtual machine.
+     * This can be used to track incremental changes to a virtual disk.
+     */
+    @Read(OPTIONAL) @Create(UNUSED) @Update(UNUSED)
+    String changeId;
+
+    /**
+     * Content ID of the virtual disk file, if available.
+     *
+     * A content ID indicates the logical contents of the disk backing and its parents.
+     *
+     * This property is only guaranteed to be up to date if this disk backing is not currently
+     * being written to by any virtual machine.
+     *
+     * The only supported operation is comparing if two content IDs are equal or not. The guarantee
+     * provided by the content ID is that if two disk backings have the same content ID and are not
+     * currently being written to, then reads issued from the guest operating system to those disk
+     * backings will return the same data.
+     */
+    @Read(OPTIONAL) @Create(UNUSED) @Update(UNUSED)
+    String contentId;
+
+    /**
+     * Indicates whether the disk backing has digest file enabled.
+     *
+     * If not specified, default is false.
+     */
+    boolean digestEnabled;
+
+    /**
+     * Indicates to the underlying filesystem whether the virtual disk backing file should be
+     * scrubbed completely at this time.
+     *
+     * Virtual disks on some filesystems like VMFS3 are zeroed-out lazily so that disk creation
+     * time doesn't take too long. However, clustering applications and features like Fault
+     * Tolerance require that the virtual disk be completely scrubbed. This setting allows
+     * controlling the scrubbing policy on a per-disk basis.
+     *
+     * If this flag is unset or set to false when creating a new disk, the disk scrubbing policy
+     * will be decided by the filesystem. If this flag is unset or set to false when editing an
+     * existing disk, it is ignored. For Read, this property may be unset if its value is unknown.
+     *
+     * If not specified, default is false.
+     */
+    @Create(OPTIONAL) @Update(UNUSED)
+    @UnionCase(tag="format", value="FLAT")
+    boolean eagerlyScrub;
+
+    /**
+     * The grain size in kB.  The default size is 1024 kB.
+     */
+    @Create(OPTIONAL) @Update(UNUSED)
+    @UnionCase(tag="format", value="SE_SPARSE")
+    long grainSize;
+
+    /**
+     * UnionCase field which is required for all CRUD operation
+     */
+    @Create(REQUIRED) @Update(REQUIRED) @Read(REQUIRED)
+    @UnionCase(tag="format", value="SE_SPARSE")
+    long requiredForAll;
+
+    /**
+     * Indicates the type of virtual disk file: split or monolithic. If true, the virtual disk is
+     * stored in multiple files, each 2GB.
+     *
+     * This property is always false for disks created on ESX. When an existing split disk such
+     * as those created by VMware Server is added to a virtual machine on ESX, the property will
+     * be set to true.
+     *
+     * If not specified, default is false.
+     */
+    @Create(UNUSED) @Update(UNUSED)
+    boolean split;
+
+    /**
+     * Indicates to the underlying filesystem, whether the virtual disk backing file should be
+     * allocated lazily (using thin provisioning). This flag is only used for file systems that
+     * support configuring the provisioning policy on a per file basis, such as VMFS3.
+     *
+     * If not specified, default is false.
+     */
+    @Create(OPTIONAL) @Update(UNUSED)
+    @UnionCase(tag="format", value="FLAT")
+    boolean thinProvisioned;
+
+    /**
+     * Indicates whether writes should go directly to the file system or should be buffered.
+     *
+     * If not specified, default is false.
+     */
+    boolean writeThrough;
+//
+//    /**
+//     * Specification related to delta disk .
+//     *
+//     * Field is not set if the VMDK is not a delta disk.
+//     */
+//    @Read(OPTIONAL)
+//    @Update(UNUSED)
+//    DeltaDiskSpec deltaDiskSpec;
+}

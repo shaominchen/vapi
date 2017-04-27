@@ -1,0 +1,196 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.introspection;
+
+import vmodl.lang.Export;
+import vmodl.lang.ID;
+import vmodl.lang.List;
+import vmodl.lang.Map;
+import vmodl.lang.Resource;
+import vmodl.lang.Set;
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * The {@link Operation} service provides operations to retrieve
+ * information about the operations present in a vAPI service.
+ */
+@Export
+@Resource(Resources.OPERATION)
+public interface Operation {
+
+    /**
+     * The {@link DataDefinition} structure describes a vAPI data type.
+     */
+    class DataDefinition {
+
+       /**
+        * The {@link DataType} enumeration provides values representing the data types
+        * supported by the vAPI infrastructure.
+        */
+       enum DataType {
+          /**
+           * Indicates the value is a binary type.
+           */
+          BINARY,
+
+          /**
+           * Indicates the value is a boolean type. The possible values are
+           * True and False equivalent of the language used to invoke
+           * this operation.
+           */
+          BOOLEAN,
+
+          /**
+           * Indicates the value is a double type. It is a 64 bit floating point
+           * number.
+           */
+          DOUBLE,
+
+          /**
+           * Indicates the value is a dynamic structure. This means, any data of type
+           * {@link DataType#STRUCTURE} can be used.
+           */
+          DYNAMIC_STRUCTURE,
+
+          /**
+           * Indicates the value is a specific error type.
+           */
+          ERROR,
+
+          /**
+           * Indicates the value is arbitrary error type. This means, any data of type
+           * {@link DataType#ERROR} can be used.
+           */
+          ANY_ERROR,
+
+          /**
+           * Indicates the value is a list data type. Any value of this type can have zero
+           * or more elements in the list.
+           */
+          LIST,
+
+          /**
+           * Indicates the value is a long data type. It is a 64 bit signed integer number.
+           */
+          LONG,
+
+          /**
+           * Indicates the value is an opaque type. This means, data of any {@link DataType}
+           * can be used.
+           */
+          OPAQUE,
+
+          /**
+           * Indicates the value is an optional data type. Any value of this type can be null.
+           */
+          OPTIONAL,
+
+          /**
+           * Indicates the value is a secret data type. This is used for sensitive information. The
+           * server will not log any data of this type and if possible wipe the data from
+           * the memory after usage.
+           */
+          SECRET,
+
+          /**
+           * Indicates the value is a string data type. This is a unicode string.
+           */
+          STRING,
+
+          /**
+           * Indicates the value is a structure data type. A structure has string identifier and a set of fields
+           * with corresponding values.
+           */
+          STRUCTURE,
+
+          /**
+           * Indicates the value is a structure reference. This is used to break circular dependencies in the
+           * type references. This just has a string identifier of the structure. Clients have to maintain
+           * a list of structures already visited and use that to resolve this reference.
+           */
+          STRUCTURE_REF,
+
+          /**
+           * Indicates the value is a void data type.
+           */
+          VOID
+       }
+
+       /** Data type of the value. */
+       @UnionTag
+       DataType type;
+
+       /** Contains the element definition for generic data types like List and Optional. */
+       @UnionCase(tag="type", value={"OPTIONAL", "LIST"})
+       DataDefinition elementDefinition;
+
+       /** Fully qualified name of the structure. */
+       @UnionCase(tag="type", value={"STRUCTURE", "STRUCTURE_REF", "ERROR"})
+       String name;
+
+       /**
+        * Fields of the structure type. The key of the map is the canonical name of the field
+        * and the value is the {@link DataDefinition} for the field. The order of the structure fields
+        * defined in IDL is not maintained by the {@link Operation} service.
+        */
+       @UnionCase(tag="type", value={"STRUCTURE", "ERROR"})
+       Map<String, DataDefinition> fields;
+    }
+
+   /**
+    * Information about a vAPI operation.
+    */
+   class Info {
+      /**
+       * {@link DataDefinition} describing the operation input.
+       * <p>
+       * The {@link DataDefinition#type} of this field will be
+       * {@link DataDefinition.DataType#STRUCTURE}. The keys of
+       * {@link DataDefinition#fields} are the names of the operation
+       * parameters, and the values of {@link DataDefinition#fields}
+       * describe the type of the operation parameters.
+       */
+      DataDefinition inputDefinition;
+
+      /**
+       * {@link DataDefinition} describing the operation output.
+       */
+      DataDefinition outputDefinition;
+
+      /**
+       * List of {@link DataDefinition} describing the errors that the operation
+       * might report.
+       * <p>
+       * The {@link DataDefinition#type} of every element in this list will be
+       * {@link DataDefinition.DataType#ERROR}.
+       */
+      List<DataDefinition> errorDefinitions;
+   }
+
+   /**
+    * Returns the set of operation identifiers for a given vAPI service.
+    *
+    * @param serviceId service identifier.
+    * @return set of operation identifiers for a given vAPI service.
+    * @throws NotFound If the service identifier does not exist.
+    */
+   Set<ID> list(@Resource(Resources.SERVICE) ID serviceId) throws NotFound;
+
+   /**
+   /**
+    * Returns the {@link Info} for a given vAPI operation.
+    *
+    * @param serviceId service identifier.
+    * @param operationId operation identifier.
+    * @return {@link Info} for a given vAPI operation.
+    * @throws NotFound If the operation identifier does not exist.
+    * @throws NotFound If the service identifier does not exist.
+    */
+   Info get(@Resource(Resources.SERVICE) ID serviceId, ID operationId) throws NotFound;
+}

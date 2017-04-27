@@ -1,0 +1,72 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.authentication;
+
+import vmodl.lang.UnionCase;
+import vmodl.lang.UnionTag;
+
+/**
+ * The {@name AuthenticationInfo} {@term structure} describes the authentication
+ * information. Authentication information could be specified for a package element,
+ * service elenent or an operation element.
+ * <p>
+ * Using the authentication scheme information, a client invoking an API call from
+ * any {@term service} can figure out what kind of credentials are needed for that
+ * API call.
+ */
+class AuthenticationInfo {
+
+    /**
+     * The {@name SchemeType} {@term enumerated type} provides {@term enumeration values}
+     * for the set of valid authentication scheme types.
+     */
+    enum SchemeType {
+        /**
+         * Indicates that the scheme is a session less authentication scheme,
+         * the user is authenticated on every {@term operation}. There is no explicit session
+         * establishment.
+         */
+        SESSIONLESS,
+
+        /**
+         * Indicates that the scheme is a session aware authentication scheme. It
+         * requires an explicit login before executing a {@term operation} and logout when a
+         * session terminates. A {@term service} might choose to have a session aware scheme
+         * if it wants to associate some state corresponding to the user until the
+         * user logs out or if it wants to mitigate the cost of authenticating the
+         * user on every {@term operation}.
+         */
+        SESSION_AWARE
+    }
+
+    /** The type of the authentication scheme. */
+    @UnionTag SchemeType schemeType;
+
+    /**
+     * In a session aware authentication scheme, a session manager is required that supports
+     * {@code create}, {@code delete} and {@code keepAlive} {@term operations}. The fully
+     * qualified {@term service} name of the session manager is provided in
+     * {@link AuthenticationInfo#sessionManager} {@term field}. This {@term service} is
+     * responsible for handling sessions.
+     */
+    @UnionCase(tag="schemeType", value="SESSION_AWARE") String sessionManager;
+
+    /**
+     * String identifier of the authentication scheme.
+     * <p>
+     * Following are the supported authentication schemes by the infrastructure:
+     * <ul>
+     *   <li>The identifier {@code com.vmware.vapi.std.security.saml_hok_token} for
+     *       SAML holder of key token based authentication mechanism. </li>
+     *   <li>The identifier {@code com.vmware.vapi.std.security.bearer_token} for
+     *       SAML bearer token based authentication mechanism. </li>
+     *   <li>The identifier {@code com.vmware.vapi.std.security.session_id} for
+     *       session based authentication mechanism. </li>
+     *   <li>The identifier {@code com.vmware.vapi.std.security.user_pass} for
+     *       username and password based authentication mechanism. </li>
+     * </ul>
+     */
+    String scheme;
+}

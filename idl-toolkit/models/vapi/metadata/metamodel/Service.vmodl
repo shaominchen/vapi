@@ -1,0 +1,58 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@name Service} {@term service} provides {@term operations}
+ * to retrieve metamodel information about a service element in the
+ * interface definition language.
+ * <p>
+ * A service is a logical grouping of operations that operate on
+ * some entity. A service element describes a service. It contains
+ * operation elements that describe the operations grouped in the
+ * service. It also contains structure elements and enumeration elements
+ * corresponding to the structures and enumerations defined in the
+ * service.
+ */
+@vmodl.lang.Resource(Resources.SERVICE)
+interface Service {
+
+    /** Resource type for service. */
+    String RESOURCE_TYPE = Resources.SERVICE;
+
+    /**
+     * Returns the identifiers for the service elements that are currently registered
+     * with the infrastructure.
+     * <p>
+     * The list of service elements is an aggregate list of all the service elements
+     * contained in all the package elements.
+     *
+     * @return The list of identifiers for the service elements that are currently
+     *          registered with the infrastructure.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves information about the service element corresponding to
+     * {@param.name serviceId}.
+     * <p>
+     * The {@link ServiceInfo} contains the metamodel information for the
+     * operation elements, structure elements and enumeration elements
+     * contained in the service element.
+     *
+     * @param serviceId Identifier of the service element.
+     * @return The {@link ServiceInfo} instance that corresponds to
+     *         {@param.name serviceId}
+     * @throws NotFound if the service element associated with {@param.name serviceId}
+     *                  is not registered with the infrastructure.
+     */
+    ServiceInfo get(ID serviceId) throws NotFound;
+}

@@ -1,0 +1,22 @@
+package com.vmware.vapi.test.errors.another;
+
+/**
+ * Service3:
+ * <ul>
+ * <li> uses top-level error type from another package by FQ name </li>
+ * <li> uses error type nested in service (Service1) from another package
+ *      by FQ name </li>
+ * <ul>
+ */
+interface Service3 {
+
+    /**
+     * FQ name used for top-level error type from another package - OK.
+     *
+     * @param error error to report
+     * @throws TopLevelErrorInFile same as {@code error} parameter
+     */
+    void reportTopLevelErrorInFileFQ(
+        com.vmware.vapi.test.errors.TopLevelErrorInFile error)
+        throws com.vmware.vapi.test.errors.TopLevelErrorInFile;
+}

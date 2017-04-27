@@ -1,0 +1,42 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.python;
+
+import vmodl.lang.*;
+
+/**
+ * Service that has names which clashes with python keywords
+ */
+interface Keyword {
+
+    /**
+     * Structure that has names which clash with python keywords
+     */
+    class Struct {
+        /** from */
+        long from;
+    }
+
+    /**
+     * Structure that has names which clash with python keywords
+     */
+    class Pass {
+        /** struct */
+        Struct struct;
+
+        /** struct1
+         * @field.optional reason
+         */
+        Optional<Struct> struct1;
+    }
+
+    /**
+     * Method name and parameters clash with python keyword
+     */
+    Pass lambda(long yield, long from, Struct struct);
+
+    /** test with self as the parameter */
+    String echo(String self);
+}

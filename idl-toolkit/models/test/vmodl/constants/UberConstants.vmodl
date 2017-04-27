@@ -1,0 +1,71 @@
+/*
+ * Copyright 2012-2014 VMware, Inc.  All rights reserved.
+ */
+package vmodl.test.uber.constants;
+
+/** Specifies a test interface for VMODL2 constants types. */
+interface UberConstants {
+
+    /** string constant */
+    String CDROM = "com.vmware.CDROM";
+
+    /** string constant */
+    String FLOPPY = "com.vmware.floppy";
+
+    /** string constant */
+    String USB = "com.vmware.USB";
+
+    /** string array constant of constants */
+    String[] REMOVABLE = {CDROM, FLOPPY, USB};
+
+    /** String constant */
+    String constantString = "val";
+
+    /** Long constant */
+    long constantLong = 1000000000000;
+
+    /** Boolean constant */
+    boolean constantBoolean = true;
+
+    /** Double constant */
+    double constantDouble = 1.5D;
+
+    /** Double constant */
+    public static final double constantDouble2 = 1.5e-9;
+
+    /** String array constants */
+    public static final String[] constantStrings = {"a", "b"};
+
+    /** Long array constants */
+    public static final Long[] constantLongs = {100, 200};
+
+    /** Long array constants */
+    public static final Double[] constantDoubles = {1.5, 2.5};
+
+    /** Boolean array constants */
+    public static final Boolean[] constantBooleans = {true, false};
+
+    /** String array constants */
+    public static final String[] constantStringsDiffPkg = {
+        CDROM,
+        vmodl.test.uber.UberResources.FOO};
+
+
+    /** Class to test constants inside Structures*/
+    class NestedStructWithConstant {
+        /** Struct string constant */
+        static final String CONSTANT_STRING = "Hello";
+
+        /** String field */
+        String stringField;
+    }
+
+    /** Class to test constants inside Errors */
+    class NestedErrorWithConstant extends Exception {
+        /** Error string constant */
+        static final String CONSTANT_STRING = "Error";
+
+        /** String field */
+        String stringField;
+    }
+}

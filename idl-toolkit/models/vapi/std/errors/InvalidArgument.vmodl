@@ -1,0 +1,51 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name InvalidArgument} {@term error} indicates that the values received
+ * for one or more {@term parameters} are not acceptable.
+ * <p>
+ * This {@term error} is reported by the API infrastructure, so it could occur
+ * in response to the invocation of any {@term operation}.  It may also be
+ * reported as the result of {@term operation}-specific validation.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>A {@term parameter} has a value that is not of the expected type. </li>
+ *   <li>A {@term parameter} has a value that is not in the required range.
+ *   </li>
+ *   <li>A {@term parameter} has a value that is not one of the specifically
+ *       allowed strings. </li>
+ *   <li>One {@term field} of a {@term structure} is the tag for a tagged union,
+ *       and has a specific value but another {@term field} of the
+ *       {@term structure} that is required to be specified when the tag has
+ *       that value is not specified, or another {@term field} of the
+ *       {@term structure} that is required to be unspecified when the tag has
+ *       that value is specified. </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>Trying to create a new tag in tag category when a tag with the
+ *       specified name already exists the tag category.
+ *       The {@link AlreadyExists} {@term error} would be used instead. </li>
+ *   <li>Invoke the {@term operation} to retrieve information about a virtual
+ *       machine, passing an id that does not identify an existing virtual
+ *       machine. The {@link NotFound} {@term error} would be used instead.
+ *       </li>
+ *   <li>Attempt to put a virtual machine into a folder that can only contain
+ *       hosts. The {@link InvalidElementType} {@term error} would be used
+ *       instead. </li>
+ *   <li>Attempt to attach a SCSI virtual disk to an IDE port. The
+ *       {@link InvalidElementType} {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class InvalidArgument extends Error {
+}

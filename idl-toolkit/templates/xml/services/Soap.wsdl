@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<wsdl:definitions name="Widget"
+    targetNamespace="http://schemas.vmware.com/resource.wsdl"
+    xmlns:tns="http://schemas.vmware.com/resource.wsdl"
+    xmlns:types="http://schemas.vmware.com/resource.xsd"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+
+  <wsdl:types>
+    <!--TODO: can we use an external XSD? E.g., one that may be used for multiple purposes. -->
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://schemas.vmware.com/resource.xsd" >
+
+      <!--FYI: iterate over structures and define their element content -->
+<% service.structures.each { s -> %>
+      <xsd:element name="${s.name}" >
+	<xsd:complexType>
+	  <xsd:sequence>
+      <% s.attributes.each { a -> %>
+	    <xsd:element name="${a.name}" type="${a.xsdType}" ${(xml.isOptional(a.type))?'minOccurs="0"':''} ${(xml.isList(a.type))?'maxOccurs="unbounded"':''} />
+      <% } %>
+	  </xsd:sequence>
+	</xsd:complexType>
+      </xsd:element>
+<% } %>
+
+      <!--FYI: iterate over operations and define their Input/Output content -->
+<% service.operations.each { o -> %>
+      <xsd:element name="${o.name}Input" >
+	<xsd:complexType>
+	  <xsd:sequence>
+      <% o.parameters.each { p -> %>
+	    <xsd:element name="${p.name}" type="${p.xsdType}" ${(xml.isOptional(p.type))?'minOccurs="0"':''} ${(xml.isList(p.type))?'maxOccurs="unbounded"':''} />
+      <% } %>
+	  </xsd:sequence>
+	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="${o.name}Output" >
+	<xsd:complexType>
+	  <xsd:sequence>
+      <% if (o.result) { %>
+	    <xsd:element name="result" type="${o.result.xsdType}" ${(xml.isOptional(o.result.type))?'minOccurs="0"':''} ${(xml.isList(o.result.type))?'maxOccurs="unbounded"':''} />
+      <% } %>
+	  </xsd:sequence>
+	</xsd:complexType>
+      </xsd:element>
+<% } %>
+    </xsd:schema>
+  </wsdl:types>
+
+<% service.operations.each { o -> %>
+  <wsdl:message name="${o.name}Input" >
+    <wsdl:part name="body" element="types:${o.name}Input" />
+  </wsdl:message>
+
+  <wsdl:message name="${o.name}Output" >
+    <wsdl:part name="body" element="types:${o.name}Output" />
+  </wsdl:message>
+<% } %>
+
+  <wsdl:portType name="${service.basename}PortType" >
+<% service.operations.each { o -> %>
+    <wsdl:operation name="${o.name}" >
+      <wsdl:input message="tns:${o.name}Input" />
+      <wsdl:output message="tns:${o.name}Output" />
+    </wsdl:operation>
+<% } %>
+  </wsdl:portType>
+
+  <wsdl:binding name="${service.basename}Binding" type="tns:${service.basename}PortType" >
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+
+    <!--TODO: iterate over operations and define their Input/Output content -->
+<% service.operations.each { o -> %>
+    <wsdl:operation name="${o.name}" >
+      <soap:operation soapActioin="http://ws.vmware.com/TODO/${o.name}" />
+      <wsdl:documentation>${o.comment}</wsdl:documentation>
+      <wsdl:input>
+	<soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+	<soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+<% } %>
+  </wsdl:binding>
+
+  <wsdl:service name="${service.basename}Service" type="tns:${service.basename}PortType" >
+    <wsdl:documentation>${service.comment}</wsdl:documentation>
+
+    <wsdl:port name="${service.basename}Port" binding="tns:${service.basename}Binding" >
+      <soap:address location="http://ws.vmware.com/TODO/${service.basename}" />
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>
+

@@ -1,0 +1,23 @@
+package com.vmware.vapi.test.structures.another;
+
+/**
+ * Service4:
+ * <ul>
+ * <li> uses top-level structure from another package by FQ name </li>
+ * <ul>
+ */
+interface Service4 {
+
+    /**
+     * FQ name used for top-level structure from another package - OK.
+     *
+     * @param param test input
+     * @return same as {@code param}
+     */
+    com.vmware.vapi.test.structures.TopLevelStructInFile echoTopLevelStructFQ(
+            com.vmware.vapi.test.structures.TopLevelStructInFile param);
+
+    // Illegal: can't access nested structure out-side the its enclosing service
+    // com.vmware.vapi.test.structures.Service1.NestedStruct
+    //     echoNestedStructFQ(com.vmware.vapi.test.structures.Service1.NestedStruct param);
+}

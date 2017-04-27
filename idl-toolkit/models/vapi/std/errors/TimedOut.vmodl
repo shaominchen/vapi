@@ -1,0 +1,43 @@
+/* **********************************************************
+ * Copyright 2012-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+
+/**
+ * The {@name TimedOut} {@term error} indicates that the {@term operation} did
+ * not complete within the allowed amount of time.  The allowed amount of time
+ * might be:
+ * <ul>
+ *   <li>provided by the client as an input {@term parameter}. </li>
+ *   <li>a fixed limit of the {@term service} implementation that is a
+ *       documented part of the contract of the {@term service}. </li>
+ *   <li>a configurable limit used by the implementation of the {@term service}.
+ *       </li>
+ *   <li>a dynamic limit computed by the implementation of the {@term service}.
+ *       </li>
+ * </ul>
+ * The {@term operation} may or may not complete after the {@name TimedOut}
+ * {@term error} was reported.
+ * <p>
+ * Examples:
+ * <ul>
+ *   <li>The {@term operation} was unable to complete within the timeout
+ *       duration specified by a {@term parameter} of the {@term operation}.
+ *       </li>
+ * </ul>
+ * <p>
+ * Counterexamples:
+ * <ul>
+ *   <li>A server implementation that puts requests into a queue before
+ *       dispatching them might delete a request from the queue if it doesn't
+ *       get dispatched within <i>n</i> minutes.  The {@link ServiceUnavailable}
+ *       {@term error} would be used instead. </li>
+ * </ul>
+ */
+@Export
+public class TimedOut extends Error {
+}

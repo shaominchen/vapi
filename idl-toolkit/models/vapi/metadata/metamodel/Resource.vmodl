@@ -1,0 +1,33 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.Set;
+
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ * The {@link Resource} {@term service} provides {@term operations} to
+ * retrieve information about resource types.
+ * <p>
+ * A service is a logical grouping of operations that operate on an
+ * entity. Each entity is identifier by a namespace (or resource type)
+ * and an unique identifier.
+ */
+@Resource(Resources.RESOURCE)
+interface Resource {
+
+    /** Resource type for resource. */
+    String RESOURCE_TYPE = Resources.RESOURCE;
+
+    /**
+     * Returns the set of resource types present across all the service
+     * elements contained in all the package elements.
+     *
+     * @return Set of resource types
+     */
+    Set<ID> list();
+}

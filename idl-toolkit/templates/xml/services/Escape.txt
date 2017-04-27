@@ -1,0 +1,8 @@
+
+<% def doc = """
+<doc>
+  <first name="Jordan" />
+  <last name="Boucher" />
+</doc>
+""" %>
+${xml.escapeXml(doc)}

@@ -1,0 +1,13 @@
+/* **********************************************************
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi} {@term component} provides API infrastructure
+ * {@term services} and standard types that can be used in the interface
+ * specification of any {@term service}.
+ */
+@Component
+package com.vmware.vapi;
+
+import vmodl.lang.Component;

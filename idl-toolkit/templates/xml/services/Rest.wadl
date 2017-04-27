@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<application
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:types="http://schemas.vmware.com/${service.path}/${service.basename}.xsd"
+    >
+
+  <grammars>
+    <include href="${service.basename}.xsd" />
+  </grammars>
+
+  <resources base="http://service.vmware.com/TODO/${service.basename}" >
+
+    <!--TODO: iterate over structures and operations and map them to REST resources - somehow -->
+    <resource path="xFoo" >
+      <method name="GET" id="" >
+        <request>
+	  <param name="x" type="xsd:string" style="query" required="true" />
+        </request>
+        <response status="200" >
+	  <representation mediaType="application/xml" element="res:ResultType" />
+        </response>
+        <response status="400" >
+	  <representation mediaType="application/xml" element="res:Error" />
+        </response>
+      </method>
+    </resource>
+
+  </resources>
+
+</application>

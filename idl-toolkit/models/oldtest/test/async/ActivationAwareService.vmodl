@@ -1,0 +1,18 @@
+package com.vmware.vapi.test.async;
+
+import com.vmware.vapi.std.errors.NotAllowedInCurrentState;
+
+/** Test service for activation tracking. */
+interface ActivationAwareService {
+
+    /**
+     * Operation which performs a number of 100ms iterations and responds to
+     * cancel.
+     *
+     * @param iterations number of 100ms iterations to perform
+     * @return the number of iterations (same as the input)
+     *
+     * @throws NotAllowedInCurrentState invocation has been canceled
+     */
+    public long testCancellable(long iterations) throws NotAllowedInCurrentState;
+}

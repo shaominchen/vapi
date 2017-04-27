@@ -1,0 +1,74 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+import vmodl.lang.ID;
+import vmodl.lang.List;
+
+import com.vmware.vapi.std.errors.NotFound;
+import com.vmware.vapi.metadata.Resources;
+
+/**
+ *  The {@name Component} {@term service} providers {@term operations}
+ *  to retrieve metamodel information of a component element.
+ *  <p>
+ *  A component defines a set of functionality that is deployed together and
+ *  versioned together. For example, all the {@term services} that belong to
+ *  VMware Content Library are part of a single component. A component
+ *  element describes a component. A component element contains one or more
+ *  package elements.
+ *  <p>
+ *  The {@term operations} for package elements are provided by {@term service}
+ *  {@link com.vmware.vapi.metadata.metamodel.Package}.
+ */
+@vmodl.lang.Resource(Resources.COMPONENT)
+interface Component {
+
+    /** Resource type for component. */
+    String RESOURCE_TYPE = Resources.COMPONENT;
+
+    /**
+     * Returns the identifiers for the component elements that are registered
+     * with the infrastructure.
+     *
+     * @return The list of identifiers for the component elements that are
+     *          registered with the infrastructure.
+     */
+    List<ID> list();
+
+    /**
+     * Retrieves metamodel information about the component element corresponding
+     * to {@param.name componentId}.
+     * <p>
+     * The {@link ComponentData} contains the metamodel information about the
+     * component and it's fingerprint. It contains information about all the
+     * package elements that are contained in this component element.
+     *
+     * @param componentId Identifier of the component element.
+     * @return The {@link ComponentData} instance that corresponds to
+     *         {@param.name componentId}.
+     * @throws NotFound if the component element associated with {@param.name componentId}
+     *                  is not registered with the infrastructure.
+     */
+    ComponentData get(ID componentId) throws NotFound;
+
+    /**
+     * Retrieves the fingerprint computed from the metamodel metadata of
+     * the component element corresponding to {@param.name componentId}.
+     * <p>
+     * The fingerprint provides clients an efficient way to check if the metadata
+     * for a particular component element has been modified on the server. The
+     * client can do this by comparing the result of this operation with the
+     * fingerprint returned in the result of
+     * {@link com.vmware.vapi.metadata.metamodel.Component#get}.
+     *
+     * @param componentId Identifier of the component element.
+     * @return The fingerprint computed from the metamodel metadata of the
+     *         component element.
+     * @throws NotFound if the component element associated with {@param.name componentId}
+     *                  is not registered with the infrastructure.
+     */
+    String fingerprint(ID componentId) throws NotFound;
+}

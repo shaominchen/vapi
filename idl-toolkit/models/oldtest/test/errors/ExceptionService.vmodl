@@ -1,0 +1,77 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+
+package com.vmware.vapi.test.errors;
+
+import com.vmware.vapi.test.errors.custom.CustomException;
+
+import vmodl.lang.*;
+
+/** Test service for Exception type */
+interface ExceptionService {
+
+    /** Structure which contains an Exception field */
+    class ExceptionStruct {
+
+        /** String field */
+        String stringField;
+
+        /** Custom Exception field */
+        CustomException customExceptionField;
+
+        /** Exception field */
+        Exception exceptionField;
+    }
+
+    /**
+     * Echoes an Exception.
+     *
+     * @param input some Exception
+     * @return same as {@code input}
+     */
+    Exception echoException(Exception input);
+
+    /**
+     * Echoes an optional Exception.
+     *
+     * @param input optional Exception
+     * @param.optional input reason
+     * @return same as {@code input}
+     * @return.optional reason
+     */
+    Optional<Exception> echoExceptionOptional(
+            Optional<Exception> input);
+
+    /**
+     * Echoes an Exception list.
+     *
+     * @param input Exception list
+     * @return same as {@code input}
+     */
+    List<Exception> echoExceptionList(List<Exception> input);
+
+    /**
+     * Echoes a custom Exception.
+     *
+     * @param input custom Exception
+     * @return same as {@code input}
+     */
+    CustomException echoCustomException(CustomException input);
+
+    /**
+     * Echoes a structure which contains an Exception field.
+     *
+     * @param input structure which contains an Exception field
+     * @return same as {@code input}
+     */
+    ExceptionStruct echoExceptionStruct(ExceptionStruct input);
+
+    /**
+     * Throws a user-defined Exception type.
+     *
+     * @param input custom Exception
+     * @throws CustomException same as {@code input}
+     */
+    void reportCustomException(CustomException input) throws CustomException;
+}

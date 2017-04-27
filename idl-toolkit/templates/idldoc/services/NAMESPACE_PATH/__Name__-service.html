@@ -1,0 +1,309 @@
+<% def thisHtml = idldoc.serviceHtml(service) %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+  <head>
+       <base href="${idldoc.topDir(service)}" />
+
+    <title>Service: ${service.name}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript">
+        //before jsTree is loaded
+        window.apiHierarchyCurrentNodeId = '${idldoc.nodeId(service)}'
+    </script>
+         <!-- begin boilerplate -->
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="css/smoothness/jquery-ui-1.8.13.custom.css" />
+    <link rel="stylesheet" type="text/css" href="css/idldoc-lean.css" />
+
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script type="text/javascript"
+        src="./js/jstree-pre1.0_fix_1/jquery.jstree.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="searchdata.js"></script>
+    <script type="text/javascript" src="treedata.js"></script>
+    <script type="text/javascript" src="searchandtree.js"></script>
+     <!-- End boilerplate -->
+    <style type="text/css">
+        .optional-type {
+            font-style: italic;
+        }
+        .optional-type:after {
+            content: "*";
+            color: red;
+        }
+    </style>
+
+  </head>
+  <body>
+       <!-- begin boilerplate -->
+    <div class="container">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                  <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </a>
+                <span class="brand"> vAPI Documentation </span>
+                <ul class="nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active dropdown ">
+                        <a id="tree-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            ${service.getQualifiedName('asCanonical')}
+                            <b class="caret"></b>
+                        </a>
+                        <ul id="tree-dropdown" class="dropdown-menu">
+                            <li>
+                                  <div id="apiHierarchy"></div>
+                             </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="nav-collapse">
+                <form class="navbar-form pull-right">
+                    <input class="search-query" placeholder="Search" id="searchInput"></input>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- End boilerplate -->
+
+	<h4>Package <a href="${idldoc.packageSummaryHtml(service.containingPackage)}">${service.containingPackage}</a></h4>
+    <h2>Service ${service.getQualifiedName('asCanonical')}</h2>
+    <p>${idldoc.multilineDoc(service)}</p>
+<% if (service.isResource()) { %>
+    <p>Manages resource: <span class="idl-resource-link" id="service-resource-link">${service.getResourceId()}</span></p>
+<% } %>
+    <h3>Summary</h3>
+<!-- Nested structures summary -->
+<% if (service.structures) { %>
+    <h5>Nested structures summary</h5>
+    <table class="table table-striped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% service.structures.each { s -> %>
+            <tr>
+                <td><a href="${thisHtml}#struct-${s.name}">${s.name}</a></td>
+                <td>${idldoc.summaryDoc(s)}</td>
+            </tr>
+<% } %>
+        </tbody>
+    </table>
+<% } %>
+
+<!-- Nested enumerations summary -->
+<% if (service.enumerations) { %>
+    <h5>Nested enumerations summary</h5>
+    <table class="table table-striped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% service.enumerations.each { e -> %>
+            <tr>
+                <td><a href="${thisHtml}#enum-${e.name}">${e.name}</a></td>
+                <td>${idldoc.summaryDoc(e)}</td>
+            </tr>
+<% } %>
+        </tbody>
+    </table>
+<% } %>
+
+<!-- Operations summary -->
+<% if (service.operations) { %>
+    <h5>Operations summary</h5>
+    <table class="table table-striped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+<% service.operations.each { op -> %>
+            <tr>
+                <td><a href="${thisHtml}#oper-${op.name}">${op.name}</a></td>
+                <td>${idldoc.summaryDoc(op)}</td>
+            </tr>
+<% } %>
+        </tbody>
+    </table>
+<% } %>
+
+
+<% if (service.structures) { %>
+    <h3>Nested Structures</h3>
+    <ul>
+<% service.structures.each { s -> %>
+    <h4><a name="struct-${s.name}" class="structure">${s.name}</a></h4>
+    <p>${idldoc.multilineDoc(s)}</p>
+    <br/>
+    <table id="${s.name}" class="table table-striped table-condensed table-bordered" >
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+<%  s.impliedAttributes.eachWithIndex { a, i  -> %>
+        <tr class="${(i%2)?'odd':'even'}" >
+      <td>${a.name}</td>
+<%   if (a.type.isAnonymous()) { %>
+      <td><a href="#${a.type.name}" >${a.type.name}</a></td>
+<%   } else { %>
+      <td>${idldoc.makeType(a)}</td>
+<%   } %>
+      <td>${idldoc.multilineDoc(a)}</td>
+        </tr>
+<%  } %>
+      </tbody>
+    </table>
+<% } %>
+    </ul>
+<% } %>
+
+<% if (service.enumerations) { %>
+    <h3>Nested Enumerations</h3>
+    <ul>
+<% service.enumerations.each { e -> %>
+      <h4><a name="enum-${e.name}" >${e.name}</a></h4>
+        <p>${idldoc.multilineDoc(e)}</p>
+        <table id="enum-${e.name}" class="table table-striped table-condensed table-bordered" >
+            <thead>
+                <tr>
+                    <th>Constant</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+<% e.constants.each { c -> %>
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${idldoc.multilineDoc(c)}</td>
+                </tr>
+<% } %>
+            </tbody>
+        </table>
+<% } %>
+    </ul>
+<% } %>
+
+<% if (service.anonymousTypes) { %>
+    <h3>Anonymous Types</h3>
+    <ul>
+<% service.anonymousTypes.each { s -> %>
+    <h4>${s.name}</h4>
+    <p>${idldoc.multilineDoc(s)}</p>
+    <br/>
+    <a name="${s.name}" >
+    <table id="${s.name}" class="table table-striped table-condensed table-bordered" >
+      <thead>
+        <tr>
+      <th>Attribute</th>
+      <th>Type</th>
+      <th>List</th>
+      <th>Optional</th>
+      <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+<%  s.impliedAttributes.eachWithIndex { a, i  -> %>
+        <tr class="${(i%2)?'odd':'even'}" >
+      <td>${a.name}</td>
+<%   if (a.type.isAnonymous()) { %>
+      <td><a href="#${a.type.name}" >${a.type.name}</a></td>
+<%   } else { %>
+      <td>${a.type.name}</td>
+<%   } %>
+      <td>${(a.type.isGeneric() && a.type.isList()) ?'Yes': ''}</td>
+      <td>${(a.type.isGeneric() && a.type.isOptional()) ?'Yes': ''}</td>
+      <td>${idldoc.multilineDoc(a)}</td>
+        </tr>
+<%  } %>
+      </tbody>
+    </table>
+    </a>
+<% } %>
+    </ul>
+<% } %>
+    <h3>Operations</h3>
+    <ul>
+<% service.operations.each { o -> %>
+    <a name="oper-${o.name}" ></a>
+    <h4 class="operation">${o.name}</h4>
+    <p>${if (o.result) idldoc.makeType(o.result)} ${o.name.asCanonical}(${o.parameters.collect{idldoc.makeType(it) + '&nbsp;' + it.name}.join(', ')})
+<% if (o.errors) { %>
+    <br /><span id="oper-${o.name}-throws">throws ${o.errors.collect{it.name}.join(', ')}</span>
+<% } %>
+    </p>
+    <p>${idldoc.multilineDoc(o)}</p>
+    <br/>
+<%  if (o.parameters ) { %>
+    <table id="${o.name}" class="table table-striped table-condensed table-bordered" >
+    <caption>Parameters</caption>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+<%  o.parameters.eachWithIndex { p, i  -> %>
+        <tr class="${(i%2)?'odd':'even'}" >
+      <td>${p.name}</td>
+<%   if (p.type.isAnonymous()) { %>
+      <td><a href="${idldoc.serviceHtml(service)}#${p.type.anonymousType?.name}" >${p.type.anonymousType?.name}</a></td>
+<%   } else { %>
+      <td>${idldoc.makeType(p)}</td>
+<%   } %>
+      <td>${idldoc.multilineDoc(p)}
+            </td>
+        </tr>
+<%  } %>
+      </tbody>
+    </table>
+<%  }
+    if (o.result) {%>
+    <table id="${o.name}_result" class="table table-striped table-condensed table-bordered">
+    <caption>Return Value</caption>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="result" >
+              <td>${idldoc.makeType(o.result)}</td>
+              <td>${idldoc.multilineDoc(o.result)}</td>
+            </tr>
+        </tbody>
+    </table>
+<%  } %>
+<% } %>
+    </ul>
+    <p><span style="color: red;">*</span> - Optional, may be null</p>
+
+    <p><a href="javascript:window.top.location.href='index.html';">Home</a></p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for VMODL2 error types (aka., exceptions).
+ * <p>
+ * The VMODL2 specification allows for the declaration of {@code Exception}
+ * types.
+ * The examples here are meant to test the proper code generation and
+ * use for a target language.
+ */
+package vmodl.test.uber.errors;
+

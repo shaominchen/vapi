@@ -1,0 +1,25 @@
+package com.vmware.vapi.std.activation;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * <b>WARNING:</b> Use only as a sample. The API is experimental and subject to
+ * change in future versions.
+ *
+ * <p>
+ * Activation tracking/management service.
+ * <p>
+ * An activation describes a method invocation in the runtime.
+ */
+public interface ActivationManager {
+
+    /**
+     * Asks for cancellation of a running activation. Whether or not the
+     * cancellation request will have any effect depends on the implementation
+     * of the method that has to be canceled.
+     *
+     * @param activationId activation identifier
+     * @throws NotFound there is no activation with the specified id
+     */
+    public void cancel(String activationId) throws NotFound;
+}

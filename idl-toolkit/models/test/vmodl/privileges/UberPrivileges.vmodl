@@ -1,0 +1,205 @@
+package vmodl.test.uber.privileges;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.NotFound;
+
+/**
+ * Sample test service for testing automatic generation of privilege documentation.
+ */
+@Resource("vmodl.test.uber.privilege")
+interface UberPrivileges {
+    /** Resource type constants. */
+    String[] REMOVABLE = {"com.vmware.CDROM", "com.vmware.floppy", "com.vmware.USB"};
+
+    /**
+     * Operation to verify privilege documentation for operations without
+     * ID parameters.
+     */
+    void simpleOperation();
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a single ID parameter that has defined privilege.
+     * @param id an ID
+     * @throws NotFound if id is not found or foreignId is not found.
+     */
+    void operationWithIdParameter(ID id) throws NotFound;
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a single ID parameter that has default privilege.
+     * @param id an ID
+     * @throws NotFound if id is not found or foreignId is not found.
+     */
+    void operationWithIdParameter2(ID id) throws NotFound;
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a ID parameters that has defined and default privileges.
+     *
+     * @param id an ID
+     * @param foreignId another ID
+     * @throws NotFound if id is not found or foreignId is not found.
+     */
+    void operationWithIdParameters(ID id, @Resource("com.vmware.vapi.foreign") ID foreignId) throws NotFound;
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a map parameter whose key is ID.
+     * @param idMap a map whose key in an ID
+     */
+    void operationWithMapParameters1(Map<ID, String> idMap);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a map parameter whose value is ID.
+     * @param idMap a map whose value in an ID
+     */
+    void operationWithMapParameters2(Map<String, ID> idMap);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a map parameter whose value is ID.
+     * @param idMap a map whose key and value in an ID
+     */
+    void operationWithMapParameters3(Map<ID, ID> idMap);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a map parameter whose value is ID.
+     * @param idMap a map whose key and value in an ID
+     */
+    void operationWithMapParameters4(Map<ID, Optional<ID>> idMap);
+
+    /**
+     * Get spec.
+     */
+    class GetSpec {
+        /** Primary key of the resource. */
+        ID id;
+
+        /** foreign id. */
+        @Resource("com.vmware.vapi.foreign")
+        ID foreignId;
+    }
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a structure parameter which has ID fields.
+     * @param spec is the get specification
+     */
+    void operationWithStructParameter1(GetSpec spec);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a structure parameter which has ID fields.
+     * @param spec is the get specification
+     */
+    void operationWithStructParameter2(@HasFieldsOf(GetSpec.class) DynamicStructure spec);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a structure parameter which has ID fields.
+     * @param spec is the get specification
+     * @param.optional spec to demo this variation of the test case
+     */
+    void operationWithStructParameter3(@HasFieldsOf(GetSpec.class) Optional<DynamicStructure> spec);
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a structure parameter which has ID fields.
+     * @param spec is the get specification
+     */
+    void operationWithStructParameter4(@HasFieldsOf(GetSpec.class) Map<ID, DynamicStructure> spec);
+
+    /**
+     * Spec with Map field.
+     */
+    class MapSpec {
+        /** Map of IDs to get privileges assigned on. */
+        Map<ID, ID> mapField;
+    }
+
+    /**
+     * Operation to verify privilege documentation for operations with
+     * a structure parameter which has ID fields in map.
+     * @param spec is a specification
+     */
+    void operationWithStructParameter5(MapSpec spec);
+
+    /**
+     * Nested spec.
+     */
+    class NestedSpec {
+        /** Get spec. */
+        GetSpec getSpec;
+
+        /** Get spec. */
+        MapSpec mapSpec;
+    }
+
+    /**
+     * Operation with a mix of IDL constructs.
+     * @param id is an ID
+     * @param nestedSpec is a specification
+     * @throws NotFound if id is not found
+     */
+    void operationMix(ID id, NestedSpec nestedSpec) throws NotFound;
+
+    /**
+     * Nested map spec.
+     */
+    class NestedMapSpec {
+        /** Get spec. */
+        @HasFieldsOf(GetSpec.class) Map<ID, DynamicStructure> getSpec;
+    }
+
+    /**
+     * Operation with a mix of IDL constructs.
+     * @param id is an ID
+     * @param nestedMapSpec is a specification
+     * @throws NotFound if id is not found
+     */
+    void operationMix2(ID id, NestedSpec nestedMapSpec) throws NotFound;
+
+    /**
+     * Nested polymorphic id spec.
+     */
+    class NestedPolymorphicIdSpec {
+
+        /** Device Type. */
+        @IsOneOf(value=REMOVABLE)
+        String deviceType;
+
+        /** device ID. */
+        @Resource(value=REMOVABLE, typeHolder="deviceType")
+        ID deviceId;
+    }
+
+    /**
+     * Operation with a mix of IDL constructs.
+     * @param spec is a specification
+     * @throws NotFound for some reason
+     */
+    void operationMix3(NestedPolymorphicIdSpec spec) throws NotFound;
+
+    /**
+     * Nested dynamic id spec.
+     */
+    class NestedDynamicIdSpec {
+        /** Device Type. */
+        String deviceType;
+
+        /** Device ID. */
+        @Resource(typeHolder="deviceType")
+        ID deviceId;
+    }
+
+    /**
+     * Operation with a mix of IDL constructs.
+     * @param spec is a specification
+     * @throws NotFound for some reason
+     */
+    void operationMix4(NestedDynamicIdSpec spec) throws NotFound;
+}

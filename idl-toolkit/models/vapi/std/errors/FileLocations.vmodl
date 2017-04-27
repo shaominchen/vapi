@@ -1,0 +1,33 @@
+/* **********************************************************
+ * Copyright 2013-2015 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.std.errors;
+
+import vmodl.lang.Export;
+import vmodl.lang.List;
+
+/**
+ * The {@name FileLocations} {@term structure} identifies the file(s) that
+ * caused the {@term operation} to report the {@term error}.
+ * <p>
+ * Some types of {@term errors} are caused by a problem with one or more files.
+ * This {@term structure} is intended to be used as the payload to identify
+ * those files when the {@term operation} reports {@term errors} like
+ * {@link NotFound}.
+ * See {@link Error#data}.
+ */
+@Export
+public class FileLocations {
+    /**
+     * String identifying the file that triggered the {@term error}.
+     */
+    String primary;
+
+    /**
+     * {@term List} (possibly empty) of strings identifying other files that
+     * caused the primary file to trigger the {@term error}.
+     */
+    List<String> secondary;
+}

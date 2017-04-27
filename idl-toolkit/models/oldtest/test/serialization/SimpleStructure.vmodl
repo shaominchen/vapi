@@ -1,0 +1,15 @@
+/* **********************************************************
+ * Copyright 2013 VMware, Inc.  All rights reserved.
+ *      -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.test.serialization;
+
+import vmodl.lang.Resource;
+
+/** Test simple structure */
+@Resource("foo")
+class SimpleStructure {
+    /** doc */
+    String str;
+}

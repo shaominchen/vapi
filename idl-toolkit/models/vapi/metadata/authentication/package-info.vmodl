@@ -1,0 +1,17 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+/**
+ * The {@name com.vmware.vapi.metadata.authentication} {@term package} provides
+ * {@term services} that expose authentication information for operation
+ * elements across all the service elements.
+ * <p>
+ * To calculate the effective authentication information for an operation element,
+ * you should first see if there is an authentication scheme specified for the
+ * operation element. If it is not specified, then authentication scheme for the
+ * service element that contains this operation element is used. If it is not specified
+ * for the service element as well, then the authentication scheme for the package
+ * element that contains this service element is used.
+ */
+package com.vmware.vapi.metadata.authentication;

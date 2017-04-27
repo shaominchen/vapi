@@ -1,0 +1,26 @@
+/* **********************************************************
+ * Copyright 2014 VMware, Inc.  All rights reserved. -- VMware Confidential
+ * **********************************************************/
+
+package com.vmware.vapi.metadata.metamodel;
+
+
+/**
+ * The {@name ConstantInfo} {@term structure} contains metamodel information
+ * of the constant elements.
+ */
+class ConstantInfo {
+    /** Type of the constant element. */
+    Type type;
+
+    /**
+     * Value of the constant element.
+     */
+    ConstantValue value;
+
+    /**
+     * English language documentation for the constant element. It can
+     * contain HTML markup and documentation tags (similar to Javadoc tags).
+     */
+    String documentation;
+}

@@ -1,0 +1,27 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for resource annotations.
+ * <p>
+ * The resource annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @Resource}
+ *   <dt> This marker associates any element of type {@code ID} to be
+ *   of the given resource type.  It may be declared directly on any
+ *   element of type {@code ID} or, as a convenience, it may be declared
+ *   on a containing class or interface.  In the latter case, it implies
+ *   a default resource type for any {@code ID} contained therein (unless
+ *   explicitly overridden.)
+ *  <dd> {@literal @IsOneOf({"foo", "bar"})}
+ *   <dt> This annotation is used to constrain a polymorphic resource.
+ *  <dd> {@literal @SymbolTableOnly}
+ *   <dt> This marker is often used on an interface that strictly exists
+ *   to declare resource type constants.  In this case, the constants
+ *   are symbols for the compiler only and they will be replaced by the
+ *   literal value when producing the IDL model.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.resources;
+

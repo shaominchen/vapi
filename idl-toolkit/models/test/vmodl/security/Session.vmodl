@@ -1,0 +1,53 @@
+/* **********************************************************
+ * Copyright 2015 VMware, Inc.  All rights reserved.
+ * **********************************************************/
+package vmodl.test.uber.security;
+
+import vmodl.lang.*;
+
+import com.vmware.vapi.std.errors.Unauthenticated;
+
+/**
+ * Provides an test service that echos back session ID from
+ * security context.
+ */
+interface Session {
+
+    /**
+     * Returns sessionId as found in request's SecurityContext.
+     *
+     * @return session ID from request's security context
+     */
+    String echoSessionId();
+
+    /**
+     * Login with SSO token; returns session identifier.
+     *
+     * @return new session ID
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    String login() throws Unauthenticated;
+
+    /**
+     * Login with NoAuthentication security scheme.
+     */
+    void noAuthn();
+
+    /**
+     * Login with SSO token; returns session identifier.
+     *
+     * @return new session ID
+     * @throws Unauthenticated if the authentication requirements are not met.
+     */
+    Secret create() throws Unauthenticated;
+
+    /**
+     * Terminates the validity of a session token. This is the equivalent of log
+     * out.
+     * <p>
+     * A session identifier is expected as part of the request.
+     *
+     * @throws Unauthenticated if the session id is missing from the request
+     */
+    void delete() throws Unauthenticated;
+}

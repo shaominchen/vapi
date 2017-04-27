@@ -1,0 +1,19 @@
+/*
+ * Copyright 2013-2014 VMware, Inc.  All rights reserved.
+ */
+
+/**
+ * Contains tests for identifier names in a model.
+ * <p>
+ * The naming annotations consist of the following:
+ * <dl>
+ *  <dd> {@literal @CanonicalName}
+ *   <dt> This annotation is used to supply a canonical name for an
+ *   identifier.  In general, this is only necessary when an identifier
+ *   is an edge case and does not naturally work in the algorithm that
+ *   creates our canonical form from identifers that follow standard
+ *   Java naming conventions.
+ * </dl>
+ */
+package vmodl.test.uber.annotations.names;
+
